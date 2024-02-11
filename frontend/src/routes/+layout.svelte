@@ -2,6 +2,11 @@
 import Header from './Header.svelte';
 import Footer from './Footer.svelte';
 import '../main.pcss';
+
+import getI18nStore from '$lib/i18n';
+import { setContext } from 'svelte';
+
+setContext('i18n', getI18nStore());
 </script>
 
 <svelte:head></svelte:head>
