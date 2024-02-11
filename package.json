@@ -1,0 +1,27 @@
+{
+    "scripts": {
+        "dev:fe": "pnpm run --filter ./frontend dev",
+        "dev:be": "pnpm run --filter ./backend dev",
+        "dev": "concurrently  \"pnpm run dev:fe\" \"pnpm run dev:be\"",
+        "build:fe": "pnpm run --filter ./frontend build",
+        "build:be": "pnpm run --filter ./backend build",
+        "build": "concurrently \"pnpm run build:fe\" \"pnpm run build:be\"",
+        "lint:fe": "pnpm run --filter ./frontend lint",
+        "lint:be": "pnpm run --filter ./backend lint",
+        "lint": "pnpm run lint:fe && pnpm run lint:be",
+        "lint:fe:ci": "pnpm run --filter ./frontend lint:ci",
+        "lint:be:ci": "pnpm run --filter ./backend lint:ci",
+        "lint:ci": "pnpm run lint:fe:ci && pnpm run lint:be:ci"
+    },
+    "dependencies": {
+        "concurrently": "^8.2.2"
+    },
+    "pnpm": {
+        "overrides": {
+            "node-fetch@<2.6.1": ">=2.6.1",
+            "axios@>=0.8.1 <1.6.0": ">=1.6.0",
+            "node-fetch@<2.6.7": ">=2.6.7",
+            "@babel/traverse@<7.23.2": ">=7.23.2"
+        }
+    }
+}
