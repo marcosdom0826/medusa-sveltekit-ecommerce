@@ -13,7 +13,7 @@ let drawerOpen = false;
     </a>
     <Nav desktop />
     <Drawer bind:open="{drawerOpen}">
-        <Nav />
+        <Nav desktop="{false}" />
     </Drawer>
 </header>
 

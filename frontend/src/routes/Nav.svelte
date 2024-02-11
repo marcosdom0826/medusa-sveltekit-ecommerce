@@ -3,7 +3,7 @@ import { t } from '$/lib/i18n';
 import type { ProductCategory } from '$/lib/medusa';
 import { page } from '$app/stores';
 
-export let desktop = false;
+export let desktop = true;
 
 const categories: Record<string, ProductCategory> = $page.data.headerCategories || [];
 </script>
