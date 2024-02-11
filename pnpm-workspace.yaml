@@ -1,0 +1,4 @@
+name: 'sk8-webshop-workspace'
+packages:
+  - 'backend'
+  - 'frontend'
