@@ -19,3 +19,22 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "medusa*"
         update-types: ["version-update:semver-major"]
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-type: production
+    groups:
+      svelte:
+        patterns:
+        - "@sveltejs*"
+        - "svelte*"
+        update-types:
+        - "minor"
+        - "patch"
+    ignore:
+      - dependency-name: "@sveltejs*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "svelte*"
+        update-types: ["version-update:semver-major"]
