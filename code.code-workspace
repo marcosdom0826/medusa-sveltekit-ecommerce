@@ -2,15 +2,34 @@
     "folders": [
         {
             "name": "backend",
-            "path": "backend"
+            "path": "backend",
         },
         {
             "name": "frontend",
-            "path": "frontend"
+            "path": "frontend",
         },
         {
             "name": "root",
-            "path": "."
-        }
-    ]
+            "path": ".",
+        },
+    ],
+    "settings": {
+        "jest.disabledWorkspaceFolders": [
+            "root",
+            "frontend",
+            "backend"
+        ],
+        "[postcss][css]": {
+            "editor.defaultFormatter": "stylelint.vscode-stylelint",
+            "editor.codeActionsOnSave": {
+                "source.fixAll.stylelint": "explicit"
+            }
+        },
+    },
+    "extensions": {
+        "recommendations": [
+            "dbaeumer.vscode-eslint",
+            "stylelint.vscode-stylelint"
+        ]
+    }
 }

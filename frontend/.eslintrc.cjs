@@ -10,7 +10,6 @@ module.exports = {
 	parser: '@typescript-eslint/parser',
     plugins: [
         '@typescript-eslint',
-        'no-null',
         'prefer-arrow',
         'import',
         'prettier'
@@ -21,7 +20,7 @@ module.exports = {
         project: './tsconfig.json',
         extraFileExtensions: ['.svelte'],
 	},
-    ignorePatterns: ['*.cjs'],
+    ignorePatterns: ['*.cjs', '*.html', 'postcss.config.js', 'svelte.config.js'],
     overrides: [
         {
             files: ['*.svelte'],
@@ -120,10 +119,6 @@ module.exports = {
         '@typescript-eslint/naming-convention': [
             'error',
             {
-                selector: 'default',
-                format: ['camelCase']
-            },
-            {
                 selector: ['variable'],
                 format: ['camelCase', 'UPPER_CASE']
             },
@@ -206,7 +201,6 @@ module.exports = {
                 hoist: 'all'
             }
         ],
-        'no-null/no-null': 'error',
         'no-throw-literal': 'error',
         'no-trailing-spaces': 'error',
         'no-undef-init': 'error',
