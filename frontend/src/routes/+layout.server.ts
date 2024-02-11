@@ -9,7 +9,9 @@ export const load: LayoutServerLoad = async () => {
         .filter((category) => !!category.metadata.nav)
         .reduce((acc, category) => ({
             ...acc,
-            [category.handle]: category
+            [category.handle]: {
+                ...category
+            }
         }), {});
 
     if (ENABLE_GIFT_CARDS) {

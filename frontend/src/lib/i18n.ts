@@ -1,31 +1,21 @@
-import i18next from 'i18next';
-import { createI18nStore } from 'svelte-i18next';
-import { PUBLIC_DEFAULT_LANGUAGE } from '$env/static/public';
-import { PUBLIC_LANGUAGES } from '$env/static/public';
+import { PUBLIC_DEFAULT_LANGUAGE, PUBLIC_LANGUAGES } from '$env/static/public';
+import i18n from 'sveltekit-i18n';
+/** @type {import('sveltekit-i18n').Config} */
+const config = ({
+    loaders: [
+        ...PUBLIC_LANGUAGES.split(',')
+            .map((lng) => ({
+                locale: lng,
+                key: '',
+                loader: async () => (
+                    await import(`./locales/${lng}.json`).catch(() => ({ default: {} }))
+                ).default
+            }))
+    ],
+    initLocale: PUBLIC_DEFAULT_LANGUAGE,
+    log: {
+        level: 'error'
+    }
+});
 
-
-const init = async () => {
-    const lngs = await Promise.all(PUBLIC_LANGUAGES.split(',')
-        .map(async (lang) => (
-            await import(`./locales/${lang}.json`)
-                .catch(() => ({ default: {} }))
-        ).default));
-    await i18next.init({
-        lng: PUBLIC_DEFAULT_LANGUAGE,
-        resources: {
-            ...PUBLIC_LANGUAGES.split(',').reduce((acc, lang, idx) => ({
-                ...acc,
-                [lang]: {
-                    translation: lngs[idx]
-                }
-            }), {})
-        },
-        interpolation: {
-            escapeValue: false // not needed for svelte as it escapes by default
-        }
-    });
-};
-void init();
-
-export default () => createI18nStore(i18next);
-export type I18nStore = ReturnType<typeof createI18nStore>;
+export const { t, locale, locales, loading, loadTranslations, setLocale } = new i18n(config as ConstructorParameters<typeof i18n>[0]);

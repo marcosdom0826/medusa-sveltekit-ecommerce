@@ -1,19 +1,17 @@
 <script lang="ts">
+import { t } from '$/lib/i18n';
 import type { ProductCategory } from '$/lib/medusa';
-import { getContext } from 'svelte';
-import type { I18nStore } from '$/lib/i18n';
 import { page } from '$app/stores';
 
 export let desktop = false;
 
 const categories: Record<string, ProductCategory> = $page.data.headerCategories || [];
-const i18n = getContext<I18nStore>('i18n');
 </script>
 
 <nav class="{desktop ? 'desktop-nav' : 'mobile-nav'}">
     <ul>
         {#each Object.entries(categories) as [handle, category]}
-            <li><a href="/products/{handle}">{$i18n.t(category.name)}</a></li>
+            <li><a href="/products/{handle}">{$t(`${category.name}`)}</a></li>
         {/each}
         <li>
             <a href="/about">About</a>
