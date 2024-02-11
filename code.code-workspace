@@ -25,6 +25,9 @@
                 "source.fixAll.stylelint": "explicit"
             }
         },
+        "i18n-ally.localesPaths": [
+            "../frontend/src/lib/locales"
+        ],
     },
     "extensions": {
         "recommendations": [
