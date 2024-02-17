@@ -1,20 +1,11 @@
 <script lang="ts">
+/* eslint-disable prettier/prettier */
+import { t } from '$/lib/i18n';
 import type { PricedProduct, ProductCategory } from '$lib/medusa';
 import { page } from '$app/stores';
 export let product: PricedProduct;
 
 const categories: Record<string, ProductCategory> = $page.data.categoriesByHandle || {};
-
-$: price = (product.variants?.[0]?.calculated_price ?? 0) / 100;
-$: originalPrice = (product.variants?.[0]?.original_price ?? 0) / 100;
-
-$: reducedPercent = (() => {
-    if (originalPrice !== price) {
-        return Math.round(((originalPrice - price) / originalPrice) * 100);
-    }
-    return 0;
-})();
-
 const recurseParentCategories = (category: ProductCategory | undefined | null, rest = ''): string => {
     if (!category) {
         return rest;
@@ -26,6 +17,16 @@ const recurseParentCategories = (category: ProductCategory | undefined | null, r
     return rest || category.handle;
 };
 
+$: price = (product.variants?.[0]?.calculated_price ?? 0) / 100;
+$: originalPrice = (product.variants?.[0]?.original_price ?? 0) / 100;
+
+$: reducedPercent = (() => {
+    if (originalPrice !== price) {
+        return Math.round(((originalPrice - price) / originalPrice) * 100);
+    }
+    return 0;
+})();
+
 $: categoryUrl = (() => {
     if (product.is_giftcard) {
         return 'giftcards/';
@@ -36,6 +37,15 @@ $: categoryUrl = (() => {
     }
     return '';
 })();
+
+$: stock = product.is_giftcard
+    ? 9999
+    : product.variants
+        ?.reduce(
+            (acc, v) => acc + (v.inventory_quantity || 0),
+            0
+        ) ?? 0;
+/* eslint-enable prettier/prettier */
 </script>
 
 <a href="/products/{categoryUrl}view/{product.handle}">
@@ -47,12 +57,18 @@ $: categoryUrl = (() => {
         {#if reducedPercent > 0}
             <span class="reduced-percent">-{reducedPercent}%</span>
         {/if}
+        {#if stock < 10 && stock > 0}
+            <span class="stock">{$t('low_stock')}</span>
+        {/if}
+        {#if stock === 0}
+            <span class="stock">{$t('out_of_stock')}</span>
+        {/if}
     </div>
     <div>
         <span class="title">{product.title}</span>
-        <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price} €</span>
+        <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price}€</span>
         {#if originalPrice !== price}
-            <span class="original price">{originalPrice} €</span>
+            <span class="original price">{originalPrice}€</span>
         {/if}
     </div>
 </a>
@@ -115,8 +131,21 @@ img {
     left: 0;
     background-color: #ff0015;
     color: white;
-    padding: 0.5em !important;
-    border-radius: 0 0.75rem 0 0.75rem;
+    padding: 0.5em 1em !important;
+    border-radius: 0 0.75em 0 0.75em;
     font-size: 1em;
+    box-shadow: 0 0 3em 0.25em var(--shadowColor);
+}
+
+.stock {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    padding: 0.5em 2em !important;
+    border-radius: 0 0.75em 0.75em 0;
+    font-size: 1em;
+    box-shadow: 0 0 3em 0.25em var(--shadowColor);
 }
 </style>

@@ -27,7 +27,12 @@ import Logo from '$assets/logo.svg?component';
 footer {
     --cellSize: 220px;
     background-color: var(--cardColor);
-    padding: 2rem 0;
+    @media (orientation: portrait) {
+        padding: 1rem 0 0 0;
+    }
+    @media (orientation: landscape) {
+        padding: 2rem 0;
+    }
     display: grid;
     place-items: center;
     place-content: center;
