@@ -1,7 +1,7 @@
 import { medusa } from '$/lib/medusa';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ params }) => {
 
     const products = await medusa.products.list({
         // eslint-disable-next-line
