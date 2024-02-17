@@ -38,14 +38,14 @@ $: categoryUrl = (() => {
 })();
 </script>
 
-<a href="/products/{categoryUrl}detail/{product.handle}">
+<a href="/products/{categoryUrl}view/{product.handle}">
     <div>
         <picture>
             <source type="image/png" srcset="{product.thumbnail}" />
             <img src="{product.thumbnail}" alt="{product.title}" />
         </picture>
         {#if reducedPercent > 0}
-            <span class="reduced-percent">{reducedPercent}%</span>
+            <span class="reduced-percent">-{reducedPercent}%</span>
         {/if}
     </div>
     <div>
@@ -117,7 +117,6 @@ img {
     color: white;
     padding: 0.5em !important;
     border-radius: 0 0.75rem 0 0.75rem;
-    font-weight: bold;
     font-size: 1em;
 }
 </style>

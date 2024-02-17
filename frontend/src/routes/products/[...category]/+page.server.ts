@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     const category = categories[categories.length - 1];
 
     if (!parentData.categoriesByHandle[category]?.id) {
-        error(404, 'Category not found');
+        error(404, 'Not found');
     }
 
     const products = await medusa.products.list({
@@ -28,17 +28,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     });
 
     return {
-        products: products.products,
-        crumbs: [
-            {
-                name: 'Products',
-                href: '/products'
-            },
-            ...categories.map((c, idx) => ({
-                name: parentData.categoriesByHandle[c].name,
-                href: `/products/${categories.slice(0, idx + 1).join('/')}`
-            }))
-        ]
+        products: products.products
     };
 
 };
