@@ -5,13 +5,15 @@ import { page } from '$app/stores';
 
 export let desktop = true;
 
-const categories: Record<string, ProductCategory> = $page.data.headerCategories || [];
+const categories: Record<string, ProductCategory> = $page.data.categoriesByHandle || {};
 </script>
 
 <nav class="{desktop ? 'desktop-nav' : 'mobile-nav'}">
     <ul>
         {#each Object.entries(categories) as [handle, category]}
-            <li><a href="/products/{handle}">{$t(`${category.name}`)}</a></li>
+            {#if category.metadata.nav}
+                <li><a href="/products/{handle}">{$t(`${category.name}`)}</a></li>
+            {/if}
         {/each}
         <li>
             <a href="/about">About</a>

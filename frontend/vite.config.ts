@@ -3,10 +3,13 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vitest/config';
 import Icons from 'unplugin-icons/vite';
 import Unfonts from 'unplugin-fonts/vite';
+import svgLoader from '@poppanator/sveltekit-svg';
+
 
 export default defineConfig({
     plugins: [
         sveltekit(),
+        svgLoader(),
         Unfonts(),
         Icons({
             autoInstall: true,
@@ -15,13 +18,6 @@ export default defineConfig({
             transform: (svg) => svg.replace(/^<svg /, '<svg ')
         })
     ],
-    // resolve: {
-    //     alias: {
-    //         $: resolve(__dirname, './src'),
-    //         $lib: resolve(__dirname, './src/lib'),
-    //         $components: resolve(__dirname, './src/lib/components')
-    //     }
-    // },
     test: {
         include: ['src/**/*.{test,spec}.{js,ts}']
     }

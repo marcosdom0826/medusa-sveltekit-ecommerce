@@ -116,52 +116,6 @@ module.exports = {
             }
         ],
         '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
-        '@typescript-eslint/naming-convention': [
-            'error',
-            {
-                selector: ['variable'],
-                format: ['camelCase', 'UPPER_CASE']
-            },
-            {
-                selector: 'parameter',
-                format: ['camelCase'],
-                leadingUnderscore: 'allow'
-            },
-            {
-                selector: ['memberLike'],
-                format: ['camelCase'],
-                leadingUnderscore: 'allow'
-            },
-            {
-                selector: ['property'],
-                format: ['camelCase', 'UPPER_CASE'],
-                leadingUnderscore: 'allow'
-            },
-            {
-                selector: ['memberLike', 'property'],
-                modifiers: ['static'],
-                format: ['PascalCase']
-            },
-            // {
-            //     "selector": ["memberLike"],
-            //     "modifiers": ["readonly"],
-            //     "format": ["UPPER_CASE"],
-            // },
-            {
-                selector: 'typeLike',
-                format: ['PascalCase']
-            },
-            {
-                selector: ['variable', 'memberLike', 'default', 'property'],
-                modifiers: ['readonly'],
-                format: ['UPPER_CASE']
-            },
-            {
-                selector: ['variable', 'memberLike', 'default', 'property'],
-                modifiers: ['static', 'readonly'],
-                format: ['UPPER_CASE']
-            }
-        ], 
         'no-console': 'warn',
         'no-return-await': 'error',
         'arrow-body-style': 'error',
@@ -169,7 +123,6 @@ module.exports = {
             'error',
             'always'
         ],
-        'camelcase': ['warn', { ignoreImports: true }],
         'comma-dangle': [
             'error',
             {

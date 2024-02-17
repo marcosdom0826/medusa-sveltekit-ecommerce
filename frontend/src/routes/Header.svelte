@@ -2,20 +2,24 @@
 import Drawer from '$components/Drawer.svelte';
 import Nav from './Nav.svelte';
 import MaterialSymbolsMenu from '~icons/material-symbols/menu';
+import Logo from '$assets/logo.svg?component';
+import BreadCrumbs from '$/lib/components/BreadCrumbs.svelte';
+
 let drawerOpen = false;
 </script>
 
 <header>
     <button class="menu-btn" on:click="{() => (drawerOpen = true)}"><MaterialSymbolsMenu /></button>
     <a class="logo" href="/">
-        <h1>Brand</h1>
-        <h1>Logo</h1>
+        <Logo />
     </a>
+    <div><!-- TODO --></div>
     <Nav desktop />
-    <Drawer bind:open="{drawerOpen}">
-        <Nav desktop="{false}" />
-    </Drawer>
+    <BreadCrumbs />
 </header>
+<Drawer bind:open="{drawerOpen}">
+    <Nav desktop="{false}" />
+</Drawer>
 
 <style lang="postcss">
 header {
@@ -27,6 +31,9 @@ header {
     @media (orientation: portrait) {
         grid-template-rows: auto;
         grid-template-columns: repeat(3, 1fr);
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 }
 

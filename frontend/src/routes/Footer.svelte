@@ -1,7 +1,10 @@
+<script lang="ts">
+import Logo from '$assets/logo.svg?component';
+</script>
+
 <footer>
     <div class="logo">
-        <h1>Brand</h1>
-        <h1>Logo</h1>
+        <Logo />
     </div>
 
     <div class="footer-nav-content">

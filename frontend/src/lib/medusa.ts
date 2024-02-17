@@ -5,3 +5,4 @@ export const medusa = new Medusa({
 });
 
 export type ProductCategory = Awaited<ReturnType<typeof medusa.productCategories.list>>['product_categories'][0];
+export type PricedProduct = Awaited<ReturnType<typeof medusa.products.list>>['products'][0];
