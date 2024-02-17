@@ -1,19 +1,62 @@
+<script lang="ts">
+import ProductBar from '$/lib/components/ProductBar.svelte';
+import type { PageData } from './$types';
+// import needed for css
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import background from '$assets/background.svg';
+
+export let data: PageData;
+</script>
+
 <div class="center">
-    <div>
-        <h1>Landing Page</h1>
-        <h2>Placeholder</h2>
+    <div class="landing">
+        <div>
+            <h1>Placeholder</h1>
+            <p>Landing content here</p>
+        </div>
+    </div>
+    <div class="fresh-products">
+        <h2>Fresh</h2>
+        <ProductBar products="{data.products}" scrollable />
     </div>
 </div>
 
 <style lang="postcss">
 .center {
+    position: relative;
+    justify-items: center;
     display: grid;
-    place-items: center;
     height: 100%;
     width: 100%;
+    grid-template-rows: auto min-content;
+    gap: 2rem;
+}
+
+.fresh-products {
+    padding: 1rem;
+    justify-items: center;
+    display: grid;
+    height: 100%;
+    width: fit-content;
+    grid-template-rows: auto min-content;
+    gap: 2rem;
+}
+
+.landing {
+    background: url('$assets/background.svg');
+    background-size: cover; /* <------ */
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    background-blend-mode: multiply;
+
+    height: calc(100dvh - var(--header-height));
+    width: 100%;
+    display: grid;
+    place-items: center;
+
     & > div {
         display: grid;
-        gap: 1rem;
         place-items: center;
     }
 }
