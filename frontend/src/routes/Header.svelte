@@ -5,6 +5,7 @@ import MaterialSymbolsMenu from '~icons/material-symbols/menu';
 import Logo from '$assets/logo.svg?component';
 import BreadCrumbs from '$/lib/components/BreadCrumbs.svelte';
 import { onMount } from 'svelte';
+import ThemeToggle from '$/lib/components/ThemeToggle.svelte';
 
 let drawerOpen = false;
 
@@ -16,12 +17,17 @@ onMount(() => {
 </script>
 
 <header>
-    <button class="menu-btn" on:click="{() => (drawerOpen = true)}"><MaterialSymbolsMenu /></button>
+    <div class="lhs">
+        <button class="menu-btn" on:click="{() => (drawerOpen = true)}"><MaterialSymbolsMenu /></button>
+        <!-- TODO -->
+    </div>
     <a class="logo" href="/">
         <Logo />
     </a>
-    <div><!-- TODO --></div>
-    <Nav desktop />
+    <div class="rhs"><ThemeToggle /></div>
+    <div class="nav-container">
+        <Nav desktop />
+    </div>
     <div class="breadcrumb-container">
         <BreadCrumbs />
     </div>
@@ -36,6 +42,7 @@ header {
     padding: 1rem;
     display: grid;
     place-items: center;
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: min-content auto;
     @media (orientation: portrait) {
         grid-template-rows: auto;
@@ -50,6 +57,7 @@ header {
     display: grid;
     place-items: center;
     padding: 1rem;
+    place-self: center;
 }
 
 .menu-btn {
@@ -73,8 +81,18 @@ a {
     color: var(--textColor);
 }
 
+.nav-container {
+    grid-column: 1 / -1;
+}
 .breadcrumb-container {
     grid-column: 1 / -1;
     width: 100%;
+}
+
+.rhs {
+    justify-self: right;
+}
+.lhs {
+    justify-self: left;
 }
 </style>
