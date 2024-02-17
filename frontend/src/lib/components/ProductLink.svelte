@@ -31,7 +31,8 @@ $: categoryUrl = (() => {
     if (product.is_giftcard) {
         return 'giftcards/';
     }
-    if (product.categories?.[0]?.handle) {
+    if (product.categories
+        ?.[0]?.handle) {
         const res = recurseParentCategories(product.categories?.[0]);
         return res ? `${res}/` : '';
     }
@@ -51,8 +52,12 @@ $: stock = product.is_giftcard
 <a href="/products/{categoryUrl}view/{product.handle}">
     <div>
         <picture>
-            <source type="image/png" srcset="{product.thumbnail}" />
-            <img src="{product.thumbnail}" alt="{product.title}" />
+            <source
+                type="image/png"
+                srcset="{product.thumbnail?.replaceAll('localhost', $page.url.host.replace(/:\d*$/g, ''))}" />
+            <img
+                src="{product.thumbnail?.replaceAll('localhost', $page.url.host.replace(/:\d*$/g, ''))}"
+                alt="{product.title}" />
         </picture>
         {#if reducedPercent > 0}
             <span class="reduced-percent">-{reducedPercent}%</span>
@@ -66,6 +71,7 @@ $: stock = product.is_giftcard
     </div>
     <div>
         <span class="title">{product.title}</span>
+        <span class="subtitle">{product.subtitle}</span>
         <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price}€</span>
         {#if originalPrice !== price}
             <span class="original price">{originalPrice}€</span>
@@ -78,7 +84,6 @@ a {
     color: var(--textColor);
     text-decoration: none;
     position: relative;
-    overflow: hidden;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto min-content;
@@ -110,6 +115,9 @@ img {
     width: 100%;
     font-size: 1.25em;
     font-weight: bold;
+}
+.subtitle {
+    width: 100%;
 }
 
 .original {

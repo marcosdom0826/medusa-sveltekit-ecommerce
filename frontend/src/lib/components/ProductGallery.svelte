@@ -1,7 +1,6 @@
 <script lang="ts">
 import ProductLink from '$lib/components/ProductLink.svelte';
 import type { PricedProduct } from '../medusa';
-
 export let products: PricedProduct[] = [];
 </script>
 
@@ -13,10 +12,10 @@ export let products: PricedProduct[] = [];
 
 <style lang="postcss">
 div {
-    white-space: pre;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 400px));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 360px));
     gap: 2rem;
     place-content: center;
+    width: 100%;
 }
 </style>
