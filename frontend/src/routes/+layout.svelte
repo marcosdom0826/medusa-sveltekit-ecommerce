@@ -34,7 +34,7 @@ onNavigate((navigation) => {
 :global(body) {
     position: absolute;
     inset: 0;
-    --header-height: 0px;
+    --header-height: 100px;
 }
 
 .wrapper {
