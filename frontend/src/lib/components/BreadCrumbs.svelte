@@ -1,5 +1,6 @@
 <script lang="ts">
 import { page } from '$app/stores';
+import { t } from '$/lib/i18n';
 
 $: crumbs = $page.data.crumbs || [];
 </script>
@@ -9,7 +10,7 @@ $: crumbs = $page.data.crumbs || [];
         {#each crumbs as crumb, idx}
             {#key crumb.href}
                 <li>
-                    <a href="{crumb.href}">{crumb.name}</a>
+                    <a href="{crumb.href}">{$t(`${crumb.name}`)}</a>
                 </li>
                 {#if idx !== crumbs.length - 1}
                     <span>›</span>
