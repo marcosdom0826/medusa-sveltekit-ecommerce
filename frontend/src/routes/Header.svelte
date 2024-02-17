@@ -15,7 +15,9 @@ let drawerOpen = false;
     </a>
     <div><!-- TODO --></div>
     <Nav desktop />
-    <BreadCrumbs />
+    <div class="breadcrumb-container">
+        <BreadCrumbs />
+    </div>
 </header>
 <Drawer bind:open="{drawerOpen}">
     <Nav desktop="{false}" />
@@ -60,5 +62,10 @@ header {
 a {
     text-decoration: none;
     color: var(--textColor);
+}
+
+.breadcrumb-container {
+    grid-column: 1 / -1;
+    width: 100%;
 }
 </style>
