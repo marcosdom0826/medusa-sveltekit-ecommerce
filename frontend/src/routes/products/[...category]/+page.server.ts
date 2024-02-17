@@ -45,7 +45,7 @@ export const load: PageServerLoad = async ({ parent, params, url }) => {
 
     return {
         products: products.products,
-        page: pageOffset + 1,
+        page: (pageOffset / limit) + 1,
         pageCount: Math.ceil(products.count / products.limit)
     };
 
