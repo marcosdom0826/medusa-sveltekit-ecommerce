@@ -42,6 +42,7 @@ header {
 .logo {
     display: grid;
     place-items: center;
+    padding: 1rem;
 }
 
 .menu-btn {
@@ -53,6 +54,7 @@ header {
     border: none;
     background-color: transparent;
     font-size: 1.5rem;
+    padding: 0;
     cursor: pointer;
     margin: 0;
     box-shadow: none;
