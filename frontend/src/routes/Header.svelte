@@ -4,8 +4,15 @@ import Nav from './Nav.svelte';
 import MaterialSymbolsMenu from '~icons/material-symbols/menu';
 import Logo from '$assets/logo.svg?component';
 import BreadCrumbs from '$/lib/components/BreadCrumbs.svelte';
+import { onMount } from 'svelte';
 
 let drawerOpen = false;
+
+onMount(() => {
+    const header = document.querySelector('header');
+    const headerHeight = header?.offsetHeight;
+    document.body.style.setProperty('--header-height', `${headerHeight || 0}px`);
+});
 </script>
 
 <header>
