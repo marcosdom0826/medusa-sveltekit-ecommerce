@@ -1,7 +1,8 @@
 <script lang="ts">
 import { onNavigate } from '$app/navigation';
 import { onMount } from 'svelte';
-import MaterialSymbolsClose from '~icons/material-symbols/close';
+import Logo from '$assets/logo.svg?component';
+import MaterialSymbolsArrowBackRounded from '~icons/material-symbols/arrow-back-rounded';
 
 export let open = false;
 export let side: 'left' | 'right' = 'left';
@@ -30,7 +31,10 @@ onNavigate(() => {
 <div class="drawer {side === 'left' ? 'left' : 'right'} {open && 'open'}">
     <slot name="header">
         <div class="drawer-header">
-            <button on:click="{close}"><MaterialSymbolsClose /></button>
+            <button on:click="{close}"><MaterialSymbolsArrowBackRounded /></button>
+            <div>
+                <Logo />
+            </div>
         </div>
     </slot>
     <slot />
@@ -43,8 +47,12 @@ onNavigate(() => {
     top: 0;
     bottom: 0;
     background-color: var(--cardColor);
-    z-index: 11;
+    z-index: 100;
     transition: transform 0.2s ease-in-out;
+    border-radius: 0 1rem 1rem 0;
+    &.open {
+        transform: translateX(0);
+    }
 }
 .left {
     left: 0;
@@ -59,30 +67,39 @@ onNavigate(() => {
     position: absolute;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 10;
-    display: none;
     margin: 0;
     border: none;
     outline: none;
     border-radius: 0;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.2;
+    &.open {
+        z-index: 90;
+        opacity: 1;
+    }
 }
 
 .open {
-    transform: translateX(0);
     display: block;
 }
 
 .drawer-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem;
     & button {
-        padding: 1rem;
+        padding: 0;
         border: none;
         background-color: transparent;
         font-size: 1.5rem;
         cursor: pointer;
         margin: 0;
         box-shadow: none;
+    }
+    & div {
+        padding: 1rem;
     }
 }
 </style>
