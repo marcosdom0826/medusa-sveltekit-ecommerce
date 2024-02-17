@@ -16,15 +16,22 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     const products = await medusa.products.list({
         currency_code: 'eur',
         include_category_children: true,
-        category_id: [
-            parentData.categoriesByHandle[category].id,
-            ...(
-                parentData.categoriesByHandle[category]
-                    ?.category_children
-                    ?.map((c) => c.id)
-                || []
-            )
-        ]
+        ...(
+            params?.category?.includes('giftcards')
+                ? {
+                    is_giftcard: true
+                } : {
+                    category_id: [
+                        parentData.categoriesByHandle[category].id,
+                        ...(
+                            parentData.categoriesByHandle[category]
+                                ?.category_children
+                                ?.map((c) => c.id)
+                            || []
+                        )
+                    ]
+                }
+        )
     });
 
     return {
