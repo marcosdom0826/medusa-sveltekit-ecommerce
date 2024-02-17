@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "dev:fe": "pnpm run --filter ./frontend dev",
-        "dev:be": "pnpm run --filter ./backend dev",
+        "dev:fe": "pnpm run --dir ./frontend dev",
+        "dev:be": "pnpm run --dir ./backend dev",
         "dev": "concurrently  \"pnpm run dev:fe\" \"pnpm run dev:be\"",
         "build:fe": "pnpm run --filter ./frontend build",
         "build:be": "pnpm run --filter ./backend build",

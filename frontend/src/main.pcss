@@ -77,7 +77,7 @@ html, body {
   transition-property: all;
   transition-duration: var(--transitionDuration);
   transition-timing-function: ease-in-out;
-  transition-delay: 0.01ms; 
+  transition-delay: 0.001ms; 
 }
 
 *[no-js-shown] {
@@ -151,21 +151,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar {
-  width: var(--scrollBarWidth);
-  height: var(--scrollBarWidth);
+@media (orientation: landscape) {
+    ::-webkit-scrollbar {
+      width: var(--scrollBarWidth);
+      height: var(--scrollBarWidth);
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbarBG);
+      border-radius: 100vw;
+      margin-block: 0.5em;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--thumbBG);
+      border-radius: 100vw;
+    }
 }
 
-::-webkit-scrollbar-track {
-  background: var(--scrollbarBG);
-  border-radius: 100vw;
-  margin-block: 0.5em;
-}
 
-::-webkit-scrollbar-thumb {
-  background-color: var(--thumbBG);
-  border-radius: 100vw;
-}
 
 p {
   white-space: pre-line;

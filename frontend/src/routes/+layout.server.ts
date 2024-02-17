@@ -1,12 +1,32 @@
 import type { LayoutServerLoad } from './$types';
-import { medusa } from '$/lib/medusa';
-import { ENABLE_GIFT_CARDS } from '$env/static/private';
+import { medusa, type ProductCategory } from '$/lib/medusa';
+import { ENABLE_GIFT_CARDS, VIRTUAL_ALL_CATEGORY } from '$env/static/private';
+
+const createVirtualCategory = (name: string, handle: string, nav: boolean, rank: number) => ({
+    id: handle,
+    handle,
+    rank,
+    metadata: {
+        nav,
+        virtual: true
+    },
+    name
+});
 
 export const load: LayoutServerLoad = async () => {
-    const productCategories = await medusa.productCategories.list();
+    const productCategories: (Partial<ProductCategory> & Pick<ProductCategory, 'id' | 'handle' | 'name' | 'rank'>)[] = (
+        await medusa.productCategories.list()
+    ).product_categories;
 
-    const headerCategories: Record<string, typeof productCategories.product_categories[0]> = productCategories.product_categories
-        .filter((category) => !!category.metadata.nav)
+    if (ENABLE_GIFT_CARDS) {
+        productCategories.push(createVirtualCategory('Gift Cards', 'giftcards', true, 1000));
+    }
+
+    if (VIRTUAL_ALL_CATEGORY) {
+        productCategories.unshift(createVirtualCategory('All', 'all', false, -1));
+    }
+
+    const categoriesByHandle: Record<string, ProductCategory> = productCategories
         .reduce((acc, category) => ({
             ...acc,
             [category.handle]: {
@@ -14,22 +34,8 @@ export const load: LayoutServerLoad = async () => {
             }
         }), {});
 
-    if (ENABLE_GIFT_CARDS) {
-        Object.assign(headerCategories, {
-            giftcards: {
-                id: 'giftcards',
-                handle: 'giftcards',
-                metadata: {
-                    nav: true,
-                    position: 0
-                },
-                name: 'Gift Cards'
-            }
-        });
-    }
-
     return {
-        productCategories: productCategories.product_categories,
-        headerCategories: headerCategories
+        productCategories: productCategories,
+        categoriesByHandle: categoriesByHandle
     };
 };

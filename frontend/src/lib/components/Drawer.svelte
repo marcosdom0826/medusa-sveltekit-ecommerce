@@ -1,4 +1,5 @@
 <script lang="ts">
+import { onNavigate } from '$app/navigation';
 import { onMount } from 'svelte';
 import MaterialSymbolsClose from '~icons/material-symbols/close';
 
@@ -19,6 +20,10 @@ onMount(() => {
     return () => {
         window.removeEventListener('keydown', handleKeydown);
     };
+});
+
+onNavigate(() => {
+    close();
 });
 </script>
 
