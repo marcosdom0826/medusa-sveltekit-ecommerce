@@ -2,7 +2,7 @@ import { medusa } from '$/lib/medusa';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ parent, params }) => {
+export const load: PageServerLoad = async ({ parent, params, url }) => {
 
     const parentData = await parent();
     const categories = params.category.split('/').filter((c) => c.length > 0);
@@ -13,7 +13,15 @@ export const load: PageServerLoad = async ({ parent, params }) => {
         error(404, 'Not found');
     }
 
+
+    const limit = 100;
+    const pageOffset = url.searchParams.get('page')
+        ? (parseInt(url.searchParams.get('page') || '1') - 1) * limit
+        : 0;
+
     const products = await medusa.products.list({
+        limit,
+        offset: pageOffset,
         currency_code: 'eur',
         include_category_children: true,
         ...(
@@ -35,7 +43,9 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     });
 
     return {
-        products: products.products
+        products: products.products,
+        page: pageOffset + 1,
+        pageCount: Math.ceil(products.count / products.limit)
     };
 
 };
