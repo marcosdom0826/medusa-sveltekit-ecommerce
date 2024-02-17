@@ -1,6 +1,7 @@
 import { medusa } from '$/lib/medusa';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { safeParseInt } from '$/lib/util';
 
 export const load: PageServerLoad = async ({ parent, params, url }) => {
 
@@ -16,7 +17,7 @@ export const load: PageServerLoad = async ({ parent, params, url }) => {
 
     const limit = 100;
     const pageOffset = url.searchParams.get('page')
-        ? (parseInt(url.searchParams.get('page') || '1') - 1) * limit
+        ? (safeParseInt(url.searchParams.get('page') || '1', 1) - 1) * limit
         : 0;
 
     const products = await medusa.products.list({

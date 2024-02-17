@@ -1,11 +1,12 @@
 import { medusa } from '$/lib/medusa';
+import { safeParseInt } from '$/lib/util';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url }) => {
 
     const limit = 100;
     const pageOffset = url.searchParams.get('page')
-        ? (parseInt(url.searchParams.get('page') || '1') - 1) * limit
+        ? (safeParseInt(url.searchParams.get('page') || '1', 1) - 1) * limit
         : 0;
     const products = await medusa.products.list({
         currency_code: 'eur',
