@@ -17,10 +17,6 @@ const categories: Record<string, ProductCategory> = $page.data.categoriesByHandl
         {/each}
         <li>
             <a href="/about">About</a>
-            <ul>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/contact">Kontakt</a></li>
-            </ul>
         </li>
     </ul>
 </nav>
@@ -28,10 +24,51 @@ const categories: Record<string, ProductCategory> = $page.data.categoriesByHandl
 <style lang="postcss">
 a {
     white-space: nowrap;
-    padding: 0.5em;
+    text-decoration: none;
+    padding: 1em;
     color: var(--textColor);
-    &:hover {
-        opacity: 0.5;
+
+    position: relative;
+}
+
+nav li {
+    position: relative;
+    display: block;
+}
+
+nav li {
+    &::after {
+        content: '';
+        height: 3px;
+        width: 100%;
+        bottom: 0em;
+        left: 0;
+        position: absolute;
+        background: var(--textColor);
+        scale: 0 1;
+        transition:
+            scale 200ms var(--scaleDelay, 0ms) ease,
+            translate 400ms var(--translateDelay, 0ms) ease;
+    }
+    &:hover,
+    &:focus-within {
+        &::after {
+            scale: 1 1;
+        }
+    }
+}
+
+@supports selector(:has(h1)) {
+    nav li:hover + li::after {
+        translate: -100%;
+        --scaleDelay: 200ms;
+        --translateDelay: 150ms;
+    }
+
+    nav li:hover:has(+ :hover)::after {
+        translate: 100%;
+        --scaleDelay: 200ms;
+        --translateDelay: 150ms;
     }
 }
 
@@ -44,13 +81,21 @@ a {
 .mobile-nav > ul {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     list-style: none;
+    gap: 1em;
     padding: 0;
     font-weight: bold;
+    width: fit-content;
     & > li > ul {
         display: grid;
         position: relative;
+        grid-template-columns: 1fr;
+    }
+    & a {
+    }
+    & li {
+        overflow: hidden;
+        width: fit-content;
     }
 }
 
@@ -59,31 +104,8 @@ nav {
 }
 nav > ul {
     display: flex;
-    gap: 1rem;
     list-style: none;
     padding: 0;
     font-weight: bold;
-}
-
-nav > ul > li {
-    position: relative;
-}
-
-li > ul {
-    display: none;
-    position: absolute;
-    background-color: var(--cardColor);
-    padding: 1rem;
-    gap: 1rem;
-    top: 100%;
-    left: 0;
-    z-index: 1;
-    list-style: none;
-}
-
-li:has(:hover, :focus-visible) {
-    & > ul {
-        display: grid;
-    }
 }
 </style>
