@@ -6,6 +6,7 @@ import type { PageData } from './$types';
 import background from '$assets/background.svg';
 
 export let data: PageData;
+$: products = data.products;
 </script>
 
 <div class="center">
@@ -17,7 +18,7 @@ export let data: PageData;
     </div>
     <div class="fresh-products">
         <h2>Fresh</h2>
-        <ProductBar products="{data.products}" scrollable />
+        <ProductBar products="{products}" scrollable />
     </div>
 </div>
 
