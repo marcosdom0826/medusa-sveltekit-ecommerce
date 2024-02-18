@@ -33,7 +33,10 @@ $: categoryUrl = (() => {
     }
     if (product.categories
         ?.[0]?.handle) {
-        const res = recurseParentCategories(product.categories?.[0]);
+        const res = recurseParentCategories(product.categories
+            ?.sort((a, b) => a.rank - b.rank)
+            ?.[0]
+        );
         return res ? `${res}/` : '';
     }
     return '';
