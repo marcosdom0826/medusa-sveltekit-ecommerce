@@ -5,7 +5,7 @@ export let products: PricedProduct[] = [];
 </script>
 
 <div>
-    {#each products as product}
+    {#each products as product (product.id)}
         <ProductLink product="{product}" />
     {/each}
 </div>
