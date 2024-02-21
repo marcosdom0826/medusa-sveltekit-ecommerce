@@ -73,7 +73,7 @@ onNavigate(() => {
     border-radius: 0;
     opacity: 0;
     z-index: -1;
-    transition: opacity 0.2;
+    transition: opacity var(--transitionDuration) ease;
     &.open {
         z-index: 90;
         opacity: 1;
