@@ -55,7 +55,7 @@ onMount(() => {
     --toggle-height: 2em;
     --toggle-width: 3.5em;
     --indicator-padding: 0.7em;
-    width: var(--toggle-width);
+    width: auto;
     height: var(--toggle-height);
     position: absolute;
     top: 0;
