@@ -42,6 +42,7 @@ nav li {
         height: 3px;
         width: 100%;
         bottom: 0em;
+        transform: translateY(0.25em);
         left: 0;
         position: absolute;
         background: var(--textColor);
@@ -59,16 +60,21 @@ nav li {
 }
 
 @supports selector(:has(h1)) {
-    nav li:hover + li::after {
-        translate: -100%;
-        --scaleDelay: 200ms;
-        --translateDelay: 150ms;
-    }
-
-    nav li:hover:has(+ :hover)::after {
-        translate: 100%;
-        --scaleDelay: 200ms;
-        --translateDelay: 150ms;
+    nav li {
+        &:hover {
+            & + li::after {
+                translate: -100%;
+                --scaleDelay: 200ms;
+                --translateDelay: 200ms;
+            }
+        }
+        &:has(+ :hover) {
+            &::after {
+                translate: 100%;
+                --scaleDelay: 200ms;
+                --translateDelay: 200ms;
+            }
+        }
     }
 }
 
