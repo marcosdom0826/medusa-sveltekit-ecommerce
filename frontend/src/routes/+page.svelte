@@ -9,10 +9,10 @@ export let data: PageData;
 </script>
 
 <div class="center">
-    <div class="landing">
+    <div class="hero">
         <div>
             <h1>Placeholder</h1>
-            <p>Landing content here</p>
+            <p>Hero content here</p>
         </div>
     </div>
     <div class="fresh-products">
@@ -42,11 +42,15 @@ export let data: PageData;
     gap: 2rem;
 }
 
-.landing {
+.hero {
     background: url('$assets/background.svg');
-    background-size: cover; /* <------ */
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
+    background-attachment: fixed;
+    @media (prefers-motion-reduce: reduce) {
+        background-attachment: scroll;
+    }
 
     background-blend-mode: multiply;
 
