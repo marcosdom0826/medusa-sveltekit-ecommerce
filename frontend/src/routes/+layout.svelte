@@ -4,6 +4,7 @@ import Footer from './Footer.svelte';
 import '../main.pcss';
 import { onNavigate } from '$app/navigation';
 
+let contentWrapper: HTMLDivElement;
 onNavigate((navigation) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(document as any).startViewTransition) return;
@@ -20,7 +21,7 @@ onNavigate((navigation) => {
 
 <svelte:head></svelte:head>
 
-<div class="wrapper">
+<div class="wrapper" bind:this="{contentWrapper}" style="display: contents">
     <Header />
 
     <main>
