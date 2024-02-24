@@ -10,16 +10,16 @@ $: products = data.products;
 </script>
 
 <div class="center">
-    <div class="hero">
+    <section class="hero">
         <div>
             <h1>Placeholder</h1>
             <p>Hero content here</p>
         </div>
-    </div>
-    <div class="fresh-products">
+    </section>
+    <section class="fresh-products">
         <h2>Fresh</h2>
         <ProductBar products="{products}" scrollable />
-    </div>
+    </section>
 </div>
 
 <style lang="postcss">
