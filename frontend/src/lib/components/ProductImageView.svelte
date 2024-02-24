@@ -439,7 +439,7 @@ img {
     height: 3em;
     aspect-ratio: 1 / 1;
     transform: translateY(-50%);
-    background: var(--inverseTextColor);
+    background: black;
     border: none;
     border-radius: 50%;
     padding: 0.25em;
@@ -450,12 +450,13 @@ img {
     box-shadow: none;
 
     & > :global(svg) {
+        color: white;
         width: 100%;
         height: 100%;
     }
 
     &.visible {
-        opacity: 0.2;
+        opacity: 0.3;
         @media screen and (orientation: landscape) {
             display: block;
         }
