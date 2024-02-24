@@ -125,7 +125,7 @@ onMount(() => {
     <div class="thumbnail-wrapper">
         <div class="thumbnails" bind:this="{thumbnails}">
             {#each product.images ?? [] as image, idx (image.id)}
-                <button on:click="{() => scrollToImage(idx)}">
+                <button on:click="{() => scrollToImage(idx)}" class:selected="{idx === currentImage}">
                     <picture>
                         <source srcset="{image.url}" />
                         <img src="{image.url}" alt="{product.title}" loading="lazy" />
@@ -290,12 +290,25 @@ button {
         transition: border var(--transitionDuration) ease;
         border: 1px solid transparent;
         overflow: overlay;
+        position: relative;
+        background: var(--cardColor);
         &:hover,
         &:focus-within,
         &:focus,
         &:active {
             box-shadow: none;
             border: 1px solid color-mix(in srgb, var(--textColor), transparent 50%);
+            & img {
+                opacity: 0.9;
+            }
+        }
+        overflow: hidden;
+        & img {
+            opacity: 0.6;
+            transition: opacity var(--transitionDuration) ease;
+        }
+        &.selected img {
+            opacity: 1;
         }
     }
 }
