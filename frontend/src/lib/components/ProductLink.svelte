@@ -53,11 +53,9 @@ $: stock = product.is_giftcard
 /* eslint-enable prettier/prettier */
 </script>
 
-<a
-    href="/products/{categoryUrl}view/{product.handle}"
-    style="view-transition-name: product-{product.id}-link;">
+<a href="/products/{categoryUrl}view/{product.handle}" style="view-transition-name: product-{product.id};">
     <div>
-        <picture style="view-transition-name: product-{product.id}-0;">
+        <picture>
             <source
                 srcset="{product.thumbnail?.replaceAll('localhost', $page.url.host.replace(/:\d*$/g, ''))}" />
             <img
