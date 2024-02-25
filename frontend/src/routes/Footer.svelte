@@ -1,5 +1,12 @@
 <script lang="ts">
 import Logo from '$assets/logo.svg?component';
+import { onMount } from 'svelte';
+
+onMount(() => {
+    const footer = document.querySelector('footer');
+    const footerHeight = footer?.offsetHeight;
+    document.body.style.setProperty('--footer-height', `${footerHeight || 0}px`);
+});
 </script>
 
 <footer>

@@ -43,7 +43,7 @@ onNavigate(() => {
 
 <style lang="postcss">
 .drawer {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     background-color: var(--cardColor);
@@ -64,7 +64,7 @@ onNavigate(() => {
 }
 
 .scrim {
-    position: absolute;
+    position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
     margin: 0;

@@ -4,7 +4,6 @@ import Footer from './Footer.svelte';
 import '../main.pcss';
 import { onNavigate } from '$app/navigation';
 
-let contentWrapper: HTMLDivElement;
 onNavigate((navigation) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(document as any).startViewTransition) return;
@@ -21,15 +20,13 @@ onNavigate((navigation) => {
 
 <svelte:head></svelte:head>
 
-<div class="wrapper" bind:this="{contentWrapper}" style="display: contents">
-    <Header />
+<Header />
 
-    <main>
-        <slot />
-    </main>
+<main>
+    <slot />
+</main>
 
-    <Footer />
-</div>
+<Footer />
 
 <style lang="postcss">
 :global(body) {
@@ -38,14 +35,10 @@ onNavigate((navigation) => {
     --header-height: 100px;
 }
 
-.wrapper {
-    display: grid;
-    grid-template-rows: min-content auto min-content;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
+main {
+    min-height: calc(100% - var(--header-height, 0px) - var(--footer-height, 0px));
 }
 
-main {
+:global(footer) {
 }
 </style>
