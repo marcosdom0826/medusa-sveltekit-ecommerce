@@ -4,6 +4,8 @@ import { medusa, type ProductOptionValue } from '$/lib/medusa';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
+const HOME_CATEGORY = 'fresh';
+
 export const load: PageServerLoad = async ({ parent, params }) => {
     const parentData = await parent();
 
@@ -29,9 +31,20 @@ export const load: PageServerLoad = async ({ parent, params }) => {
             return acc;
         }, {});
 
+
+        const relatedProducts  = await medusa.products.list({
+            currency_code: 'eur',
+            include_category_children: true,
+            limit: 10,
+            offset: 0,
+            category_id: [parentData.categoriesByHandle[HOME_CATEGORY].id]
+        });
+
+
         return {
             product: product,
             productOptions: productOptions,
+            relatedProducts: relatedProducts.products,
             crumbs: [
                 ...parentData.crumbs,
                 {

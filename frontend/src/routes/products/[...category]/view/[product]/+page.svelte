@@ -1,8 +1,10 @@
 <script lang="ts">
 /* eslint-disable prettier/prettier */
+import { t } from '$/lib/i18n';
 import type { PageData } from './$types';
 import ProductImageView from '$/lib/components/ProductImageView.svelte';
 import type { ProductOptionValue, ProductVariant } from '$/lib/medusa';
+    import ProductBar from '$/lib/components/ProductBar.svelte';
 
 export let data: PageData;
 
@@ -49,6 +51,11 @@ const isOrderAllowed = (variant: ProductVariant | undefined, nonVariant?: boolea
 const outOfStockOptions = findOutOfStockOptions();
 const selectedOptions: Record<string, ProductOptionValue[]> = {};
 
+$: selectedVariant = variantForOptions(selectedOptions) || data.product.variants[0];
+
+$: price = (selectedVariant?.calculated_price ?? 0) / 100;
+$: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
+
 </script>
 
 <div class="wrapper">
@@ -63,38 +70,54 @@ const selectedOptions: Record<string, ProductOptionValue[]> = {};
                 <h3>{data.product.subtitle}</h3>
                 <p>{data.product.description}</p>
             </div>
-            <div class="option-select">
-                {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
-                    <div>
-                        <h3>{optionCategory}</h3>
-                        <fieldset>
-                            {#each Object.entries(optionGroup) as [optionName, optionValues] (optionName)}
-                                <label>
-                                    <input
-                                        disabled={
-                                            outOfStockOptions[optionCategory][optionName] ||
-                                            !isOrderAllowed(variantForOptions({ ...selectedOptions, [optionCategory]: optionValues }), true)
-                                        }
-                                        type="radio"
-                                        name="{optionName}"
-                                        value="{optionValues}"
-                                        bind:group="{selectedOptions[optionCategory]}" />
-                                    <span>{optionName}</span>
-                                </label>
-                            {/each}
-                        </fieldset>
-                    </div>
-                {/each}
+            <div class="pricing">
+                {#if originalPrice !== price}
+                <span class="original price">{originalPrice} €</span>
+                {/if}
+                <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price} €</span>
+                <!-- {#if originalPrice !== price}
+                <span class="reduced">-{Math.round(((originalPrice - price) / originalPrice) * 100)}%</span>
+                {/if} -->
             </div>
-            <div class="checkout">
-                <h3>Checkout</h3>
-                <p>Checkout area here</p>
-            </div>
+            <form>
+                <div class="option-select">
+                    {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
+                        <div>
+                            <h3>{optionCategory}</h3>
+                            <fieldset>
+                                {#each Object.entries(optionGroup) as [optionName, optionValues] (optionName)}
+                                    <label>
+                                        <input
+                                            disabled={
+                                                outOfStockOptions[optionCategory][optionName] ||
+                                                !isOrderAllowed(
+                                                    variantForOptions({ ...selectedOptions, [optionCategory]: optionValues }),
+                                                    true
+                                                )
+                                            }
+                                            type="radio"
+                                            name="{optionName}"
+                                            value="{optionValues}"
+                                            bind:group="{selectedOptions[optionCategory]}" />
+                                        <span>{optionName}</span>
+                                    </label>
+                                {/each}
+                            </fieldset>
+                        </div>
+                    {/each}
+                </div>
+                <div class="low-stock" class:expanded={(selectedVariant.inventory_quantity || 999) < 10}>
+                    <span>{$t('low_stock')}</span>
+                </div>
+                <div class="checkout">
+                    <button>Add to Cart</button>
+                </div>
+            </form>
         </div>
     </section>
-    <section class="dummy">
-        <h1>Placeholder</h1>
-        <p>Landing content here</p>
+    <section class="related">
+        <h2>You might also like</h2>
+        <ProductBar products="{data.relatedProducts.filter((p) => p.id !== data.product.id)}" scrollable />
     </section>
 </div>
 
@@ -105,13 +128,12 @@ const selectedOptions: Record<string, ProductOptionValue[]> = {};
     height: 100%;
 }
 
-.dummy {
+.related {
     grid-column: 1 / -1;
     display: grid;
-    place-content: center;
-    height: 600px;
-    background: firebrick;
-    width: 100%;
+    place-items: center;
+    gap: 2rem;
+    padding: 2rem;
 }
 
 .product-content {
@@ -139,6 +161,11 @@ const selectedOptions: Record<string, ProductOptionValue[]> = {};
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
 }
 
 .images-wrapper {
@@ -164,10 +191,42 @@ const selectedOptions: Record<string, ProductOptionValue[]> = {};
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
     & > div {
-        display: flex;
+        display: grid;
         flex-direction: column;
-        gap: 1rem;
+        gap: 1em;
+    }
+}
+
+.low-stock {
+    opacity: 0.8;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--transitionDuration);
+    &.expanded {
+        grid-template-rows: 1fr;
+    }
+    & > * {
+        overflow: hidden;
+    }
+}
+
+.pricing {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    & > .reduced {
+        color: rgb(207, 0, 0);;
+    }
+}
+.price {
+    font-size: 1.8em;
+    font-weight: bold;
+    &.original {
+        text-decoration: line-through;
+        font-weight: normal;
     }
 }
 
