@@ -3,6 +3,7 @@
 import { t } from '$/lib/i18n';
 import type { PricedProduct, ProductCategory } from '$lib/medusa';
 import { page } from '$app/stores';
+
 export let product: PricedProduct;
 
 const categories: Record<string, ProductCategory> = $page.data.categoriesByHandle || {};
@@ -52,11 +53,12 @@ $: stock = product.is_giftcard
 /* eslint-enable prettier/prettier */
 </script>
 
-<a href="/products/{categoryUrl}view/{product.handle}">
+<a
+    href="/products/{categoryUrl}view/{product.handle}"
+    style="view-transition-name: product-{product.id}-link;">
     <div>
-        <picture>
+        <picture style="view-transition-name: product-{product.id}-0;">
             <source
-                type="image/png"
                 srcset="{product.thumbnail?.replaceAll('localhost', $page.url.host.replace(/:\d*$/g, ''))}" />
             <img
                 src="{product.thumbnail?.replaceAll('localhost', $page.url.host.replace(/:\d*$/g, ''))}"
@@ -128,11 +130,11 @@ img {
 }
 
 .reduced {
-    color: #ff0015;
+    color: rgb(207, 0, 0);
 }
 
 .price {
-    font-size: 1.05em;
+    font-size: 1.2em;
     font-weight: bold;
 }
 
@@ -140,7 +142,7 @@ img {
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: #ff0015;
+    background-color: rgb(207, 0, 0);
     color: white;
     padding: 0.5em 1em !important;
     border-radius: 0 0.75em 0 0.75em;

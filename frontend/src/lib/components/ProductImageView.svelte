@@ -128,7 +128,10 @@ onMount(() => {
                 <button on:click="{() => scrollToImage(idx)}" class:selected="{idx === currentImage}">
                     <picture>
                         <source srcset="{image.url}" />
-                        <img src="{image.url}" alt="{product.title}" loading="lazy" />
+                        <img
+                            src="{image.url}"
+                            alt="{product.title}"
+                            loading="{idx === 0 ? 'eager' : 'lazy'}" />
                     </picture>
                 </button>
             {/each}
@@ -198,7 +201,8 @@ onMount(() => {
                             class="{zoomed && currentImage === idx ? 'zoomed' : ''} {hasZoomTransitions
                                 ? 'zoom-transitions'
                                 : ''}"
-                            style="--translate: {imgTranslate}; --scale: {zoomFactor};">
+                            style="--translate: {imgTranslate}; --scale: {zoomFactor};
+                            view-transition-name: product-{product.id}-{idx};">
                             <source srcset="{image.url}" />
                             <img src="{image.url}" alt="{product.title} {idx + 1}" loading="lazy" />
                         </picture>
