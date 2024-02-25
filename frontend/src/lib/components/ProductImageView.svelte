@@ -185,6 +185,7 @@ onMount(() => {
                         {zoomed && currentImage === idx ? 'zoomed' : ''}
                         {currentImage === idx ? 'current-image' : ''}
                         {isDragging ? 'dragging' : ''}"
+                        style="{idx === 0 ? `view-transition-name: product-${product.id};` : ''}"
                         on:click="{(e) => {
                             if (isDragging) {
                                 return;
@@ -202,7 +203,7 @@ onMount(() => {
                                 ? 'zoom-transitions'
                                 : ''}"
                             style="--translate: {imgTranslate}; --scale: {zoomFactor};
-                            view-transition-name: product-{product.id}-{idx};">
+">
                             <source srcset="{image.url}" />
                             <img src="{image.url}" alt="{product.title} {idx + 1}" loading="lazy" />
                         </picture>
