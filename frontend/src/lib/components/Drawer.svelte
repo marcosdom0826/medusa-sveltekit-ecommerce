@@ -96,8 +96,8 @@ onNavigate(() => {
 }
 
 .drawer-header {
-    display: flex;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: auto auto;
     align-items: center;
     padding: 1rem;
     & button {
