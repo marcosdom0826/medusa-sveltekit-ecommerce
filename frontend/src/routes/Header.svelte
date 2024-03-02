@@ -2,12 +2,15 @@
 import Drawer from '$components/Drawer.svelte';
 import Nav from './Nav.svelte';
 import MaterialSymbolsMenu from '~icons/material-symbols/menu';
+import MdiCartOutline from '~icons/mdi/cart-outline';
 import Logo from '$assets/logo.svg?component';
 import BreadCrumbs from '$/lib/components/BreadCrumbs.svelte';
 import { onMount } from 'svelte';
 import ThemeToggle from '$/lib/components/ThemeToggle.svelte';
+import Cart from '$/lib/components/Cart.svelte';
+import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
 
-let drawerOpen = false;
+let navDrawerOpen = false;
 
 onMount(() => {
     const header = document.querySelector('header');
@@ -18,13 +21,17 @@ onMount(() => {
 
 <header>
     <div class="lhs">
-        <button class="menu-btn" on:click="{() => (drawerOpen = true)}"><MaterialSymbolsMenu /></button>
+        <button class="menu-btn landscape-none" on:click="{() => (navDrawerOpen = true)}"
+            ><MaterialSymbolsMenu /></button>
         <!-- TODO -->
     </div>
     <a class="logo" href="/">
         <Logo />
     </a>
-    <div class="rhs"><ThemeToggle /></div>
+    <div class="rhs">
+        <button class="menu-btn" on:click="{() => ($cartDrawerOpen = true)}"><MdiCartOutline /></button
+        ><ThemeToggle />
+    </div>
     <div class="nav-container">
         <Nav desktop />
     </div>
@@ -33,9 +40,11 @@ onMount(() => {
     </div>
 </header>
 
-<Drawer bind:open="{drawerOpen}">
+<Drawer bind:open="{navDrawerOpen}">
     <Nav desktop="{false}" />
 </Drawer>
+
+<Drawer bind:open="{$cartDrawerOpen}" side="right"><Cart /></Drawer>
 
 <style lang="postcss">
 header {
@@ -61,11 +70,14 @@ header {
     place-self: center;
 }
 
-.menu-btn {
+.landscape-none {
     display: none;
     @media (orientation: portrait) {
         display: unset;
     }
+}
+
+.menu-btn {
     padding: 1rem;
     border: none;
     background-color: transparent;
@@ -75,6 +87,10 @@ header {
     margin: 0;
     box-shadow: none;
     justify-self: start;
+    &:hover,
+    &:focus-visible {
+        opacity: 0.75;
+    }
 }
 
 a {
@@ -92,6 +108,10 @@ a {
 
 .rhs {
     justify-self: right;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
 }
 .lhs {
     justify-self: left;

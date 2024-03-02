@@ -5,8 +5,14 @@ import type { PageData } from './$types';
 import ProductImageView from '$/lib/components/ProductImageView.svelte';
 import type { ProductOptionValue, ProductVariant } from '$/lib/medusa';
     import ProductBar from '$/lib/components/ProductBar.svelte';
+    import { enhance } from '$app/forms';
+    import { fade } from 'svelte/transition';
+    import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
+    import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
 
 export let data: PageData;
+
+let loading = false;
 
 const findOutOfStockOptions = (): Record<string, Record<string, boolean>> => data.product.variants.reduce(
     (variantAcc, variant) => variant.options?.reduce(
@@ -67,7 +73,7 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
             <ProductImageView product="{data.product}" />
         </div>
 
-        <div class="checkout-area">
+        <div class="cart-area">
             <div class="product-info">
                 <h2>{data.product.title}</h2>
                 <h3>{data.product.subtitle || ''}</h3>
@@ -76,13 +82,20 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
             <div class="pricing">
                 <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price} €</span>
                 {#if originalPrice !== price}
-                <span class="original price">{originalPrice} €</span>
+                <span class="original price" transition:fade>{originalPrice} €</span>
                 {/if}
                 <!-- {#if originalPrice !== price}
                 <span class="reduced">-{Math.round(((originalPrice - price) / originalPrice) * 100)}%</span>
                 {/if} -->
             </div>
-            <form method="POST">
+            <form method="POST" use:enhance={() => {
+                loading = true;
+                return async ({ update }) => {
+                    await update();
+                    loading = false;
+                    $cartDrawerOpen = true;
+                };
+            }}>
                 <div class="option-select">
                     {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
                         <div>
@@ -99,8 +112,8 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
                                                 )
                                             }
                                             type="radio"
-                                            name="{optionName}"
-                                            value="{optionValues}"
+                                            name="variant"
+                                            value="{JSON.stringify(optionValues)}"
                                             bind:group="{selectedOptions[optionCategory]}" />
                                         <span>{optionName}</span>
                                     </label>
@@ -112,12 +125,17 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
                 <div class="low-stock" class:expanded={(selectedVariant.inventory_quantity || 999) < 10}>
                     <span>{$t('low_stock')}</span>
                 </div>
-                <div class="checkout">
-                    <button disabled="{!selectionValid}">{
-                        selectionValid
-                            ? 'Add to cart'
-                            : 'Please select size'
-                        }</button>
+                <div class="add-to-cart">
+                    <button disabled="{!selectionValid || loading}" class:loading={loading}>
+                    {#if loading}
+                        <span transition:fade class="loading"><LoadingSpinner size="1.3em" ringWidth="0.25em" /></span>
+                    {:else}
+                        <span transition:fade>{
+                            selectionValid
+                                ? 'Add to cart'
+                                : 'Please select size'
+                        }</span>
+                    {/if}</button>
                 </div>
             </form>
         </div>
@@ -163,7 +181,7 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
     gap: 1rem;
 }
 
-.checkout-area {
+.cart-area {
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -324,9 +342,10 @@ fieldset {
     }
 }
 
-.checkout {
+.add-to-cart {
     & button {
         width: 100%;
+        min-height: 3em;
         display: grid;
         place-items: center;
         margin: 0;
@@ -336,6 +355,12 @@ fieldset {
         position: relative;
         border: none;
         outline: none;
+        position: relative;
+
+        & > * {
+            grid-column: 1 / -1;
+            grid-row: 1 / -1;
+        }
 
         &:disabled {
             opacity: 0.5;
@@ -365,6 +390,7 @@ fieldset {
             }
         }
     }
+
 }
 
 </style>
