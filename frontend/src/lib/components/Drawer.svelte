@@ -28,13 +28,19 @@ onNavigate(() => {
 });
 </script>
 
-<div class="drawer {side === 'left' ? 'left' : 'right'} {open && 'open'}">
+<div class="drawer {side === 'left' || side === undefined ? 'left' : 'right'} {open && 'open'}">
     <slot name="header">
         <div class="drawer-header">
-            <button on:click="{close}"><MaterialSymbolsArrowBackRounded /></button>
+            {#if side === 'left'}
+                <button on:click="{close}"><MaterialSymbolsArrowBackRounded /></button>
+            {/if}
             <div>
                 <Logo />
             </div>
+            {#if side === 'right'}
+                <button on:click="{close}" style="transform: rotate(180deg);"
+                    ><MaterialSymbolsArrowBackRounded /></button>
+            {/if}
         </div>
     </slot>
     <slot />
@@ -49,7 +55,12 @@ onNavigate(() => {
     background-color: var(--cardColor);
     z-index: 100;
     transition: transform 0.2s ease-in-out;
-    border-radius: 0 1rem 1rem 0;
+    &.left {
+        border-radius: 0 1rem 1rem 0;
+    }
+    &.right {
+        border-radius: 1rem 0 0 1rem;
+    }
     &.open {
         transform: translateX(0);
     }
