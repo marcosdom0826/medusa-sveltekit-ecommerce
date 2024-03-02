@@ -74,7 +74,7 @@ $: stock = product.is_giftcard
     </div>
     <div>
         <span class="title">{product.title}</span>
-        <span class="subtitle">{product.subtitle}</span>
+        <span class="subtitle">{product.subtitle || ' '}</span>
         <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price}€</span>
         {#if originalPrice !== price}
             <span class="original price">{originalPrice}€</span>
@@ -121,6 +121,7 @@ img {
 }
 .subtitle {
     width: 100%;
+    height: 1.5em;
 }
 
 .original {
