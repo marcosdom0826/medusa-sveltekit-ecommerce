@@ -398,8 +398,8 @@ img {
 }
 
 .image-indicator {
-    --gap-padding: 0.5em;
-    --size: 0.65em;
+    --gap-padding: 0.4em;
+    --size: 0.55em;
     display: flex;
     justify-content: center;
     position: absolute;
