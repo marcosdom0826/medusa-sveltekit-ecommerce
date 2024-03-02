@@ -10,3 +10,4 @@ export type PricedProduct = Awaited<ReturnType<typeof medusa.products.list>>['pr
 export type ProductOption = Required<PricedProduct>['options'][number];
 export type ProductOptionValue = Required<ProductOption>['values'][number];
 export type ProductVariant = Required<PricedProduct>['variants'][number];
+export type CartItem = Required<Awaited<ReturnType<typeof medusa.carts.retrieve>>>['cart']['items'][0];

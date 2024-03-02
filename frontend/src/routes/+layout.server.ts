@@ -13,7 +13,7 @@ const createVirtualCategory = (name: string, handle: string, nav: boolean, rank:
     name
 });
 
-export const load: LayoutServerLoad = async () => {
+export const load: LayoutServerLoad = async ({ cookies }) => {
     const productCategories: (Partial<ProductCategory> & Pick<ProductCategory, 'id' | 'handle' | 'name' | 'rank'>)[] = (
         await medusa.productCategories.list()
     ).product_categories;
@@ -26,6 +26,16 @@ export const load: LayoutServerLoad = async () => {
         productCategories.unshift(createVirtualCategory('All', 'all', false, -1));
     }
 
+    const cartId = cookies.get('cart_id');
+    let cart;
+    if (cartId) {
+        try {
+            cart = await medusa.carts.retrieve(cartId);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     const categoriesByHandle: Record<string, ProductCategory> = productCategories
         .reduce((acc, category) => ({
             ...acc,
@@ -36,6 +46,7 @@ export const load: LayoutServerLoad = async () => {
 
     return {
         productCategories: productCategories,
-        categoriesByHandle: categoriesByHandle
+        categoriesByHandle: categoriesByHandle,
+        cart: cart?.cart
     };
 };
