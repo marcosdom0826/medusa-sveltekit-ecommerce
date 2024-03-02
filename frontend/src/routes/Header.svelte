@@ -9,6 +9,9 @@ import { onMount } from 'svelte';
 import ThemeToggle from '$/lib/components/ThemeToggle.svelte';
 import Cart from '$/lib/components/Cart.svelte';
 import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
+import { page } from '$app/stores';
+import CartItem from '$/lib/components/CartItem.svelte';
+import { fade } from 'svelte/transition';
 
 let navDrawerOpen = false;
 
@@ -17,6 +20,8 @@ onMount(() => {
     const headerHeight = header?.offsetHeight;
     document.body.style.setProperty('--header-height', `${headerHeight || 0}px`);
 });
+
+$: cartCount = $page.data.cart?.items?.reduce((acc: number, item: CartItem) => acc + item.quantity, 0) || 0;
 </script>
 
 <header>
@@ -29,8 +34,13 @@ onMount(() => {
         <Logo />
     </a>
     <div class="rhs">
-        <button class="menu-btn" on:click="{() => ($cartDrawerOpen = true)}"><MdiCartOutline /></button
-        ><ThemeToggle />
+        <button class="menu-btn" on:click="{() => ($cartDrawerOpen = true)}">
+            <MdiCartOutline />
+            {#if cartCount > 0}
+                <div class="badge" transition:fade>{cartCount}</div>
+            {/if}
+        </button>
+        <ThemeToggle />
     </div>
     <div class="nav-container">
         <Nav desktop />
@@ -87,6 +97,7 @@ header {
     margin: 0;
     box-shadow: none;
     justify-self: start;
+    position: relative;
     &:hover,
     &:focus-visible {
         opacity: 0.75;
@@ -115,5 +126,18 @@ a {
 }
 .lhs {
     justify-self: left;
+}
+
+.badge {
+    position: absolute;
+    font-size: 0.5em;
+    background-color: red;
+    color: white;
+    border-radius: 100vw;
+    padding: 0.4em;
+    font-weight: bold;
+    top: 0;
+    right: 0;
+    translate: 25% -25%;
 }
 </style>
