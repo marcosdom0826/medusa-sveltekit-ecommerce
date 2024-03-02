@@ -56,6 +56,9 @@ $: selectedVariant = variantForOptions(selectedOptions) || data.product.variants
 $: price = (selectedVariant?.calculated_price ?? 0) / 100;
 $: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
 
+$: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.productOptions).length
+    && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder);
+
 </script>
 
 <div class="wrapper">
@@ -67,19 +70,19 @@ $: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
         <div class="checkout-area">
             <div class="product-info">
                 <h2>{data.product.title}</h2>
-                <h3>{data.product.subtitle}</h3>
-                <p>{data.product.description}</p>
+                <h3>{data.product.subtitle || ''}</h3>
+                <p>{data.product.description || ''}</p>
             </div>
             <div class="pricing">
+                <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price} €</span>
                 {#if originalPrice !== price}
                 <span class="original price">{originalPrice} €</span>
                 {/if}
-                <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price} €</span>
                 <!-- {#if originalPrice !== price}
                 <span class="reduced">-{Math.round(((originalPrice - price) / originalPrice) * 100)}%</span>
                 {/if} -->
             </div>
-            <form>
+            <form method="POST">
                 <div class="option-select">
                     {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
                         <div>
@@ -89,7 +92,7 @@ $: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
                                     <label>
                                         <input
                                             disabled={
-                                                outOfStockOptions[optionCategory][optionName] ||
+                                                outOfStockOptions?.[optionCategory]?.[optionName] ||
                                                 !isOrderAllowed(
                                                     variantForOptions({ ...selectedOptions, [optionCategory]: optionValues }),
                                                     true
@@ -110,7 +113,11 @@ $: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
                     <span>{$t('low_stock')}</span>
                 </div>
                 <div class="checkout">
-                    <button>Add to Cart</button>
+                    <button disabled="{!selectionValid}">{
+                        selectionValid
+                            ? 'Add to cart'
+                            : 'Please select size'
+                        }</button>
                 </div>
             </form>
         </div>
@@ -313,6 +320,49 @@ fieldset {
 
         & input[type='radio']:checked + span {
             color: var(--inverseTextColor);
+        }
+    }
+}
+
+.checkout {
+    & button {
+        width: 100%;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        color: var(--inverseTextColor);
+        background-color: var(--textColor);
+        font-weight: bold;
+        position: relative;
+        border: none;
+        outline: none;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            &:hover,&:focus-visible {
+                box-shadow: none;
+                &::before {
+                    display: none;
+                }
+            }
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--inverseTextColor);
+            opacity: 0;
+            transition: opacity var(--transitionDuration) ease;
+        }
+
+        &:hover,&:focus-visible {
+            border: none;
+            outline: none;
+            &::before {
+                opacity: 0.3;
+            }
         }
     }
 }
