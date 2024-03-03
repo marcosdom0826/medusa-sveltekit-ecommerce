@@ -1,40 +1,102 @@
 <script lang="ts">
+import { enhance } from '$app/forms';
 import type { CartItem } from '../medusa';
+import RemoveIcon from '~icons/material-symbols/remove-shopping-cart-outline-rounded';
+import { cartDrawerOpen } from '../stores/cartDrawer';
+import LoadingSpinner from './LoadingSpinner.svelte';
+import { fade } from 'svelte/transition';
 
 export let item: CartItem;
-console.log(item);
+let form: HTMLFormElement;
+let loading = false;
 </script>
 
-<form class="cart-item">
+<form
+    use:enhance="{() => {
+        loading = true;
+        return async ({ update }) => {
+            await update({ reset: false });
+            loading = false;
+            $cartDrawerOpen = true;
+        };
+    }}"
+    method="post"
+    bind:this="{form}"
+    action="/?/editCart">
     <picture>
         <source srcset="{item.thumbnail}" />
         <img src="{item.thumbnail}" alt="{item.title}" />
     </picture>
     <h3>{item.title}</h3>
-    <span class="total-price">{(item.subtotal || item.unit_price) / 100}€</span>
     <span class="variant">{item.variant.title}</span>
     <span class="price">{item.unit_price / 100}€</span>
-    <input type="number" value="{item.quantity}" />
+    <fieldset disabled="{loading}">
+        <button disabled="{loading}" role="spinbutton" data-type="subtract" formaction="/?/decrementCartItem"
+            >-</button>
+        <input
+            disabled="{loading}"
+            type="number"
+            name="quantity"
+            min="0"
+            value="{item.quantity}"
+            formaction="/?/editCart"
+            on:keydown="{(e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    form.submit();
+                }
+            }}"
+            on:blur="{() => form.submit()}" />
+        <button disabled="{loading}" role="spinbutton" data-type="add" formaction="/?/incrementCartItem"
+            >+</button>
+    </fieldset>
+    <input type="hidden" name="id" value="{item.id}" />
+    <button
+        disabled="{loading}"
+        aria-roledescription="remove"
+        data-type="remove"
+        formaction="/?/removeCartItem"><RemoveIcon /></button>
+    <span class="total-price">{(item.subtotal || item.unit_price) / 100}€</span>
+    {#if loading}
+        <div class="spinner" transition:fade>
+            <LoadingSpinner size="1.3em" ringWidth="0.25em" />
+        </div>
+    {/if}
 </form>
 
 <style lang="postcss">
-.cart-item {
+form {
     width: 100%;
     display: grid;
-    gap: 1em;
-    grid-template-columns: minmax(5em, 6em) auto min-content;
-    grid-template-rows: min-content min-content min-content min-content;
+    column-gap: 0.5em;
+    row-gap: 0.5em;
+    grid-template-columns: minmax(6em, 10em) auto auto auto;
+    grid-template-rows: min-content min-content min-content auto;
     position: relative;
     align-items: center;
 
     & > * {
         grid-column: 2 / -1;
     }
-    & h3 {
-        grid-column: 2 / span 1;
-    }
     & .total-price {
-        grid-column: 3 / span 1;
+        grid-column: 4;
+        grid-row: 5;
+        justify-self: end;
+    }
+    & button[data-type='remove'] {
+        grid-column: 3;
+        grid-row: 5;
+        border: none;
+        padding: 0.5em;
+        &:hover,
+        &:focus-visible {
+            background: color-mix(in srgb, var(--textColor), transparent 75%);
+        }
+    }
+    & fieldset {
+        grid-column: 2;
+        grid-row: 5;
+        width: min-content;
     }
     & picture,
     & img {
@@ -44,7 +106,20 @@ console.log(item);
         object-fit: cover;
         place-self: center;
         height: 100%;
+        border-radius: 0.5em;
     }
+    & > *:disabled {
+        opacity: 0.5;
+    }
+}
+
+.spinner {
+    position: absolute;
+    grid-column: 2 / span 1;
+    grid-row: 5;
+    inset: 0;
+    display: grid;
+    place-items: center;
 }
 
 .price {
@@ -58,5 +133,50 @@ console.log(item);
 .total-price {
     font-weight: bold;
     font-size: 1.1em;
+}
+
+fieldset {
+    display: grid;
+    grid-template-columns: min-content auto min-content;
+    padding: 0;
+    margin: 0;
+    border: 1px solid color-mix(in srgb, var(--textColor), transparent 50%);
+    border-radius: 0.5em;
+    place-items: center;
+    overflow: hidden;
+    & > * {
+        border: none;
+        box-shadow: none;
+        &:is(:hover, :focus, :active) {
+            border: none;
+        }
+    }
+    &:hover {
+        border: 1px solid var(--textColor);
+    }
+    & button {
+        width: 2.5em;
+        height: 2.5em;
+        padding: 0.5em;
+        height: 100%;
+        font-weight: bold;
+        display: grid;
+        border-radius: 0;
+        place-items: center;
+        &:hover {
+            background: color-mix(in srgb, var(--textColor), transparent 85%);
+        }
+    }
+}
+input[type='number'] {
+    appearance: textfield;
+    width: 3.25em;
+    text-align: center;
+    padding: 0.5em;
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+        appearance: none;
+        margin: 0;
+    }
 }
 </style>

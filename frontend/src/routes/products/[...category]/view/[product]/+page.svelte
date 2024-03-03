@@ -91,7 +91,7 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
             <form method="POST" use:enhance={() => {
                 loading = true;
                 return async ({ update }) => {
-                    await update();
+                    await update({ reset: false });
                     loading = false;
                     $cartDrawerOpen = true;
                     selectedOptions = {};
