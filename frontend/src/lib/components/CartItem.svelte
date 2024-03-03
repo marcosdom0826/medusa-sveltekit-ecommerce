@@ -70,7 +70,7 @@ form {
     display: grid;
     column-gap: 0.5em;
     row-gap: 0.5em;
-    grid-template-columns: minmax(6em, 10em) auto auto auto;
+    grid-template-columns: minmax(1em, 10em) auto auto auto;
     grid-template-rows: min-content min-content min-content auto;
     position: relative;
     align-items: center;

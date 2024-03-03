@@ -23,16 +23,15 @@ import CartItem from './CartItem.svelte';
     height: 100%;
     overflow: auto;
     scrollbar-gutter: stable;
+    min-width: min(28em, 100dvw);
 }
 .cart {
     display: grid;
-    place-items: center;
     padding: 1em;
     gap: 2em;
-    &:has(.empty) {
-        height: 100%;
-    }
     & > :global(*) {
+        grid-row: 1;
+        grid-column: 1;
         &::after {
             content: '';
             width: 100%;
@@ -52,7 +51,8 @@ import CartItem from './CartItem.svelte';
 .empty {
     display: grid;
     place-items: center;
-    padding: 1em;
+    padding: 4em;
+    white-space: nowrap;
     height: 100%;
 }
 </style>
