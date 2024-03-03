@@ -3,7 +3,6 @@
 import { medusa, type ProductOptionValue } from '$/lib/medusa';
 import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { safeParseJson } from '$/lib/util';
 
 const HOME_CATEGORY = 'fresh';
 
@@ -68,7 +67,7 @@ export const actions = {
         const cookies = event.cookies;
 
         const cartId = cookies.get('cart_id');
-        const selectedVariant = safeParseJson<ProductOptionValue[]>(data.get('variant') as string, []);
+        const selectedVariant = data.get('variant') as string;
 
         let cart;
         if (cartId) {
@@ -82,14 +81,14 @@ export const actions = {
             cart = await medusa.carts.create();
             cookies.set('cart_id', cart.cart.id, { path: '/' });
         }
-        const maybeInCartItem = cart.cart.items?.find((i) => i.variant_id === selectedVariant[0].variant_id);
+        const maybeInCartItem = cart.cart.items?.find((i) => i.variant_id === selectedVariant);
         if (maybeInCartItem) {
             await medusa.carts.lineItems.update(cart.cart.id, maybeInCartItem.id, {
                 quantity: maybeInCartItem.quantity + 1
             });
         } else {
             await medusa.carts.lineItems.create(cart.cart.id, {
-                variant_id: selectedVariant[0].variant_id,
+                variant_id: selectedVariant,
                 quantity: 1
             });
 
