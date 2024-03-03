@@ -3,10 +3,12 @@ import { onNavigate } from '$app/navigation';
 import { onMount } from 'svelte';
 import Logo from '$assets/logo.svg?component';
 import MaterialSymbolsArrowBackRounded from '~icons/material-symbols/arrow-back-rounded';
+import { browser } from '$app/environment';
 
 export let open = false;
 export let side: 'left' | 'right' = 'left';
 export let cancellable = true;
+
 const close = () => {
     open = false;
 };
@@ -26,6 +28,22 @@ onMount(() => {
 onNavigate(() => {
     close();
 });
+
+$: scrollbarWidth = browser ? window.innerWidth - document.documentElement.clientWidth : 0;
+
+$: {
+    if (browser) {
+        if (open) {
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+            document.body.style.transition = 'none';
+        } else {
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            setTimeout(() => (document.body.style.transition = ''), 250);
+        }
+    }
+}
 </script>
 
 <div class="drawer {side === 'left' || side === undefined ? 'left' : 'right'} {open && 'open'}">
@@ -55,6 +73,9 @@ onNavigate(() => {
     background-color: var(--cardColor);
     z-index: 100;
     transition: transform 0.2s ease-in-out;
+    display: grid;
+    grid-template-rows: min-content auto;
+    height: 100%;
     &.left {
         border-radius: 0 1rem 1rem 0;
     }
@@ -76,6 +97,7 @@ onNavigate(() => {
 
 .scrim {
     position: fixed;
+    width: 100%;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
     margin: 0;
@@ -89,10 +111,6 @@ onNavigate(() => {
         z-index: 90;
         opacity: 1;
     }
-}
-
-.open {
-    display: block;
 }
 
 .drawer-header {
