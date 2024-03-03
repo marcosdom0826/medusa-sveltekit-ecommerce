@@ -37,7 +37,7 @@ $: cartCount = $page.data.cart?.items?.reduce((acc: number, item: CartItem) => a
         <button class="menu-btn" on:click="{() => ($cartDrawerOpen = true)}">
             <MdiCartOutline />
             {#if cartCount > 0}
-                <div class="badge" transition:fade>{cartCount}</div>
+                <div class="badge" transition:fade><span>{cartCount}</span></div>
             {/if}
         </button>
         <ThemeToggle />
@@ -130,14 +130,17 @@ a {
 
 .badge {
     position: absolute;
-    font-size: 0.5em;
+    font-size: 0.4em;
     background-color: red;
     color: white;
     border-radius: 100vw;
-    padding: 0.4em;
+    padding: 0.4em 0.8em;
     font-weight: bold;
     top: 0;
     right: 0;
     translate: 25% -25%;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
 }
 </style>
