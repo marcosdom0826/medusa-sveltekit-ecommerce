@@ -76,6 +76,7 @@ $: {
     display: grid;
     grid-template-rows: min-content auto;
     height: 100%;
+    width: fit-content;
     &.left {
         border-radius: 0 1rem 1rem 0;
     }
