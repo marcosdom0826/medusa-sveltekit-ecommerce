@@ -55,7 +55,7 @@ const isOrderAllowed = (variant: ProductVariant | undefined, nonVariant?: boolea
     variant ? (variant.allow_backorder || variant.inventory_quantity !== 0) : nonVariant;
 
 const outOfStockOptions = findOutOfStockOptions();
-const selectedOptions: Record<string, ProductOptionValue[]> = {};
+let selectedOptions: Record<string, ProductOptionValue[]> = {};
 
 $: selectedVariant = variantForOptions(selectedOptions) || data.product.variants[0];
 
@@ -94,6 +94,7 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
                     await update();
                     loading = false;
                     $cartDrawerOpen = true;
+                    selectedOptions = {};
                 };
             }}>
                 <div class="option-select">
@@ -112,8 +113,8 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
                                                 )
                                             }
                                             type="radio"
-                                            name="variant"
-                                            value="{JSON.stringify(optionValues)}"
+                                            name="{optionName}"
+                                            value="{optionValues}"
                                             bind:group="{selectedOptions[optionCategory]}" />
                                         <span>{optionName}</span>
                                     </label>
@@ -121,6 +122,7 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
                             </fieldset>
                         </div>
                     {/each}
+                    <input type="hidden" name="variant" value="{selectedVariant.id}" />
                 </div>
                 <div class="low-stock" class:expanded={(selectedVariant.inventory_quantity || 999) < 10}>
                     <span>{$t('low_stock')}</span>
