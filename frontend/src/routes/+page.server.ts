@@ -1,5 +1,6 @@
 import { medusa } from '$/lib/medusa';
-import type { PageServerLoad } from './$types';
+import { fail } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 
 
 const HOME_CATEGORY = 'fresh';
@@ -23,3 +24,54 @@ export const load: PageServerLoad = async ({ parent }) => {
     };
 
 };
+
+export const actions = {
+    editCart: async (event) => {
+        const data = await event.request.formData();
+        const id = data.get('id') as string;
+        const quantity = Number.parseInt(data.get('quantity') as string, 10);
+        const cartId = event.cookies.get('cart_id');
+        if (!cartId || !id || !quantity) {
+            throw fail(400, {});
+        }
+        await medusa.carts.lineItems.update(cartId, id, {
+            quantity: quantity
+        });
+    },
+    incrementCartItem: async (event) => {
+        const data = await event.request.formData();
+        const id = data.get('id') as string;
+        const quantity = Number.parseInt(data.get('quantity') as string, 10);
+        const cartId = event.cookies.get('cart_id');
+        if (!cartId || !id || !quantity) {
+            throw fail(400, {});
+        }
+        await medusa.carts.lineItems.update(cartId, id, {
+            quantity: quantity + 1
+        });
+    },
+    decrementCartItem: async (event) => {
+        const data = await event.request.formData();
+        const id = data.get('id') as string;
+        const quantity = Number.parseInt(data.get('quantity') as string, 10);
+        const cartId = event.cookies.get('cart_id');
+        if (!cartId || !id || !quantity) {
+            throw fail(400, {});
+        }
+        await medusa.carts.lineItems.update(cartId, id, {
+            quantity: quantity - 1
+        });
+    },
+    removeCartItem: async (event) => {
+        const data = await event.request.formData();
+        const id = data.get('id') as string;
+        const quantity = Number.parseInt(data.get('quantity') as string, 10);
+        const cartId = event.cookies.get('cart_id');
+        if (!cartId || !id || !quantity) {
+            throw fail(400, {});
+        }
+        await medusa.carts.lineItems.update(cartId, id, {
+            quantity: 0
+        });
+    }
+} satisfies Actions;
