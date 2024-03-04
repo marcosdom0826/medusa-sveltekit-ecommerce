@@ -1,6 +1,6 @@
 <script lang="ts">
 import { page } from '$app/stores';
-import { fade } from 'svelte/transition';
+import { fade, slide } from 'svelte/transition';
 import CartItem from './CartItem.svelte';
 
 $: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.createdAt - b.createdAt) || [];
@@ -25,9 +25,10 @@ export let disableEmpty = false;
     </div>
     <div>
         <slot name="total">
-            <h3>Total: {($page.data.cart?.total || 0) / 100}€</h3>
-            <a class="button primary" href="{($page.data.cart?.items?.length || 0) === 0 ? '#' : '/checkout'}"
-                >Checkout</a>
+            {#if ($page.data.cart?.items?.length || 0) > 0}
+                <h3 transition:slide>Total: {($page.data.cart?.total || 0) / 100}€</h3>
+                <a transition:slide class="button primary" href="/checkout">Checkout</a>
+            {/if}
         </slot>
     </div>
 </div>
