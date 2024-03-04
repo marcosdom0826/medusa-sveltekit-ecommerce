@@ -6,14 +6,21 @@ import PhSun from '~icons/ph/sun';
 let darkMode = false;
 const toggleTheme = () => {
     const body = document.querySelector('body');
+    const html = document.querySelector('html');
     if (darkMode) {
         body?.classList.remove('theme-dark');
         body?.classList.add('theme-light');
+        setTimeout(() => {
+            html?.setAttribute('data-theme', 'light');
+        }, 300);
         window.localStorage.setItem('theme', 'light');
     } else {
         body?.classList.remove('theme-light');
         body?.classList.add('theme-dark');
         window.localStorage.setItem('theme', 'dark');
+        setTimeout(() => {
+            html?.setAttribute('data-theme', 'dark');
+        }, 300);
     }
     darkMode = !darkMode;
 };
@@ -21,10 +28,14 @@ const toggleTheme = () => {
 onMount(() => {
     const theme = window.localStorage.getItem('theme');
     const body = document.querySelector('body');
+    const html = document.querySelector('html');
     if (theme) {
         body?.classList.remove(theme === 'dark' ? 'theme-light' : 'theme-dark');
         body?.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
         darkMode = theme === 'dark';
+        setTimeout(() => {
+            html?.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+        }, 300);
     }
     const hasTheme = body?.classList.contains('theme-dark') || body?.classList.contains('theme-light');
     const isDark =
