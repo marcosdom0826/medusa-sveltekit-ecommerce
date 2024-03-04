@@ -308,7 +308,7 @@ fieldset {
                 &::before {
                     opacity: 0.25;
                 }
-                &:hover {
+                &:hover,&:focus-visible {
                     box-shadow: none;
                     &::after {
                         background: transparent;
@@ -316,7 +316,7 @@ fieldset {
                 }
             }
 
-            &:hover {
+            &:hover,&:focus-visible {
                 &::after {
                     background: hsla(0, 0%, 100%, var(--effectAlpha));
                 }
