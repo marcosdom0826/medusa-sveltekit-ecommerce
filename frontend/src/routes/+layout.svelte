@@ -37,6 +37,7 @@ onNavigate((navigation) => {
 
 main {
     min-height: calc(100% - var(--header-height, 0px) - var(--footer-height, 0px));
+    position: relative;
 }
 
 :global(footer) {

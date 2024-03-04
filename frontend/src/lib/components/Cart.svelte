@@ -4,9 +4,12 @@ import { fade } from 'svelte/transition';
 import CartItem from './CartItem.svelte';
 
 $: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.createdAt - b.createdAt) || [];
+
+export let disableMinWidth = false;
+export let disableEmpty = false;
 </script>
 
-<div class="wrapper">
+<div class="wrapper" style="{disableMinWidth ? '' : 'min-width: min(28em, 100dvw);'}">
     <div>
         <div class="cart">
             {#if ($page.data.cart?.items?.length || 0) === 0}
@@ -15,7 +18,7 @@ $: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.cr
                 </div>
             {:else}
                 {#each sortedItems as item (item.id)}
-                    <CartItem item="{item}" />
+                    <CartItem item="{item}" disableEmpty="{disableEmpty}" />
                 {/each}
             {/if}
         </div>
@@ -23,7 +26,8 @@ $: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.cr
     <div>
         <slot name="total">
             <h3>Total: {($page.data.cart?.total || 0) / 100}€</h3>
-            <a class="button primary" href="/checkout">Checkout</a>
+            <a class="button primary" href="{($page.data.cart?.items?.length || 0) === 0 ? '#' : '/checkout'}"
+                >Checkout</a>
         </slot>
     </div>
 </div>
@@ -31,7 +35,6 @@ $: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.cr
 <style lang="postcss">
 .wrapper {
     height: 100%;
-    min-width: min(28em, 100dvw);
     display: grid;
     grid-template-rows: auto min-content;
     overflow: hidden;
@@ -79,5 +82,8 @@ $: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.cr
     padding: 4em;
     white-space: nowrap;
     height: 100%;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
 }
 </style>
