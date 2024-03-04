@@ -128,7 +128,7 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
                     <span>{$t('low_stock')}</span>
                 </div>
                 <div class="add-to-cart">
-                    <button disabled="{!selectionValid || loading}" class:loading={loading}>
+                    <button class="primary" disabled="{!selectionValid || loading}" class:loading={loading}>
                     {#if loading}
                         <span transition:fade class="loading"><LoadingSpinner size="1.3em" ringWidth="0.25em" /></span>
                     {:else}
@@ -286,6 +286,8 @@ fieldset {
             border-radius: 2px;
             position: absolute;
             inset: 0;
+            width: 100%;
+            height: 100%;
             cursor: pointer;
 
             &::before {
@@ -293,6 +295,7 @@ fieldset {
                 content: '';
                 position: absolute;
                 inset: 0;
+                border-radius: 0;
                 clip-path: polygon(0 0, 0 0, 100% 100%, 0% 100%);
                 background: var(--textColor);
                 transition:
@@ -347,52 +350,11 @@ fieldset {
 .add-to-cart {
     & button {
         width: 100%;
-        min-height: 3em;
-        display: grid;
-        place-items: center;
-        margin: 0;
-        color: var(--inverseTextColor);
-        background-color: var(--textColor);
-        font-weight: bold;
-        position: relative;
-        border: none;
-        outline: none;
-        position: relative;
 
         & > * {
             grid-column: 1 / -1;
             grid-row: 1 / -1;
         }
-
-        &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            &:hover,&:focus-visible {
-                box-shadow: none;
-                &::before {
-                    display: none;
-                }
-            }
-        }
-
-        &::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--inverseTextColor);
-            opacity: 0;
-            transition: opacity var(--transitionDuration) ease;
-        }
-
-        &:hover,&:focus-visible {
-            border: none;
-            outline: none;
-            &::before {
-                opacity: 0.3;
-            }
-        }
     }
-
 }
-
 </style>

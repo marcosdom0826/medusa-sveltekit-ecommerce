@@ -4,24 +4,35 @@ import type { CartItem } from '../medusa';
 import RemoveIcon from '~icons/material-symbols/remove-shopping-cart-outline-rounded';
 import { cartDrawerOpen } from '../stores/cartDrawer';
 import LoadingSpinner from './LoadingSpinner.svelte';
-import { fade } from 'svelte/transition';
+import { fade, slide } from 'svelte/transition';
+import { page } from '$app/stores';
 
 export let item: CartItem;
-let form: HTMLFormElement;
+let formElement: HTMLFormElement;
 let loading = false;
+
+let error: string | false = '';
 </script>
 
 <form
     use:enhance="{() => {
         loading = true;
-        return async ({ update }) => {
+        error = false;
+        return async ({ update, result }) => {
+            if ((result.status || 0) >= 299) {
+                error = result?.data.code;
+            } else {
+                error = false;
+            }
             await update({ reset: false });
             loading = false;
-            $cartDrawerOpen = true;
+            if (!Object.values($page.route).find((val) => val?.includes('checkout'))) {
+                $cartDrawerOpen = true;
+            }
         };
     }}"
     method="post"
-    bind:this="{form}"
+    bind:this="{formElement}"
     action="/?/editCart">
     <picture>
         <source srcset="{item.thumbnail}" />
@@ -30,7 +41,7 @@ let loading = false;
     <h3>{item.title}</h3>
     <span class="variant">{item.variant.title}</span>
     <span class="price">{item.unit_price / 100}€</span>
-    <fieldset disabled="{loading}">
+    <fieldset disabled="{loading}" class:invalid-anim="{error}">
         <button disabled="{loading}" role="spinbutton" data-type="subtract" formaction="/?/decrementCartItem"
             >-</button>
         <input
@@ -43,10 +54,10 @@ let loading = false;
             on:keydown="{(e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    form.submit();
+                    formElement.requestSubmit();
                 }
             }}"
-            on:blur="{() => form.submit()}" />
+            on:blur="{() => formElement.requestSubmit()}" />
         <button disabled="{loading}" role="spinbutton" data-type="add" formaction="/?/incrementCartItem"
             >+</button>
     </fieldset>
@@ -61,6 +72,9 @@ let loading = false;
         <div class="spinner" transition:fade>
             <LoadingSpinner size="1.3em" ringWidth="0.25em" />
         </div>
+    {/if}
+    {#if error}
+        <p class="error" transition:slide>{error}</p>
     {/if}
 </form>
 
@@ -180,6 +194,24 @@ input[type='number'] {
     &::-webkit-outer-spin-button {
         appearance: none;
         margin: 0;
+    }
+}
+
+.invalid-anim {
+    animation: error 0.5s ease-in-out alternate;
+    animation-play-state: running;
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+    grid-column: 2 / -1;
+    grid-row: 6;
+}
+
+@keyframes error {
+    0% {
+        border: 1px solid red;
     }
 }
 </style>
