@@ -8,6 +8,11 @@ import { fade, slide } from 'svelte/transition';
 import { page } from '$app/stores';
 
 export let item: CartItem;
+export let disableEmpty = false;
+$: cartItems = $page.data.cart?.items || [];
+
+$: isLastCartItem = cartItems.length === 1 && cartItems[0].id === item.id && cartItems[0].quantity === 1;
+
 let formElement: HTMLFormElement;
 let loading = false;
 
@@ -20,6 +25,8 @@ let error: string | false = '';
         error = false;
         return async ({ update, result }) => {
             if ((result.status || 0) >= 299) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 error = result?.data.code;
             } else {
                 error = false;
@@ -42,8 +49,11 @@ let error: string | false = '';
     <span class="variant">{item.variant.title}</span>
     <span class="price">{item.unit_price / 100}€</span>
     <fieldset disabled="{loading}" class:invalid-anim="{error}">
-        <button disabled="{loading}" role="spinbutton" data-type="subtract" formaction="/?/decrementCartItem"
-            >-</button>
+        <button
+            disabled="{loading || (disableEmpty && isLastCartItem)}"
+            role="spinbutton"
+            data-type="subtract"
+            formaction="/?/decrementCartItem">-</button>
         <input
             disabled="{loading}"
             type="number"
@@ -53,17 +63,35 @@ let error: string | false = '';
             formaction="/?/editCart"
             on:keydown="{(e) => {
                 if (e.key === 'Enter') {
+                    if (disableEmpty && isLastCartItem) {
+                        if (e.target) {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            e.target.value = 1;
+                        }
+                        return;
+                    }
                     e.preventDefault();
                     formElement.requestSubmit();
                 }
             }}"
-            on:blur="{() => formElement.requestSubmit()}" />
+            on:blur="{(e) => {
+                if (disableEmpty && isLastCartItem) {
+                    if (e.target) {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        e.target.value = 1;
+                    }
+                    return;
+                }
+                formElement.requestSubmit();
+            }}" />
         <button disabled="{loading}" role="spinbutton" data-type="add" formaction="/?/incrementCartItem"
             >+</button>
     </fieldset>
     <input type="hidden" name="id" value="{item.id}" />
     <button
-        disabled="{loading}"
+        disabled="{loading || disableEmpty}"
         aria-roledescription="remove"
         data-type="remove"
         formaction="/?/removeCartItem"><RemoveIcon /></button>

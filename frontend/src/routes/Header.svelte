@@ -34,12 +34,14 @@ $: cartCount = $page.data.cart?.items?.reduce((acc: number, item: CartItem) => a
         <Logo />
     </a>
     <div class="rhs">
-        <button class="menu-btn" on:click="{() => ($cartDrawerOpen = true)}">
-            <MdiCartOutline />
-            {#if cartCount > 0}
-                <div class="badge" transition:fade><span>{cartCount}</span></div>
-            {/if}
-        </button>
+        {#if !Object.values($page.route).find((val) => val?.includes('checkout'))}
+            <button class="menu-btn" on:click="{() => ($cartDrawerOpen = true)}" transition:fade>
+                <MdiCartOutline />
+                {#if cartCount > 0}
+                    <div class="badge" transition:fade><span>{cartCount}</span></div>
+                {/if}
+            </button>
+        {/if}
         <ThemeToggle />
     </div>
     <div class="nav-container">

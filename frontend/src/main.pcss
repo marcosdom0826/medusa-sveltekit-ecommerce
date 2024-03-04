@@ -191,7 +191,8 @@ p {
   white-space: pre-line;
 }
 
-button {
+button, .button {
+text-decoration: none;
   background-color: transparent;
   border: 1px solid color-mix(in srgb, var(--textColor), transparent 60%);
   cursor: pointer;
@@ -269,6 +270,37 @@ input[type="checkbox"]:is(.toggle) {
   }
 }
 
+& input[type='radio'] {
+    position: relative;
+    appearance: none;
+    border-radius: 100vw;
+    width: 1.5em;
+    height: 1.5em;
+    padding: 0;
+    box-shadow:
+        0 0 1px 0 white inset,
+        0 0 1px 0 white;
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0.4em;
+        border-radius: 100vw;
+        transition: background-color var(--transitionDuration) ease;
+    }
+    &:checked::before {
+        background-color: var(--textColor);
+    }
+    &:hover,
+    &:focus-visible {
+        & input[type='radio']::before {
+            background-color: color-mix(in srgb, var(--textColor), transparent 75%);
+        }
+    }
+}
+
+fieldset {
+    border: 1px solid transparent;
+}
 
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
@@ -290,4 +322,47 @@ input[type="checkbox"]:is(.toggle) {
   ::view-transition-new(*) {
     animation: none !important;
   }
+}
+
+.primary {
+    padding: 1em;
+    border: none;
+    background-color: var(--textColor);
+    color: var(--inverseTextColor);
+    position: relative;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    color: var(--inverseTextColor);
+    background-color: var(--textColor);
+    font-weight: bold;
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        &:hover,
+        &:focus-visible {
+            box-shadow: none;
+            &::before {
+                display: none;
+            }
+        }
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--inverseTextColor);
+        opacity: 0;
+        transition: opacity var(--transitionDuration) ease;
+    }
+
+    &:hover,
+    &:focus-visible {
+        border: none;
+        outline: none;
+        &::before {
+            opacity: var(--inverseEffectAlpha);
+        }
+    }
 }
