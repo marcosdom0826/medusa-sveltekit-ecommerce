@@ -3,14 +3,23 @@ import ProductBar from '$/lib/components/ProductBar.svelte';
 import type { PageData } from './$types';
 // import needed for css
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import background from '$assets/background.svg';
+import background from '$assets/background.svg?url';
 
 export let data: PageData;
 $: products = data.products;
+
+let y = 0;
 </script>
+
+<svelte:window bind:scrollY="{y}" />
 
 <div class="center">
     <section class="hero">
+        <div>
+            <div>
+                <img src="{background}" alt="background" style="translate: 0 {y / 2}px;" />
+            </div>
+        </div>
         <div>
             <h1>Placeholder</h1>
             <p>Hero content here</p>
@@ -44,25 +53,36 @@ $: products = data.products;
 }
 
 .hero {
-    background: url('$assets/background.svg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    @media (prefers-motion-reduce: reduce) {
-        background-attachment: scroll;
-    }
-
-    background-blend-mode: multiply;
-
     height: calc(100dvh - var(--header-height));
     width: 100%;
     display: grid;
     place-items: center;
+    position: relative;
+
+    & > :first-child {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        & div {
+            margin-top: calc(var(--header-height) * -1);
+            position: absolute;
+            inset: 0;
+        }
+        & img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            /* mix-blend-mode: hard-light; */
+        }
+    }
 
     & > div {
         display: grid;
         place-items: center;
+    }
+
+    & > :last-child {
+        isolation: isolate;
     }
 }
 </style>
