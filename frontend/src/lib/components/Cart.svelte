@@ -2,6 +2,8 @@
 import { page } from '$app/stores';
 import { fade } from 'svelte/transition';
 import CartItem from './CartItem.svelte';
+
+$: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.createdAt - b.createdAt) || [];
 </script>
 
 <div class="wrapper">
@@ -12,15 +14,17 @@ import CartItem from './CartItem.svelte';
                     <h2>Your cart is empty</h2>
                 </div>
             {:else}
-                {#each $page.data.cart.items as item (item.id)}
+                {#each sortedItems as item (item.id)}
                     <CartItem item="{item}" />
                 {/each}
             {/if}
         </div>
     </div>
     <div>
-        <h3>Total: {($page.data.cart?.total || 0) / 100}€</h3>
-        <button>Checkout</button>
+        <slot name="total">
+            <h3>Total: {($page.data.cart?.total || 0) / 100}€</h3>
+            <a class="button primary" href="/checkout">Checkout</a>
+        </slot>
     </div>
 </div>
 
@@ -43,7 +47,6 @@ import CartItem from './CartItem.svelte';
         display: grid;
         gap: 1em;
         place-items: center;
-        background: var(--cardColor);
         box-shadow: 0 -1px 1px 0 color-mix(in srgb, var(--textColor), transparent 75%);
         isolation: isolate;
     }
