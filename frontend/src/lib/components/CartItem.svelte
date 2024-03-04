@@ -88,9 +88,12 @@ form {
         grid-row: 5;
         border: none;
         padding: 0.5em;
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1;
         &:hover,
         &:focus-visible {
-            background: color-mix(in srgb, var(--textColor), transparent 75%);
+            background: color-mix(in srgb, var(--textColor), transparent 85%);
         }
     }
     & fieldset {
