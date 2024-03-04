@@ -5,33 +5,55 @@ import CartItem from './CartItem.svelte';
 </script>
 
 <div class="wrapper">
-    <div class="cart">
-        {#if ($page.data.cart?.items?.length || 0) === 0}
-            <div transition:fade class="empty">
-                <h2>Your cart is empty</h2>
-            </div>
-        {:else}
-            {#each $page.data.cart.items as item (item.id)}
-                <CartItem item="{item}" />
-            {/each}
-        {/if}
+    <div>
+        <div class="cart">
+            {#if ($page.data.cart?.items?.length || 0) === 0}
+                <div transition:fade class="empty">
+                    <h2>Your cart is empty</h2>
+                </div>
+            {:else}
+                {#each $page.data.cart.items as item (item.id)}
+                    <CartItem item="{item}" />
+                {/each}
+            {/if}
+        </div>
+    </div>
+    <div>
+        <h3>Total: {($page.data.cart?.total || 0) / 100}€</h3>
+        <button>Checkout</button>
     </div>
 </div>
 
 <style lang="postcss">
 .wrapper {
     height: 100%;
-    overflow: auto;
-    scrollbar-gutter: stable;
     min-width: min(28em, 100dvw);
+    display: grid;
+    grid-template-rows: auto min-content;
+    overflow: hidden;
+
+    & > :first-child {
+        height: 100%;
+        overflow: auto;
+        scrollbar-gutter: stable;
+    }
+
+    & > :last-child {
+        padding: 1em;
+        display: grid;
+        gap: 1em;
+        place-items: center;
+        background: var(--cardColor);
+        box-shadow: 0 -1px 1px 0 color-mix(in srgb, var(--textColor), transparent 75%);
+        isolation: isolate;
+    }
 }
 .cart {
     display: grid;
     padding: 1em;
     gap: 2em;
+
     & > :global(*) {
-        grid-row: 1;
-        grid-column: 1;
         &::after {
             content: '';
             width: 100%;
