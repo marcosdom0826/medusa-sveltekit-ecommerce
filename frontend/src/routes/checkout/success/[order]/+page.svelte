@@ -1,13 +1,14 @@
 <script lang="ts">
 import Cart from '$/lib/components/Cart.svelte';
 import { t } from '$/lib/i18n';
+import { fade } from 'svelte/transition';
 import type { PageData } from './$types';
 
 export let data: PageData;
 $: shippingCost = data.order.shipping_total || 0;
 </script>
 
-<div class="content">
+<div class="content" transition:fade>
     <div>
         <h2>Thank you for your order</h2>
         <div>
@@ -18,45 +19,45 @@ $: shippingCost = data.order.shipping_total || 0;
             <h3 class="wide">Contact</h3>
             <div class="columns contact">
                 <span>Email:</span>
-                <span>{data.cart?.email}</span>
-                {#if data.cart?.shipping_address?.phone}
+                <span style="white-space: nowrap;">{data.order?.email}</span>
+                {#if data.order?.shipping_address?.phone}
                     <span>Phone:</span>
-                    <span>{data.cart?.shipping_address?.phone}</span>
+                    <span>{data.order?.shipping_address?.phone}</span>
                 {/if}
             </div>
             <h3 class="wide">Delivery Address</h3>
             <div class="columns">
                 <span>
-                    {data.cart?.shipping_address?.first_name}
-                    {data.cart?.shipping_address?.last_name}
+                    {data.order?.shipping_address?.first_name}
+                    {data.order?.shipping_address?.last_name}
                 </span>
-                {#if data.cart?.shipping_address?.company}
-                    <span class="wide">{data.cart?.shipping_address?.company}</span>
+                {#if data.order?.shipping_address?.company}
+                    <span class="wide">{data.order?.shipping_address?.company}</span>
                 {/if}
-                <span class="wide">{data.cart?.shipping_address?.address_1}</span>
-                <span>{data.cart?.shipping_address?.postal_code} {data.cart?.shipping_address?.city}</span>
+                <span class="wide">{data.order?.shipping_address?.address_1}</span>
+                <span>{data.order?.shipping_address?.postal_code} {data.order?.shipping_address?.city}</span>
             </div>
-            {#if data.cart?.billing_address}
+            {#if data.order?.billing_address}
                 <h3 class="wide">Billing Address</h3>
                 <div class="columns">
                     <span>
-                        {data.cart?.billing_address?.first_name}
-                        {data.cart?.billing_address?.last_name}
+                        {data.order?.billing_address?.first_name}
+                        {data.order?.billing_address?.last_name}
                     </span>
-                    {#if data.cart?.billing_address?.company}
-                        <span class="wide">{data.cart?.billing_address?.company}</span>
+                    {#if data.order?.billing_address?.company}
+                        <span class="wide">{data.order?.billing_address?.company}</span>
                     {/if}
-                    <span class="wide">{data.cart?.billing_address?.address_1}</span>
+                    <span class="wide">{data.order?.billing_address?.address_1}</span>
                     <span>
-                        {data.cart?.billing_address?.postal_code}
-                        {data.cart?.billing_address?.city}
+                        {data.order?.billing_address?.postal_code}
+                        {data.order?.billing_address?.city}
                     </span>
                 </div>
             {/if}
 
             <h3 class="wide">Shipping method</h3>
             <div class="columns">
-                <span>{data.cart?.shipping_methods?.[0]?.shipping_option?.name}</span>
+                <span>{data.order?.shipping_methods?.[0]?.shipping_option?.name}</span>
                 <span>{shippingCost > 0 ? `${shippingCost / 100}€` : 'Free'}</span>
             </div>
         </div>
