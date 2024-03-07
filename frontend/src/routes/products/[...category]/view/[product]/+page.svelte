@@ -6,7 +6,7 @@ import ProductImageView from '$/lib/components/ProductImageView.svelte';
 import type { ProductOptionValue, ProductVariant } from '$/lib/medusa';
     import ProductBar from '$/lib/components/ProductBar.svelte';
     import { enhance } from '$app/forms';
-    import { fade } from 'svelte/transition';
+    import { fade, slide } from 'svelte/transition';
     import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
     import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
 
@@ -22,7 +22,7 @@ const findOutOfStockOptions = (): Record<string, Record<string, boolean>> => dat
                 if (!optionAcc[group.title]) {
                     optionAcc[group.title] = {};
                 }
-                const variantInStock = variant.inventory_quantity !== 0;
+                const variantInStock = (variant.inventory_quantity || 0) > 0;
                 const allowsBackOrder = variant.allow_backorder;
                 if (optionAcc[group.title][option.value] === undefined) {
                     optionAcc[group.title][option.value] = (
@@ -124,8 +124,17 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
                     {/each}
                     <input type="hidden" name="variant" value="{selectedVariant.id}" />
                 </div>
-                <div class="low-stock" class:expanded={(selectedVariant.inventory_quantity || 999) < 10}>
-                    <span>{$t('low_stock')}</span>
+                <div class="stock-container">
+                    {#if (selectedVariant.inventory_quantity ?? 0) <= 0 && (selectedVariant.allow_backorder)}
+                        <div class="low-stock" transition:slide>
+                            On Backorder
+                        </div>
+                    {/if}
+                    {#if (selectedVariant.inventory_quantity ?? 0) < 10 && (selectedVariant.inventory_quantity ?? 0) > 0}
+                        <div class="low-stock" transition:slide>
+                            <span>{$t('low_stock')}</span>
+                        </div>
+                    {/if}
                 </div>
                 <div class="add-to-cart">
                     <button class="primary" disabled="{!selectionValid || loading}" class:loading={loading}>
@@ -229,11 +238,8 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
 .low-stock {
     opacity: 0.8;
     display: grid;
-    grid-template-rows: 0fr;
+    grid-template-rows: 1fr;
     transition: grid-template-rows var(--transitionDuration);
-    &.expanded {
-        grid-template-rows: 1fr;
-    }
     & > * {
         overflow: hidden;
     }
@@ -295,6 +301,8 @@ fieldset {
                 content: '';
                 position: absolute;
                 inset: 0;
+                width: 100%;
+                height: 100%;
                 border-radius: 0;
                 clip-path: polygon(0 0, 0 0, 100% 100%, 0% 100%);
                 background: var(--textColor);
