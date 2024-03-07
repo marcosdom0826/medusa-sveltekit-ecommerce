@@ -111,17 +111,17 @@ $: paypalScript = loadScript({
 
 <svelte:window bind:innerWidth="{width}" bind:innerHeight="{height}" />
 
-<div class="content">
+<div class="content" transition:fade>
     <div>
         <div>
             <div class="order-info">
                 <h3 class="wide">Contact</h3>
                 <div class="columns contact">
                     <span>Email:</span>
-                    <span>{data.cart?.email}</span>
+                    <span style="white-space: nowrap;">{data.cart?.email}</span>
                     {#if data.cart?.shipping_address?.phone}
                         <span>Phone:</span>
-                        <span>{data.cart?.shipping_address?.phone}</span>
+                        <span style="white-space: nowrap;">{data.cart?.shipping_address?.phone}</span>
                     {/if}
                 </div>
                 <h3 class="wide">Delivery Address</h3>

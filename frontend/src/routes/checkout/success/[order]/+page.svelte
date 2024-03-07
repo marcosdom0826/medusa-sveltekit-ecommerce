@@ -22,7 +22,7 @@ $: shippingCost = data.order.shipping_total || 0;
                 <span style="white-space: nowrap;">{data.order?.email}</span>
                 {#if data.order?.shipping_address?.phone}
                     <span>Phone:</span>
-                    <span>{data.order?.shipping_address?.phone}</span>
+                    <span style="white-space: nowrap;">{data.order?.shipping_address?.phone}</span>
                 {/if}
             </div>
             <h3 class="wide">Delivery Address</h3>
