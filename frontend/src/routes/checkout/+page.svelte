@@ -4,6 +4,7 @@ import { applyAction, enhance } from '$app/forms';
 import { page } from '$app/stores';
 import { fade, slide } from 'svelte/transition';
 import type { ActionData, PageData } from './$types';
+import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 
 let loading = false;
 
@@ -12,11 +13,11 @@ export let form: ActionData;
 
 let htmlForm: HTMLFormElement;
 
-let shippingOption = data.shippingOptions?.[0]?.id;
+let shippingOption = data.cart?.shipping_methods?.[0]?.shipping_option_id ?? data.shippingOptions?.[0]?.id;
 
 $: shippingCost = data.shippingOptions.find((s) => s.id === shippingOption)?.amount || 0;
 
-let invoiceAddress = 'asDelivery';
+let invoiceAddress = data.cart?.billing_address ? 'separateAddress' : 'asDelivery';
 let formValid = false;
 
 let width: number;
@@ -57,7 +58,8 @@ let portraitCartExpanded = false;
                         id="email"
                         on:input="{() => {
                             if (form?.fieldErrors?.email) form.fieldErrors.email = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.email ?? ''}" />
                     <span class="hint">Email</span>
                 </label>
                 <label for="first_name" class:field-error="{form?.fieldErrors?.first_name}">
@@ -69,7 +71,8 @@ let portraitCartExpanded = false;
                         id="first_name"
                         on:input="{() => {
                             if (form?.fieldErrors?.first_name) form.fieldErrors.first_name = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.shipping_address?.first_name ?? ''}" />
                     <span class="hint">Name</span>
                 </label>
                 <label for="last_name" class:field-error="{form?.fieldErrors?.last_name}">
@@ -81,7 +84,8 @@ let portraitCartExpanded = false;
                         id="last_name"
                         on:input="{() => {
                             if (form?.fieldErrors?.last_name) form.fieldErrors.last_name = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.shipping_address?.last_name ?? ''}" />
                     <span class="hint">Last Name</span>
                 </label>
                 <label for="company" class="wide" class:field-error="{form?.fieldErrors?.company}">
@@ -92,7 +96,8 @@ let portraitCartExpanded = false;
                         id="company"
                         on:input="{() => {
                             if (form?.fieldErrors?.company) form.fieldErrors.company = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.shipping_address?.company ?? ''}" />
                     <span class="hint">Company (Optional)</span>
                 </label>
                 <label for="address" class="wide" class:field-error="{form?.fieldErrors?.address}">
@@ -104,7 +109,8 @@ let portraitCartExpanded = false;
                         id="address"
                         on:input="{() => {
                             if (form?.fieldErrors?.address) form.fieldErrors.address = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.shipping_address?.address_1 ?? ''}" />
                     <span class="hint">Address</span>
                 </label>
                 <label for="zip" class:field-error="{form?.fieldErrors?.zip}">
@@ -116,7 +122,8 @@ let portraitCartExpanded = false;
                         id="zip"
                         on:input="{() => {
                             if (form?.fieldErrors?.zip) form.fieldErrors.zip = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.shipping_address?.postal_code ?? ''}" />
                     <span class="hint">Zip</span>
                 </label>
                 <label for="city" class:field-error="{form?.fieldErrors?.city}">
@@ -128,7 +135,8 @@ let portraitCartExpanded = false;
                         id="city"
                         on:input="{() => {
                             if (form?.fieldErrors?.city) form.fieldErrors.city = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.shipping_address?.city ?? ''}" />
                     <span class="hint">City</span>
                 </label>
                 <label for="phone" class="wide" class:field-error="{form?.fieldErrors?.phone}">
@@ -139,7 +147,8 @@ let portraitCartExpanded = false;
                         id="phone"
                         on:input="{() => {
                             if (form?.fieldErrors?.phone) form.fieldErrors.phone = '';
-                        }}" />
+                        }}"
+                        value="{data.cart?.shipping_address?.phone ?? ''}" />
                     <span class="hint">Phone (Optional)</span>
                 </label>
                 <input type="hidden" name="country" value="de" />
@@ -206,7 +215,8 @@ let portraitCartExpanded = false;
                                 name="invoice-first_name"
                                 type="text"
                                 placeholder="Name"
-                                required />
+                                required
+                                value="{data.cart?.billing_address?.first_name}" />
                             <span class="hint">Name</span>
                         </label>
                         <label
@@ -217,7 +227,8 @@ let portraitCartExpanded = false;
                                 name="invoice-last_name"
                                 type="text"
                                 placeholder="Last Name"
-                                required />
+                                required
+                                value="{data.cart?.billing_address?.last_name ?? ''}" />
                             <span class="hint">Last Name</span>
                         </label>
                         <label
@@ -229,7 +240,8 @@ let portraitCartExpanded = false;
                                 name="invoice-company"
                                 type="text"
                                 placeholder="Company (Optional)"
-                                class="wide" />
+                                class="wide"
+                                value="{data.cart?.billing_address?.company ?? ''}" />
                             <span class="hint">Company (Optional)</span>
                         </label>
                         <label
@@ -242,7 +254,8 @@ let portraitCartExpanded = false;
                                 type="text"
                                 placeholder="Address"
                                 required
-                                class="wide" />
+                                class="wide"
+                                value="{data.cart?.billing_address?.address_1 ?? ''}" />
                             <span class="hint">Address</span>
                         </label>
                         <label for="invoice-zip" class:field-error="{form?.fieldErrors?.['invoice-zip']}">
@@ -251,7 +264,8 @@ let portraitCartExpanded = false;
                                 name="invoice-zip"
                                 type="text"
                                 placeholder="Zip"
-                                required />
+                                required
+                                value="{data.cart?.billing_address?.postal_code ?? ''}" />
                             <span class="hint">Zip</span>
                         </label>
                         <label for="invoice-city" class:field-error="{form?.fieldErrors?.['invoice-city']}">
@@ -260,7 +274,8 @@ let portraitCartExpanded = false;
                                 name="invoice-city"
                                 type="text"
                                 placeholder="City"
-                                required />
+                                required
+                                value="{data.cart?.billing_address?.city ?? ''}" />
                             <span class="hint">City</span>
                         </label>
                         <input type="hidden" name="invoice-country" value="de" />
@@ -303,7 +318,11 @@ let portraitCartExpanded = false;
                 class="primary"
                 type="submit"
                 disabled="{loading || !formValid || !shippingOption}">
-                Next
+                {#if loading}
+                    <LoadingSpinner size="1.3em" ringWidth="0.25em" />
+                {:else}
+                    Next
+                {/if}
             </button>
         </div>
     </div>

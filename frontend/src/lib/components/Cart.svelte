@@ -2,17 +2,20 @@
 import { page } from '$app/stores';
 import { fade, slide } from 'svelte/transition';
 import CartItem from './CartItem.svelte';
-
-$: sortedItems =
-    $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.title.localeCompare(b.title)) || [];
+import type { CartItem as LineItem } from '../medusa';
 
 export let disableMinWidth = false;
 export let disableEmpty = false;
 export let disableEdit = false;
+export let items = undefined as LineItem[] | undefined;
+
+$: sortedItems =
+    (items ?? $page.data.cart?.items)?.sort((a: LineItem, b: LineItem) => a.title.localeCompare(b.title)) ||
+    [];
 </script>
 
 <div class="wrapper" style="{disableMinWidth ? '' : 'min-width: min(28em, 100dvw);'}">
-    {#if ($page.data.cart?.items?.length || 0) === 0}
+    {#if (sortedItems?.length || 0) === 0}
         <div transition:fade class="empty">
             <h2>Your cart is empty</h2>
         </div>
@@ -25,7 +28,7 @@ export let disableEdit = false;
     {/if}
     <div>
         <slot name="total">
-            {#if ($page.data.cart?.items?.length || 0) > 0}
+            {#if (sortedItems?.length || 0) > 0}
                 <h3 transition:slide>Total: {($page.data.cart?.subtotal || 0) / 100}€</h3>
                 <a transition:slide class="button primary" href="/checkout">Checkout</a>
             {/if}

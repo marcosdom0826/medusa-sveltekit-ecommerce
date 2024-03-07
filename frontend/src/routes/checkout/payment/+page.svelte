@@ -12,6 +12,8 @@ import { PUBLIC_PAYPAL_CLIENT_ID } from '$env/static/public';
 
 export let data: PageData;
 
+let loading = false;
+
 let htmlForm: HTMLFormElement | undefined;
 
 let selectedPaymentProvider = data.cart?.payment_session?.provider_id || 'paypal';
@@ -58,7 +60,6 @@ const paypalButtonOptions: PayPalButtonsComponentOptions = {
     onError: (err) => console.error('Paypal error:', err),
 
     createOrder: async () => {
-        await ppInitActions?.disable();
         // HACK!: We are most definitely to fast for paypal here, so waiting a full second avoids some race-condition in their shitty SDK
         // This shit took me TWO FUCKING FULL DAYS to discover
         // TWO FULL DAYS!
@@ -214,7 +215,17 @@ $: paypalScript = loadScript({
                 <h3>Total:</h3>
                 <span>{(($page.data.cart?.subtotal || 0) + shippingCost) / 100}€</span>
             </div>
-            <form action="?/placeOrder" method="post">
+            <form
+                action="?/placeOrder"
+                method="post"
+                use:enhance="{async () => {
+                    loading = true;
+                    return async ({ update, result }) => {
+                        await update({ reset: false });
+                        loading = false;
+                        await applyAction(result);
+                    };
+                }}">
                 <div class="overlap" transition:slide>
                     {#if selectedPaymentProvider === 'paypal'}
                         <div transition:fade id="paypal-button-container">
@@ -229,7 +240,13 @@ $: paypalScript = loadScript({
                             <!-- eslint-enable prettier/prettier -->
                         </div>
                     {:else}
-                        <button transition:fade class="primary" type="submit"> Place order and Pay </button>
+                        <button transition:fade class="primary" type="submit" disabled="{loading}">
+                            {#if loading}
+                                <LoadingSpinner size="1.3em" ringWidth="0.25em" />
+                            {:else}
+                                Place order and Pay
+                            {/if}
+                        </button>
                     {/if}
                 </div>
             </form>
@@ -239,7 +256,8 @@ $: paypalScript = loadScript({
 
 <style lang="postcss">
 .content {
-    width: 100%;
+    width: min(100%, 1800px);
+    justify-self: center;
     display: grid;
     justify-content: center;
     padding: 1em;
@@ -259,6 +277,7 @@ $: paypalScript = loadScript({
     & > div {
         display: grid;
         gap: 2em;
+        width: 100%;
 
         @media (orientation: portrait) {
             grid-template-columns: 100%;
@@ -268,7 +287,6 @@ $: paypalScript = loadScript({
 
         grid-template-columns: repeat(2, 1fr);
         @media (orientation: landscape) {
-            width: min(100%, 1800px);
             & > * {
                 width: 100%;
             }
