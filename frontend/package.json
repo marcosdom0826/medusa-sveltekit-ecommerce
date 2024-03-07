@@ -45,6 +45,7 @@
 	"type": "module",
 	"dependencies": {
 		"@medusajs/medusa-js": "^6.1.7",
+		"@paypal/paypal-js": "^8.0.2",
 		"sveltekit-i18n": "^2.4.2"
 	}
 }

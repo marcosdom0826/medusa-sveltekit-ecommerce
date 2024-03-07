@@ -218,6 +218,9 @@ text-decoration: none;
     box-shadow: 0 0px 8px 0 rgb(0 0 0 / 0);
     border: 1px solid color-mix(in srgb, var(--textColor), transparent 80%);
   }
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
 
 input:not([type="checkbox"]) {
@@ -280,18 +283,20 @@ input[type="checkbox"]:is(.toggle) {
 & input[type='radio'] {
     position: relative;
     appearance: none;
-    border-radius: 100vw;
-    width: 1.5em;
-    height: 1.5em;
+    border-radius: 100%;
+    display: grid;
+    place-items: center;
+    width: 1.4em;
+    height: 1.4em;
     padding: 0;
     box-shadow:
         0 0 1px 0 white inset,
         0 0 1px 0 white;
     &::before {
         content: '';
-        position: absolute;
-        inset: 0.4em;
-        border-radius: 100vw;
+        width: 50%;
+        height: 50%;
+        border-radius: 100%;
         transition: background-color var(--transitionDuration) ease;
     }
     &:checked::before {

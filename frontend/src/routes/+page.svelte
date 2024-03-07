@@ -13,7 +13,7 @@ let y = 0;
 
 <svelte:window bind:scrollY="{y}" />
 
-<div class="center">
+<div class="content">
     <section class="hero">
         <div>
             <div>
@@ -32,7 +32,7 @@ let y = 0;
 </div>
 
 <style lang="postcss">
-.center {
+.content {
     position: relative;
     justify-items: center;
     display: grid;

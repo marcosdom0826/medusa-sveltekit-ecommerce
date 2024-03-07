@@ -14,7 +14,7 @@ export let data: PageData;
 
 let loading = false;
 
-const findOutOfStockOptions = (): Record<string, Record<string, boolean>> => data.product.variants.reduce(
+const findOutOfStockOptions = (): Record<string, Record<string, boolean>> => data.product?.variants?.reduce(
     (variantAcc, variant) => variant.options?.reduce(
         (optionAcc, option) => {
             const group = data.product.options?.find((o) => o.id === option.option_id);

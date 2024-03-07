@@ -9,6 +9,7 @@ import { page } from '$app/stores';
 
 export let item: CartItem;
 export let disableEmpty = false;
+export let disableEdit = false;
 $: cartItems = $page.data.cart?.items || [];
 
 $: isLastCartItem = cartItems.length === 1 && cartItems[0].id === item.id && cartItems[0].quantity === 1;
@@ -20,6 +21,8 @@ let error: string | false = '';
 </script>
 
 <form
+    in:fade
+    out:slide|fade
     use:enhance="{() => {
         loading = true;
         error = false;
@@ -48,14 +51,16 @@ let error: string | false = '';
     <h3>{item.title}</h3>
     <span class="variant">{item.variant.title}</span>
     <span class="price">{item.unit_price / 100}€</span>
-    <fieldset disabled="{loading}" class:invalid-anim="{error}">
-        <button
-            disabled="{loading || (disableEmpty && isLastCartItem)}"
-            role="spinbutton"
-            data-type="subtract"
-            formaction="/?/decrementCartItem">-</button>
+    <fieldset disabled="{loading || disableEdit}" class:invalid-anim="{error}">
+        {#if !disableEdit}
+            <button
+                disabled="{loading || (disableEmpty && isLastCartItem)}"
+                role="spinbutton"
+                data-type="subtract"
+                formaction="/?/decrementCartItem">-</button>
+        {/if}
         <input
-            disabled="{loading}"
+            disabled="{loading || disableEdit}"
             type="number"
             name="quantity"
             min="0"
@@ -86,15 +91,19 @@ let error: string | false = '';
                 }
                 formElement.requestSubmit();
             }}" />
-        <button disabled="{loading}" role="spinbutton" data-type="add" formaction="/?/incrementCartItem"
-            >+</button>
+        {#if !disableEdit}
+            <button disabled="{loading}" role="spinbutton" data-type="add" formaction="/?/incrementCartItem"
+                >+</button>
+        {/if}
     </fieldset>
     <input type="hidden" name="id" value="{item.id}" />
-    <button
-        disabled="{loading || disableEmpty}"
-        aria-roledescription="remove"
-        data-type="remove"
-        formaction="/?/removeCartItem"><RemoveIcon /></button>
+    {#if !disableEdit}
+        <button
+            disabled="{loading || disableEmpty}"
+            aria-roledescription="remove"
+            data-type="remove"
+            formaction="/?/removeCartItem"><RemoveIcon /></button>
+    {/if}
     <span class="total-price">{(item.subtotal || item.unit_price) / 100}€</span>
     {#if loading}
         <div class="spinner" transition:fade>
@@ -110,7 +119,7 @@ let error: string | false = '';
 form {
     width: 100%;
     display: grid;
-    column-gap: 0.5em;
+    column-gap: 1em;
     row-gap: 0.5em;
     grid-template-columns: minmax(1em, 10em) auto auto auto;
     grid-template-rows: min-content min-content min-content auto;
@@ -196,7 +205,7 @@ fieldset {
             border: none;
         }
     }
-    &:hover {
+    &:not(:disabled):hover {
         border: 1px solid var(--textColor);
     }
     & button {

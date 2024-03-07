@@ -3,30 +3,30 @@ import { page } from '$app/stores';
 import { fade, slide } from 'svelte/transition';
 import CartItem from './CartItem.svelte';
 
-$: sortedItems = $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.createdAt - b.createdAt) || [];
+$: sortedItems =
+    $page.data.cart?.items?.sort((a: CartItem, b: CartItem) => a.title.localeCompare(b.title)) || [];
 
 export let disableMinWidth = false;
 export let disableEmpty = false;
+export let disableEdit = false;
 </script>
 
 <div class="wrapper" style="{disableMinWidth ? '' : 'min-width: min(28em, 100dvw);'}">
-    <div>
-        <div class="cart">
-            {#if ($page.data.cart?.items?.length || 0) === 0}
-                <div transition:fade class="empty">
-                    <h2>Your cart is empty</h2>
-                </div>
-            {:else}
-                {#each sortedItems as item (item.id)}
-                    <CartItem item="{item}" disableEmpty="{disableEmpty}" />
-                {/each}
-            {/if}
+    {#if ($page.data.cart?.items?.length || 0) === 0}
+        <div transition:fade class="empty">
+            <h2>Your cart is empty</h2>
         </div>
-    </div>
+    {:else}
+        <div class="cart">
+            {#each sortedItems as item (item.id)}
+                <CartItem item="{item}" disableEmpty="{disableEmpty}" disableEdit="{disableEdit}" />
+            {/each}
+        </div>
+    {/if}
     <div>
         <slot name="total">
             {#if ($page.data.cart?.items?.length || 0) > 0}
-                <h3 transition:slide>Total: {($page.data.cart?.total || 0) / 100}€</h3>
+                <h3 transition:slide>Total: {($page.data.cart?.subtotal || 0) / 100}€</h3>
                 <a transition:slide class="button primary" href="/checkout">Checkout</a>
             {/if}
         </slot>
@@ -41,7 +41,6 @@ export let disableEmpty = false;
     overflow: hidden;
 
     & > :first-child {
-        height: 100%;
         overflow: auto;
         scrollbar-gutter: stable;
     }
@@ -58,9 +57,12 @@ export let disableEmpty = false;
 .cart {
     display: grid;
     padding: 1em;
-    gap: 2em;
+    height: fit-content;
+    grid-row: 1;
+    grid-column: 1;
 
     & > :global(*) {
+        margin: 1em 0;
         &::after {
             content: '';
             width: 100%;
@@ -80,11 +82,11 @@ export let disableEmpty = false;
 .empty {
     display: grid;
     place-items: center;
-    padding: 4em;
     white-space: nowrap;
     height: 100%;
-    position: absolute;
-    inset: 0;
     pointer-events: none;
+    grid-row: 1;
+    grid-column: 1;
+    padding: 2em 0;
 }
 </style>
