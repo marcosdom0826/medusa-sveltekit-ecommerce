@@ -138,7 +138,7 @@ module.exports = {
                 format: ['UPPER_CASE']
             }
         ], 
-        'no-console': 'warn',
+        'no-console': 'off',
         'no-return-await': 'error',
         'arrow-body-style': 'error',
         'arrow-parens': [
