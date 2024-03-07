@@ -26,7 +26,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 export const actions = {
     setPaymentSession: async (event) => {
-        console.log('setPaymentSession');
         const data = await event.request.formData();
         const cartId = event.cookies.get('cart_id');
 
