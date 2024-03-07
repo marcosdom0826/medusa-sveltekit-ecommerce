@@ -5,6 +5,7 @@ import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 const HOME_CATEGORY = 'fresh';
+const CART_EXPIRY_DAYS = 5;
 
 export const load: PageServerLoad = async ({ parent, params }) => {
     const parentData = await parent();
@@ -79,7 +80,7 @@ export const actions = {
         }
         if (!cart) {
             cart = await medusa.carts.create();
-            cookies.set('cart_id', cart.cart.id, { path: '/' });
+            cookies.set('cart_id', cart.cart.id, { path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * CART_EXPIRY_DAYS) });
         }
         const maybeInCartItem = cart.cart.items?.find((i) => i.variant_id === selectedVariant);
         if (maybeInCartItem) {

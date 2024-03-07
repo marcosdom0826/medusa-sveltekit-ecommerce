@@ -22,7 +22,7 @@ onNavigate((navigation) => {
 
 <Header />
 
-<main>
+<main style="view-transition-name: main;">
     <slot />
 </main>
 
@@ -38,6 +38,12 @@ onNavigate((navigation) => {
 main {
     min-height: calc(100% - var(--header-height, 0px) - var(--footer-height, 0px));
     position: relative;
+    display: grid;
+
+    & > :global(*) {
+        grid-row: 1;
+        grid-column: 1;
+    }
 }
 
 :global(footer) {

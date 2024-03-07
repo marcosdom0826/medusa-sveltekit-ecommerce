@@ -65,6 +65,9 @@ importers:
       medusa-payment-manual:
         specifier: ^1.0.24
         version: 1.0.24(medusa-interfaces@1.3.8)
+      medusa-payment-paypal:
+        specifier: ^6.0.2
+        version: 6.0.2(@medusajs/medusa@1.20.2)
       medusa-payment-stripe:
         specifier: ^6.0.7
         version: 6.0.7(@medusajs/medusa@1.20.2)(pg@8.11.3)
@@ -132,6 +135,9 @@ importers:
       '@medusajs/medusa-js':
         specifier: ^6.1.7
         version: 6.1.7(@medusajs/medusa@1.20.2)
+      '@paypal/paypal-js':
+        specifier: ^8.0.2
+        version: 8.0.2
       sveltekit-i18n:
         specifier: ^2.4.2
         version: 2.4.2(svelte@4.2.11)
@@ -198,7 +204,7 @@ importers:
         version: 4.2.11
       svelte-check:
         specifier: ^3.6.0
-        version: 3.6.4(@babel/core@7.23.9)(postcss@8.4.35)(svelte@4.2.11)
+        version: 3.6.4(postcss@8.4.35)(svelte@4.2.11)
       tslib:
         specifier: ^2.4.1
         version: 2.6.2
@@ -4240,22 +4246,6 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  /@oclif/command@1.8.36(@oclif/config@1.18.17):
-    resolution: {integrity: sha512-/zACSgaYGtAQRzc7HjzrlIs14FuEYAZrMOEwicRoUnZVyRunG4+t5iSEeQu0Xy2bgbCD0U1SP/EdeNZSTXRwjQ==}
-    engines: {node: '>=12.0.0'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    peerDependencies:
-      '@oclif/config': ^1
-    dependencies:
-      '@oclif/config': 1.18.17
-      '@oclif/errors': 1.3.6
-      '@oclif/help': 1.0.15(supports-color@8.1.1)
-      '@oclif/parser': 3.8.17
-      debug: 4.3.4(supports-color@8.1.1)
-      semver: 7.6.0
-    transitivePeerDependencies:
-      - supports-color
-
   /@oclif/command@1.8.36(@oclif/config@1.18.17)(supports-color@8.1.1):
     resolution: {integrity: sha512-/zACSgaYGtAQRzc7HjzrlIs14FuEYAZrMOEwicRoUnZVyRunG4+t5iSEeQu0Xy2bgbCD0U1SP/EdeNZSTXRwjQ==}
     engines: {node: '>=12.0.0'}
@@ -4405,6 +4395,24 @@ packages:
     engines: {node: '>=8.0.0'}
     deprecated: Deprecated in favor of @oclif/core
 
+  /@paypal/checkout-server-sdk@1.0.3:
+    resolution: {integrity: sha512-UEdq8akEdMz0Vs4qoQFU2gMp8PpyE/HKyMwiZuK4vIWUKl8jfd1fWKjQN5cDFm9NkFUIp5U7h++rdMOVj9WMNA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@paypal/paypalhttp': 1.0.1
+    dev: false
+
+  /@paypal/paypal-js@8.0.2:
+    resolution: {integrity: sha512-JbWXxMsTDUE4j+JXAu04qBacjkP6/38lgGC5YKW/FBfU1v3S5EgjfF1cMCGFehcpmsU5T88rkpKDsuftrCkyCA==}
+    dependencies:
+      promise-polyfill: 8.3.0
+    dev: false
+
+  /@paypal/paypalhttp@1.0.1:
+    resolution: {integrity: sha512-DC7AHxTT7drF6dUi3YaFdPVuT15sIkpD5H2eHmdtFgxM4UanS1o1ZDfMhR9mpxd8o+X6pz2r+EZVRRq+n1cssQ==}
+    engines: {node: '>=4'}
+    dev: false
+
   /@pkgjs/parseargs@0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -4469,7 +4477,7 @@ packages:
       svgo: '>=3.x'
       vite: '>=4.x'
     dependencies:
-      '@rollup/pluginutils': 5.1.0
+      '@rollup/pluginutils': 5.1.0(rollup@3.20.7)
       svelte: 4.2.11
       svgo: 3.2.0
       vite: 5.1.3
@@ -5753,20 +5761,6 @@ packages:
       rollup: 3.20.7
     dev: false
 
-  /@rollup/pluginutils@5.1.0:
-    resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@types/estree': 1.0.5
-      estree-walker: 2.0.2
-      picomatch: 2.3.1
-    dev: true
-
   /@rollup/pluginutils@5.1.0(rollup@3.20.7):
     resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
     engines: {node: '>=14.0.0'}
@@ -5780,7 +5774,6 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 3.20.7
-    dev: false
 
   /@rollup/rollup-android-arm-eabi@4.12.0:
     resolution: {integrity: sha512-+ac02NL/2TCKRrJu2wffk1kZ+RyqxVUlbjSagNgPm94frxtr+XDL12E5Ll1enWskLrtrZ2r8L3wED1orIibV/w==}
@@ -13025,6 +13018,22 @@ packages:
       medusa-interfaces: 1.3.8
     dev: false
 
+  /medusa-payment-paypal@6.0.2(@medusajs/medusa@1.20.2):
+    resolution: {integrity: sha512-Lvmx5XsPFzdRaZMlCngsUnvB8hg9VvQkHKUuwMxnYje4ide1aY3Ez925U4Acr44faMIYQAHKi9uJULx+yuR3Pg==}
+    peerDependencies:
+      '@medusajs/medusa': ^1.12.0
+    dependencies:
+      '@medusajs/medusa': 1.20.2(@babel/core@7.23.9)(@types/ioredis-mock@8.2.5)(medusa-interfaces@1.3.8)(typeorm@0.3.20)
+      '@paypal/checkout-server-sdk': 1.0.3
+      axios: 1.6.7
+      body-parser: 1.20.2
+      express: 4.18.2
+      medusa-core-utils: 1.2.1
+    transitivePeerDependencies:
+      - debug
+      - supports-color
+    dev: false
+
   /medusa-payment-stripe@6.0.7(@medusajs/medusa@1.20.2)(pg@8.11.3):
     resolution: {integrity: sha512-qpSSHJDW3+yCF7jY/53XiZeuJY5gXMFA33BAh0ipAlBC2OAqM/ZPYiiZNtDb8RaTYTTikhBOIqHxCaYYoFaPkw==}
     engines: {node: '>=16'}
@@ -13826,7 +13835,7 @@ packages:
     engines: {node: '>=8.0.0'}
     hasBin: true
     dependencies:
-      '@oclif/command': 1.8.36(@oclif/config@1.18.17)
+      '@oclif/command': 1.8.36(@oclif/config@1.18.17)(supports-color@8.1.1)
       '@oclif/config': 1.18.17
       '@oclif/plugin-help': 3.3.1
       cli-ux: 5.6.7(@oclif/config@1.18.17)
@@ -14721,6 +14730,10 @@ packages:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
 
+  /promise-polyfill@8.3.0:
+    resolution: {integrity: sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==}
+    dev: false
+
   /promise@7.3.1:
     resolution: {integrity: sha512-nolQXZ/4L+bP/UGlkfaIujX9BKxGwmQ9OT4mOt5yvy8iK1h3wqTEJCijzGANTCCl9nWjY41juyAn2K3Q1hLLTg==}
     dependencies:
@@ -15577,7 +15590,6 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.3
-    dev: false
 
   /rollup@4.12.0:
     resolution: {integrity: sha512-wz66wn4t1OHIJw3+XU7mJJQV/2NAfw5OAk6G6Hoo3zcvz/XOfQ52Vgi+AN4Uxoxi0KBBwk2g8zPrTDA4btSB/Q==}
@@ -16229,7 +16241,7 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check@3.6.4(@babel/core@7.23.9)(postcss@8.4.35)(svelte@4.2.11):
+  /svelte-check@3.6.4(postcss@8.4.35)(svelte@4.2.11):
     resolution: {integrity: sha512-mY/dqucqm46p72M8yZmn81WPZx9mN6uuw8UVfR3ZKQeLxQg5HDGO3HHm5AZuWZPYNMLJ+TRMn+TeN53HfQ/vsw==}
     hasBin: true
     peerDependencies:
@@ -16242,7 +16254,7 @@ packages:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.2.11
-      svelte-preprocess: 5.1.3(@babel/core@7.23.9)(postcss@8.4.35)(svelte@4.2.11)(typescript@5.3.3)
+      svelte-preprocess: 5.1.3(postcss@8.4.35)(svelte@4.2.11)(typescript@5.3.3)
       typescript: 5.3.3
     transitivePeerDependencies:
       - '@babel/core'
@@ -16282,7 +16294,7 @@ packages:
       svelte: 4.2.11
     dev: true
 
-  /svelte-preprocess@5.1.3(@babel/core@7.23.9)(postcss@8.4.35)(svelte@4.2.11)(typescript@5.3.3):
+  /svelte-preprocess@5.1.3(postcss@8.4.35)(svelte@4.2.11)(typescript@5.3.3):
     resolution: {integrity: sha512-xxAkmxGHT+J/GourS5mVJeOXZzne1FR5ljeOUAMXUkfEhkLEllRreXpbl3dIYJlcJRfL1LO1uIAPpBpBfiqGPw==}
     engines: {node: '>= 16.0.0', pnpm: ^8.0.0}
     requiresBuild: true
@@ -16320,7 +16332,6 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@babel/core': 7.23.9
       '@types/pug': 2.0.10
       detect-indent: 6.1.0
       magic-string: 0.30.7

@@ -1,13 +1,23 @@
 <script lang="ts">
 import Cart from '$/lib/components/Cart.svelte';
-import { enhance } from '$app/forms';
+import { applyAction, enhance } from '$app/forms';
 import { page } from '$app/stores';
-import { slide } from 'svelte/transition';
-let loading = false;
-$: console.log(loading);
+import { fade, slide } from 'svelte/transition';
+import type { ActionData, PageData } from './$types';
 
-let paymentOption = 'paypal';
+let loading = false;
+
+export let data: PageData;
+export let form: ActionData;
+
+let htmlForm: HTMLFormElement;
+
+let shippingOption = data.shippingOptions?.[0]?.id;
+
+$: shippingCost = data.shippingOptions.find((s) => s.id === shippingOption)?.amount || 0;
+
 let invoiceAddress = 'asDelivery';
+let formValid = false;
 
 let width: number;
 let height: number;
@@ -19,75 +29,140 @@ let portraitCartExpanded = false;
 
 <svelte:window bind:innerWidth="{width}" bind:innerHeight="{height}" />
 
-<div class="wrapper">
+<div class="content" class:loading="{loading}" transition:fade>
     <div>
         <form
             method="POST"
+            id="data-form"
+            bind:this="{htmlForm}"
+            on:input="{() => {
+                formValid = htmlForm.checkValidity();
+            }}"
             use:enhance="{async () => {
                 loading = true;
-                return async ({ update }) => {
+                return async ({ update, result }) => {
                     await update({ reset: false });
                     loading = false;
+                    await applyAction(result);
                 };
             }}">
             <div class="columns">
                 <h3 class="wide">Delivery</h3>
-                <label for="email" class="wide">
-                    <input name="email" type="email" placeholder="Email" required id="email" />
+                <label for="email" class="wide" class:field-error="{form?.fieldErrors?.email}">
+                    <input
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        required
+                        id="email"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.email) form.fieldErrors.email = '';
+                        }}" />
                     <span class="hint">Email</span>
                 </label>
-                <label for="name">
-                    <input name="name" type="text" placeholder="Name" required id="name" />
+                <label for="first_name" class:field-error="{form?.fieldErrors?.first_name}">
+                    <input
+                        name="first_name"
+                        type="text"
+                        placeholder="Name"
+                        required
+                        id="first_name"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.first_name) form.fieldErrors.first_name = '';
+                        }}" />
                     <span class="hint">Name</span>
                 </label>
-                <label for="surname">
-                    <input name="surname" type="text" placeholder="Surname" required id="surname" />
-                    <span class="hint">Surname</span>
+                <label for="last_name" class:field-error="{form?.fieldErrors?.last_name}">
+                    <input
+                        name="last_name"
+                        type="text"
+                        placeholder="Last Name"
+                        required
+                        id="last_name"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.last_name) form.fieldErrors.last_name = '';
+                        }}" />
+                    <span class="hint">Last Name</span>
                 </label>
-                <label for="company" class="wide">
-                    <input name="company" type="text" placeholder="Company (Optional)" id="company" />
+                <label for="company" class="wide" class:field-error="{form?.fieldErrors?.company}">
+                    <input
+                        name="company"
+                        type="text"
+                        placeholder="Company (Optional)"
+                        id="company"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.company) form.fieldErrors.company = '';
+                        }}" />
                     <span class="hint">Company (Optional)</span>
                 </label>
-                <label for="address" class="wide">
-                    <input name="address" type="text" placeholder="Address" required id="address" />
+                <label for="address" class="wide" class:field-error="{form?.fieldErrors?.address}">
+                    <input
+                        name="address"
+                        type="text"
+                        placeholder="Address"
+                        required
+                        id="address"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.address) form.fieldErrors.address = '';
+                        }}" />
                     <span class="hint">Address</span>
                 </label>
-                <label for="zip">
-                    <input name="zip" type="text" placeholder="Zip" required id="zip" />
+                <label for="zip" class:field-error="{form?.fieldErrors?.zip}">
+                    <input
+                        name="zip"
+                        type="text"
+                        placeholder="Zip"
+                        required
+                        id="zip"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.zip) form.fieldErrors.zip = '';
+                        }}" />
                     <span class="hint">Zip</span>
                 </label>
-                <label for="city">
-                    <input name="city" type="text" placeholder="City" required id="city" />
+                <label for="city" class:field-error="{form?.fieldErrors?.city}">
+                    <input
+                        name="city"
+                        type="text"
+                        placeholder="City"
+                        required
+                        id="city"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.city) form.fieldErrors.city = '';
+                        }}" />
                     <span class="hint">City</span>
                 </label>
-                <label for="phone" class="wide">
-                    <input name="phone" type="tel" placeholder="Phone (Optional)" id="phone" />
+                <label for="phone" class="wide" class:field-error="{form?.fieldErrors?.phone}">
+                    <input
+                        name="phone"
+                        type="tel"
+                        placeholder="Phone (Optional)"
+                        id="phone"
+                        on:input="{() => {
+                            if (form?.fieldErrors?.phone) form.fieldErrors.phone = '';
+                        }}" />
                     <span class="hint">Phone (Optional)</span>
                 </label>
+                <input type="hidden" name="country" value="de" />
             </div>
             <fieldset>
-                <h3>Payment</h3>
-                <span>All payments are encrypted and secure</span>
-                <label for="paypal" class="checkbox-label">
-                    <input
-                        type="radio"
-                        name="paymentOption"
-                        id="paypal"
-                        value="paypal"
-                        required
-                        bind:group="{paymentOption}" />
-                    <span>Paypal</span>
-                </label>
-                <label for="prepayment" class="checkbox-label">
-                    <input
-                        type="radio"
-                        name="paymentOption"
-                        id="prepayment"
-                        value="prepayment"
-                        required
-                        bind:group="{paymentOption}" />
-                    <span>Prepayment</span>
-                </label>
+                {#if data.shippingOptions.length > 0}
+                    <h3>Shipping method</h3>
+                {/if}
+                {#each data.shippingOptions as option (option.id)}
+                    {#if !option.admin_only}
+                        <label for="shipping-{option.id}" class="checkbox-label">
+                            <input
+                                type="radio"
+                                name="shippingOption"
+                                id="shipping-{option.id}"
+                                value="{option.id}"
+                                required
+                                bind:group="{shippingOption}" />
+                            <span>{option.name}</span>
+                            <span>{(option.price_incl_tax || 0) / 100}€</span>
+                        </label>
+                    {/if}
+                {/each}
             </fieldset>
             <fieldset>
                 <h3>Invoice Adress</h3>
@@ -98,6 +173,11 @@ let portraitCartExpanded = false;
                         id="asDelivery"
                         value="asDelivery"
                         required
+                        on:change="{() => {
+                            setTimeout(() => {
+                                formValid = htmlForm.checkValidity();
+                            }, 500);
+                        }}"
                         bind:group="{invoiceAddress}" />
                     <span>Same as delivery address</span>
                 </label>
@@ -108,30 +188,42 @@ let portraitCartExpanded = false;
                         id="separateAddress"
                         value="separateAddress"
                         required
+                        on:change="{() => {
+                            setTimeout(() => {
+                                formValid = htmlForm.checkValidity();
+                            }, 500);
+                        }}"
                         bind:group="{invoiceAddress}" />
                     <span>Separate address</span>
                 </label>
                 {#if invoiceAddress === 'separateAddress'}
                     <div class="columns" transition:slide>
-                        <label for="invoice-name">
+                        <label
+                            for="invoice-first_name"
+                            class:field-error="{form?.fieldErrors?.['invoice-first_name']}">
                             <input
-                                id="invoice-name"
-                                name="invoice-name"
+                                id="invoice-first_name"
+                                name="invoice-first_name"
                                 type="text"
                                 placeholder="Name"
                                 required />
                             <span class="hint">Name</span>
                         </label>
-                        <label for="invoice-surname">
+                        <label
+                            for="invoice-last_name"
+                            class:field-error="{form?.fieldErrors?.['invoice-last_name']}">
                             <input
-                                id="invoice-surname"
-                                name="invoice-surname"
+                                id="invoice-last_name"
+                                name="invoice-last_name"
                                 type="text"
-                                placeholder="Surname"
+                                placeholder="Last Name"
                                 required />
-                            <span class="hint">Surname</span>
+                            <span class="hint">Last Name</span>
                         </label>
-                        <label for="invoice-company" class="wide">
+                        <label
+                            for="invoice-company"
+                            class="wide"
+                            class:field-error="{form?.fieldErrors?.['invoice-company']}">
                             <input
                                 id="invoice-company"
                                 name="invoice-company"
@@ -140,7 +232,10 @@ let portraitCartExpanded = false;
                                 class="wide" />
                             <span class="hint">Company (Optional)</span>
                         </label>
-                        <label for="invoice-address" class="wide">
+                        <label
+                            for="invoice-address"
+                            class="wide"
+                            class:field-error="{form?.fieldErrors?.['invoice-address']}">
                             <input
                                 id="invoice-address"
                                 name="invoice-address"
@@ -150,7 +245,7 @@ let portraitCartExpanded = false;
                                 class="wide" />
                             <span class="hint">Address</span>
                         </label>
-                        <label for="invoice-zip">
+                        <label for="invoice-zip" class:field-error="{form?.fieldErrors?.['invoice-zip']}">
                             <input
                                 id="invoice-zip"
                                 name="invoice-zip"
@@ -159,7 +254,7 @@ let portraitCartExpanded = false;
                                 required />
                             <span class="hint">Zip</span>
                         </label>
-                        <label for="invoice-city">
+                        <label for="invoice-city" class:field-error="{form?.fieldErrors?.['invoice-city']}">
                             <input
                                 id="invoice-city"
                                 name="invoice-city"
@@ -168,62 +263,59 @@ let portraitCartExpanded = false;
                                 required />
                             <span class="hint">City</span>
                         </label>
-                        <label for="invoice-phone" class="wide">
-                            <input
-                                id="invoice-phone"
-                                name="invoice-phone"
-                                type="tel"
-                                placeholder="Phone (Optional)"
-                                class="wide" />
-                            <span class="hint">Phone (Optional)</span>
-                        </label>
+                        <input type="hidden" name="invoice-country" value="de" />
                     </div>
                 {/if}
             </fieldset>
+            {#if form?.error?.message}
+                <span transition:slide class="error">{form?.error?.message}</span>
+            {/if}
+        </form>
+        <div class="rhs">
             {#if portrait}
-                <div class="wide" style="width: 100%; overflow-x: hidden;">
-                    <button
-                        class="expand-cart-button"
-                        on:click="{(e) => {
-                            e.preventDefault();
-                            portraitCartExpanded = !portraitCartExpanded;
-                        }}">
-                        {portraitCartExpanded ? 'Hide' : 'Show'} Cart
-                    </button>
-                    {#if portraitCartExpanded}
-                        <div transition:slide>
-                            <Cart disableMinWidth="{true}" disableEmpty="{true}">
-                                <div slot="total"></div>
-                            </Cart>
-                        </div>
-                    {/if}
-                </div>
-                <div class="total">
-                    <h3>Total:</h3>
-                    <span>{($page.data.cart?.total || 0) / 100}€</span>
+                <button
+                    class="expand-cart-button"
+                    on:click="{(e) => {
+                        e.preventDefault();
+                        portraitCartExpanded = !portraitCartExpanded;
+                    }}">
+                    {portraitCartExpanded ? 'Hide' : 'Show'} Cart
+                </button>
+            {/if}
+            {#if !portrait || portraitCartExpanded}
+                <div transition:slide>
+                    <Cart disableMinWidth="{true}">
+                        <div slot="total"></div>
+                    </Cart>
                 </div>
             {/if}
-            <button class="primary">Pay</button>
-        </form>
-        {#if !portrait}
-            <aside>
-                <Cart disableMinWidth="{true}" disableEmpty="{true}">
-                    <div class="total" slot="total">
-                        <h3>Total:</h3>
-                        <span>{($page.data.cart?.total || 0) / 100}€</span>
-                    </div>
-                </Cart>
-            </aside>
-        {/if}
+            <div class="total">
+                <h4>Subtotal:</h4>
+                <span>{($page.data.cart?.subtotal || 0) / 100}€</span>
+                <span>Shipping:</span>
+                <span>{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
+                <h3>Total:</h3>
+                <span>{(($page.data.cart?.subtotal || 0) + shippingCost) / 100}€</span>
+            </div>
+            <button
+                transition:fade|slide
+                form="data-form"
+                class="primary"
+                type="submit"
+                disabled="{loading || !formValid || !shippingOption}">
+                Next
+            </button>
+        </div>
     </div>
 </div>
 
 <style lang="postcss">
-.wrapper {
+.content {
     width: 100%;
     display: grid;
     justify-content: center;
     padding: 1em;
+
     @media (orientation: landscape) {
         &::after {
             content: '';
@@ -235,6 +327,9 @@ let portraitCartExpanded = false;
             opacity: 0.25;
             background-color: var(--textColor);
         }
+    }
+    &.loading {
+        pointer-events: none;
     }
     & > div {
         display: grid;
@@ -249,22 +344,24 @@ let portraitCartExpanded = false;
         grid-template-columns: repeat(2, 1fr);
         @media (orientation: landscape) {
             width: min(100%, 1800px);
-            & > :first-child {
-                width: 100%;
-            }
-            & > :last-child {
-                height: fit-content;
+            & > * {
                 width: 100%;
             }
         }
     }
 }
 
+.rhs {
+    display: grid;
+    gap: 1em;
+    height: fit-content;
+}
+
 form {
     display: grid;
     gap: 2em;
     padding: 1em;
-    min-height: 100%;
+    height: fit-content;
 
     @media (orientation: portrait) {
         padding: 0;
@@ -272,10 +369,17 @@ form {
     }
 
     & label {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: auto min-content;
         align-items: center;
         position: relative;
         isolation: isolate;
+
+        & > * {
+            grid-column: 1;
+            grid-row: 1;
+        }
 
         & input:not([type='radio']) {
             width: 100%;
@@ -286,16 +390,16 @@ form {
             opacity: 1;
             font-size: 0.75em;
             translate: 0 -1.75em;
+            background-color: var(--backgroundColor);
         }
 
         & .hint {
-            position: absolute;
-            left: 0.5em;
             pointer-events: none;
+            width: fit-content;
             user-select: none;
+            margin: 0 0.5em;
             padding: 0 0.5em;
             opacity: 0.5;
-            background-color: var(--backgroundColor);
             transition: all var(--transitionDuration) ease;
             border-radius: 0.5em;
         }
@@ -320,6 +424,18 @@ form {
 
 input::placeholder {
     visibility: hidden;
+    opacity: 0;
+}
+
+label.field-error {
+    & input {
+        border-color: red;
+    }
+    & span + span {
+        color: red;
+        grid-row: 2;
+        padding: 0.5em 0;
+    }
 }
 
 fieldset {
@@ -342,6 +458,11 @@ fieldset {
             padding: 0;
         }
 
+        & span + span {
+            margin-left: auto;
+            opacity: 0.75;
+        }
+
         &:hover,
         &:focus-visible {
             & input[type='radio']:not(:checked)::before {
@@ -357,8 +478,12 @@ fieldset {
     width: 100%;
     gap: 1em;
     align-items: center;
+
     & span {
         font-weight: bold;
+    }
+    & > :nth-child(even) {
+        text-align: end;
     }
 }
 
@@ -366,5 +491,10 @@ fieldset {
     display: grid;
     place-items: center;
     width: 100%;
+}
+
+.error {
+    color: rgb(207, 0, 0);
+    font-weight: bold;
 }
 </style>
