@@ -2,24 +2,25 @@ import type {
     MiddlewaresConfig,
     MedusaRequest,
     MedusaResponse,
-    MedusaNextFunction,
-} from "@medusajs/medusa";
+    MedusaNextFunction
+} from '@medusajs/medusa';
 
 const defaultExpandWithCategories = [
-    "categories",
+    'categories',
     // original defaults
-    "variants",
-    "variants.prices",
-    "variants.options",
-    "options",
-    "options.values",
-    "images",
-    "tags",
-    "collection",
-    "type",
-    "profiles",
+    'variants',
+    'variants.prices',
+    'variants.options',
+    'options',
+    'options.values',
+    'images',
+    'tags',
+    'collection',
+    'type',
+    'profiles'
 ];
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 async function categoryInclude(
     req: MedusaRequest,
     res: MedusaResponse,
@@ -27,9 +28,9 @@ async function categoryInclude(
 ) {
     if (!req.query.expand) {
         // medusa does not seem to use query.params from express, keep it here for other middlewares
-        req.query = { ...req.query, expand: defaultExpandWithCategories.join(",") };
-        // stupidly patch the url as that's was medusajs uses.................. ... . . .. . ..  .. . . . . . . . . 
-        req.url = `${req.url}${req.url.includes("?") ? "&" : "?"}expand=${defaultExpandWithCategories.join(",")}`;
+        req.query = { ...req.query, expand: defaultExpandWithCategories.join(',') };
+        // stupidly patch the url as that's was medusajs uses.................. ... . . .. . ..  .. . . . . . . . .
+        req.url = `${req.url}${req.url.includes('?') ? '&' : '?'}expand=${defaultExpandWithCategories.join(',')}`;
     }
 
     next();
@@ -38,8 +39,8 @@ async function categoryInclude(
 export const config: MiddlewaresConfig = {
     routes: [
         {
-            matcher: "/store/products",
-            middlewares: [categoryInclude],
-        },
-    ],
+            matcher: '/store/products',
+            middlewares: [categoryInclude]
+        }
+    ]
 };
