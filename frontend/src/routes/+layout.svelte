@@ -3,6 +3,7 @@ import Header from './Header.svelte';
 import Footer from './Footer.svelte';
 import '../main.pcss';
 import { onNavigate } from '$app/navigation';
+import { page } from '$app/stores';
 
 onNavigate((navigation) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,17 +17,23 @@ onNavigate((navigation) => {
         });
     });
 });
+
+$: email = $page.url.searchParams.get('email') === 'true';
 </script>
 
 <svelte:head></svelte:head>
 
-<Header />
+{#if !email}
+    <Header />
+{/if}
 
 <main style="view-transition-name: main;">
     <slot />
 </main>
 
-<Footer />
+{#if !email}
+    <Footer />
+{/if}
 
 <style lang="postcss">
 :global(body) {
