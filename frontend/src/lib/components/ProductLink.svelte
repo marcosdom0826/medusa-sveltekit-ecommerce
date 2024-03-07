@@ -47,7 +47,14 @@ $: stock = product.is_giftcard
     ? 9999
     : product.variants
         ?.reduce(
-            (acc, v) => acc + (v.inventory_quantity || 0),
+            (acc, v) =>
+            {
+                const quantity = (v.inventory_quantity || 0);
+                if (quantity < 0) {
+                    return acc;
+                }
+                return acc + (v.inventory_quantity || 0);
+            },
             0
         ) ?? 0;
 /* eslint-enable prettier/prettier */
