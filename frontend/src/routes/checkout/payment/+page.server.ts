@@ -21,6 +21,21 @@ export const load: PageServerLoad = async ({ parent }) => {
         };
     }
 
+    // check if paymentSession updated at is older than 15 minutes
+    if (parentData.cart.payment_session.provider_id === 'paypal') {
+        const updated_at = new Date(parentData.cart.payment_session.updated_at);
+        const now = new Date();
+        const minutes = Math.floor((now.getTime() - updated_at.getTime()) / 60000);
+        if (minutes > 15) {
+            const updatedCart = await medusa.carts.setPaymentSession(parentData.cart.id, {
+                provider_id: 'paypal'
+            });
+            return {
+                cart: updatedCart.cart
+            };
+        }
+    }
+
 
 };
 
