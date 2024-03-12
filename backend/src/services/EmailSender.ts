@@ -1,6 +1,8 @@
-import { AbstractNotificationService, FulfillmentService, Logger, Order, OrderService, ReturnedData } from '@medusajs/medusa';
+import { AbstractNotificationService, FulfillmentService, Logger, OrderService, ReturnedData } from '@medusajs/medusa';
 import { EntityManager } from 'typeorm';
 import nodemailer from 'nodemailer';
+import { Order } from 'src/models/order';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 
 
 export default class EmailSenderService extends AbstractNotificationService {
@@ -21,11 +23,12 @@ export default class EmailSenderService extends AbstractNotificationService {
         this.fulfillmentService = container.fulfillmentService as FulfillmentService;
 
         this.mailer = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
+            host: process.env.SMTP_HOST,
+            port: Number.parseInt(process.env.SMTP_PORT, 10),
+            secure: process.env.SMTP_SECURE === 'true',
             auth: {
-                user: 'bret3@ethereal.email',
-                pass: 'X1aGzQSnRvT2gjNPbM'
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS
             }
         });
     }
@@ -38,14 +41,14 @@ export default class EmailSenderService extends AbstractNotificationService {
                 if (!data.id) {
                     throw new Error('No order id');
                 }
-                order = await this.orderService.retrieve(data.id as string);
+                order = await this.orderService.retrieve(data.id as string) as Order;
                 return this.sendOrderEmail(order);
             }
             case 'order.shipment_created':
                 if (!data.id) {
                     throw new Error('No order id');
                 }
-                order = await this.orderService.retrieve(data.id as string);
+                order = await this.orderService.retrieve(data.id as string) as Order;
                 return this.sendShippingEmail(order);
                 break;
             default:
@@ -70,8 +73,8 @@ export default class EmailSenderService extends AbstractNotificationService {
                     throw new Error('No order id');
                 }
                 order = await this.orderService.retrieve(data.orderId, {
-                    relations: ['fulfillments', 'fulfillments.tracking_links']
-                });
+                    relations: ['fulfillments', 'fulfillments.tracking_links', 'invoice']
+                }) as Order;
                 return this.sendOrderEmail(order, config?.to);
             }
             case 'order.shipment_created':
@@ -79,8 +82,8 @@ export default class EmailSenderService extends AbstractNotificationService {
                     throw new Error('No order id');
                 }
                 order = await this.orderService.retrieve(data.orderId, {
-                    relations: ['fulfillments', 'fulfillments.tracking_links']
-                });
+                    relations: ['fulfillments', 'fulfillments.tracking_links', 'invoice']
+                }) as Order;
                 return this.sendShippingEmail(order, config?.to);
             default:
                 break;
@@ -101,7 +104,13 @@ export default class EmailSenderService extends AbstractNotificationService {
             from: '"Fred Foo 👻" <bret3@ethereal.email>',
             to: to || order.email,
             subject: 'Order confirmation 📦',
-            html: html
+            html: html,
+            attachments: order.invoice?.pdf ? [
+                {
+                    filename: `invoice-${order.invoice.invoice_number}.pdf`,
+                    content: order.invoice?.pdf
+                }
+            ] : []
         });
 
         return {

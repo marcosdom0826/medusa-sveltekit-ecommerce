@@ -4,6 +4,7 @@ import {
     BeforeInsert,
     Column,
     Entity,
+    JoinColumn,
     OneToOne
 } from 'typeorm';
 import { BaseEntity } from '@medusajs/medusa';
@@ -14,16 +15,19 @@ import { Order } from './order';
 export class Invoice extends BaseEntity {
     @Column({ type: 'bytea' })
     public pdf: Buffer | null;
+    @Column({ type: 'varchar' })
+    public invoice_number: string | null;
 
     @Column({ type: 'varchar' })
     public order_id: string | null;
 
     @OneToOne(() => Order)
+    @JoinColumn({ name: 'order_id', referencedColumnName: 'id' })
     public order: Order | null;
 
     @BeforeInsert()
     public beforeInsert(): void {
-        this.id = generateEntityId(this.id, 'post');
+        this.id = generateEntityId(this.id, 'invoice');
     }
 
 }
