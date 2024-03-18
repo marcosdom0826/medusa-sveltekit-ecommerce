@@ -1,6 +1,7 @@
 <script lang="ts">
 import type { PricedProduct } from '$lib/medusa';
 import { onMount } from 'svelte';
+import { fade } from 'svelte/transition';
 import MdiChevronLeft from '~icons/mdi/chevron-left';
 import MdiChevronRight from '~icons/mdi/chevron-right';
 
@@ -22,6 +23,18 @@ let currentImage = 0;
 let mainImageWrapper: HTMLDivElement | undefined;
 let slideWrapper: HTMLDivElement | undefined;
 let thumbnails: HTMLDivElement | undefined;
+
+/* eslint-disable prettier/prettier */
+$: images =
+    (product.images?.length || 0) > 0
+        ? product.images
+        : [
+            {
+                url: product.thumbnail,
+                id: Math.random().toString(36).substring(7)
+            }
+        ];
+/* eslint-enable prettier/prettier */
 
 const zoomMouseHandler = (e: MouseEvent) => {
     if (!e.target || !(e.target instanceof HTMLElement)) {
@@ -71,8 +84,8 @@ const dragEndHandler = (e: Event) => {
     const clientWidth = slideWrapper?.clientWidth;
     if (scrollLeft && scrollWidth && clientWidth) {
         const percentageScrolled = scrollLeft / (scrollWidth - clientWidth);
-        const index = Math.floor(percentageScrolled * (product.images?.length || 0));
-        const remainder = percentageScrolled * (product.images?.length || 0) - index;
+        const index = Math.floor(percentageScrolled * (images?.length || 0));
+        const remainder = percentageScrolled * (images?.length || 0) - index;
         let finalIndex;
         if (scrollLeft > lastScrollLeft) {
             finalIndex = remainder >= 0.25 ? index + 1 : index;
@@ -123,24 +136,26 @@ onMount(() => {
 
 <div class="image-view">
     <div class="thumbnail-wrapper">
-        <div class="thumbnails" bind:this="{thumbnails}">
-            {#each product.images ?? [] as image, idx (image.id)}
-                <button on:click="{() => scrollToImage(idx)}" class:selected="{idx === currentImage}">
-                    <picture>
-                        <source srcset="{image.url}" />
-                        <img
-                            src="{image.url}"
-                            alt="{product.title}"
-                            loading="{idx === 0 ? 'eager' : 'lazy'}" />
-                    </picture>
-                </button>
-            {/each}
-        </div>
+        {#if (images ?? []).length > 1}
+            <div class="thumbnails" bind:this="{thumbnails}" transition:fade>
+                {#each images ?? [] as image, idx (image.id)}
+                    <button on:click="{() => scrollToImage(idx)}" class:selected="{idx === currentImage}">
+                        <picture>
+                            <source srcset="{image.url}" />
+                            <img
+                                src="{image.url}"
+                                alt="{product.title}"
+                                loading="{idx === 0 ? 'eager' : 'lazy'}" />
+                        </picture>
+                    </button>
+                {/each}
+            </div>
+        {/if}
     </div>
     <div class="main-image" bind:this="{mainImageWrapper}">
         <div
             class="slide-wrapper"
-            style="--imagesCount: {product.images?.length || 0};"
+            style="--imagesCount: {images?.length || 0};"
             bind:this="{slideWrapper}"
             role="slider"
             aria-valuenow="{currentImage}"
@@ -178,7 +193,7 @@ onMount(() => {
             on:mouseup="{dragEndHandler}"
             on:mouseleave="{dragEndHandler}"
             on:touchend="{dragEndHandler}">
-            {#each product.images ?? [] as image, idx (image.id)}
+            {#each images ?? [] as image, idx (image.id)}
                 <div class="zoom-container-wrapper">
                     <button
                         class="zoom-container
@@ -211,10 +226,10 @@ onMount(() => {
                 </div>
             {/each}
         </div>
-        {#if (product.images ?? []).length > 1}
+        {#if (images ?? []).length > 1}
             <div class="image-indicator" style="{zoomed ? 'display: none;' : 'display: flex;'}">
                 <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
-                {#each product.images ?? [] as _, idx}
+                {#each images ?? [] as _, idx}
                     <div class:active="{currentImage === idx}"></div>
                 {/each}
                 <div
@@ -236,11 +251,11 @@ onMount(() => {
         <button
             class="scroll-button right"
             on:click="{() => {
-                if (currentImage < (product.images?.length || 0) - 1) {
+                if (currentImage < (images?.length || 0) - 1) {
                     scrollToImage(currentImage + 1);
                 }
             }}"
-            class:visible="{currentImage < (product.images?.length || 0) - 1 && !zoomed}">
+            class:visible="{currentImage < (images?.length || 0) - 1 && !zoomed}">
             <MdiChevronRight />
         </button>
     </div>
