@@ -4,42 +4,44 @@ import { t } from '$/lib/i18n';
 import type { PageData } from './$types';
 import ProductImageView from '$/lib/components/ProductImageView.svelte';
 import type { ProductOptionValue, ProductVariant } from '$/lib/medusa';
-    import ProductBar from '$/lib/components/ProductBar.svelte';
-    import { enhance } from '$app/forms';
-    import { fade, slide } from 'svelte/transition';
-    import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
-    import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
+import ProductBar from '$/lib/components/ProductBar.svelte';
+import { enhance } from '$app/forms';
+import { fade, slide } from 'svelte/transition';
+import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
+import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
 
 export let data: PageData;
 
 let loading = false;
 
-const findOutOfStockOptions = (): Record<string, Record<string, boolean>> => data.product?.variants?.reduce(
-    (variantAcc, variant) => variant.options?.reduce(
-        (optionAcc, option) => {
-            const group = data.product.options?.find((o) => o.id === option.option_id);
-            if (group) {
-                if (!optionAcc[group.title]) {
-                    optionAcc[group.title] = {};
+const findOutOfStockOptions = (): Record<string, Record<string, boolean>> => data.product.is_giftcard
+    ? ({})
+    : data.product?.variants?.reduce(
+        (variantAcc, variant) => variant.options?.reduce(
+            (optionAcc, option) => {
+                const group = data.product.options?.find((o) => o.id === option.option_id);
+                if (group) {
+                    if (!optionAcc[group.title]) {
+                        optionAcc[group.title] = {};
+                    }
+                    const variantInStock = (variant.inventory_quantity || 0) > 0;
+                    const allowsBackOrder = variant.allow_backorder;
+                    if (optionAcc[group.title][option.value] === undefined) {
+                        optionAcc[group.title][option.value] = (
+                            !variantInStock && !allowsBackOrder
+                        );
+                    } else {
+                        optionAcc[group.title][option.value] = (
+                            optionAcc[group.title][option.value] && (!variantInStock && !allowsBackOrder)
+                        );
+                    }
                 }
-                const variantInStock = (variant.inventory_quantity || 0) > 0;
-                const allowsBackOrder = variant.allow_backorder;
-                if (optionAcc[group.title][option.value] === undefined) {
-                    optionAcc[group.title][option.value] = (
-                        !variantInStock && !allowsBackOrder
-                    );
-                } else {
-                    optionAcc[group.title][option.value] = (
-                        optionAcc[group.title][option.value] && (!variantInStock && !allowsBackOrder)
-                    );
-                }
-            }
-            return optionAcc;
-        },
-        variantAcc
-    ) || variantAcc,
-    {} as Record<string, Record<string, boolean>>
-);
+                return optionAcc;
+            },
+            variantAcc
+        ) || variantAcc,
+        {} as Record<string, Record<string, boolean>>
+    );
 
 const variantForOptions = (options: Record<string, ProductOptionValue[]>) => {
     const optionValues = Object.values(options).flat(1);
@@ -52,7 +54,7 @@ const variantForOptions = (options: Record<string, ProductOptionValue[]>) => {
     );
 };
 const isOrderAllowed = (variant: ProductVariant | undefined, nonVariant?: boolean) =>
-    variant ? (variant.allow_backorder || variant.inventory_quantity !== 0) : nonVariant;
+    data.product.is_giftcard ? true : variant ? (variant.allow_backorder || variant.inventory_quantity !== 0) : nonVariant;
 
 const outOfStockOptions = findOutOfStockOptions();
 let selectedOptions: Record<string, ProductOptionValue[]> = {};
@@ -62,9 +64,14 @@ $: selectedVariant = variantForOptions(selectedOptions) || data.product.variants
 $: price = (selectedVariant?.calculated_price ?? 0) / 100;
 $: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
 
-$: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.productOptions).length
-    && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder);
-
+$: selectionValid = data.product.is_giftcard
+    ? true
+    : (
+        variantForOptions(selectedOptions) !== undefined
+        && Object.keys(selectedOptions).length >= Object.keys(data.productOptions).length
+        && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder)
+    );
+/* eslint-enable prettier/prettier */
 </script>
 
 <div class="wrapper">
@@ -82,71 +89,76 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
             <div class="pricing">
                 <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price} €</span>
                 {#if originalPrice !== price}
-                <span class="original price" transition:fade>{originalPrice} €</span>
+                    <span class="original price" transition:fade>{originalPrice} €</span>
                 {/if}
                 <!-- {#if originalPrice !== price}
                 <span class="reduced">-{Math.round(((originalPrice - price) / originalPrice) * 100)}%</span>
                 {/if} -->
             </div>
-            <form method="POST" use:enhance={() => {
-                loading = true;
-                return async ({ update }) => {
-                    await update({ reset: false });
-                    loading = false;
-                    $cartDrawerOpen = true;
-                    selectedOptions = {};
-                };
-            }}>
-                <div class="option-select">
-                    {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
-                        <div>
-                            <h3>{optionCategory}</h3>
-                            <fieldset>
-                                {#each Object.entries(optionGroup) as [optionName, optionValues] (optionName)}
-                                    <label>
-                                        <input
-                                            disabled={
-                                                outOfStockOptions?.[optionCategory]?.[optionName] ||
-                                                !isOrderAllowed(
-                                                    variantForOptions({ ...selectedOptions, [optionCategory]: optionValues }),
-                                                    true
-                                                )
-                                            }
-                                            type="radio"
-                                            name="{optionName}"
-                                            value="{optionValues}"
-                                            bind:group="{selectedOptions[optionCategory]}" />
-                                        <span>{optionName}</span>
-                                    </label>
-                                {/each}
-                            </fieldset>
-                        </div>
-                    {/each}
+            <form
+                method="POST"
+                use:enhance="{() => {
+                    loading = true;
+                    return async ({ update }) => {
+                        await update({ reset: false });
+                        loading = false;
+                        $cartDrawerOpen = true;
+                        selectedOptions = {};
+                    };
+                }}">
+                {#if !data.product.is_giftcard}
+                    <div class="option-select" transition:slide|fade>
+                        {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
+                            <div>
+                                <h3>{optionCategory}</h3>
+                                <fieldset>
+                                    {#each Object.entries(optionGroup) as [optionName, optionValues] (optionName)}
+                                        <label>
+                                            <input
+                                                disabled="{outOfStockOptions?.[optionCategory]?.[
+                                                    optionName
+                                                ] ||
+                                                    !isOrderAllowed(
+                                                        variantForOptions({
+                                                            ...selectedOptions,
+                                                            [optionCategory]: optionValues
+                                                        }),
+                                                        true
+                                                    )}"
+                                                type="radio"
+                                                name="{optionName}"
+                                                value="{optionValues}"
+                                                bind:group="{selectedOptions[optionCategory]}" />
+                                            <span>{optionName}</span>
+                                        </label>
+                                    {/each}
+                                </fieldset>
+                            </div>
+                        {/each}
+                        <input type="hidden" name="variant" value="{selectedVariant.id}" />
+                    </div>
+                    <div class="stock-container" transition:slide|fade>
+                        {#if (selectedVariant.inventory_quantity ?? 0) <= 0 && selectedVariant.allow_backorder}
+                            <div class="low-stock" transition:slide>On Backorder</div>
+                        {/if}
+                        {#if (selectedVariant.inventory_quantity ?? 0) < 10 && (selectedVariant.inventory_quantity ?? 0) > 0}
+                            <div class="low-stock" transition:slide>
+                                <span>{$t('low_stock')}</span>
+                            </div>
+                        {/if}
+                    </div>
+                {:else}
                     <input type="hidden" name="variant" value="{selectedVariant.id}" />
-                </div>
-                <div class="stock-container">
-                    {#if (selectedVariant.inventory_quantity ?? 0) <= 0 && (selectedVariant.allow_backorder)}
-                        <div class="low-stock" transition:slide>
-                            On Backorder
-                        </div>
-                    {/if}
-                    {#if (selectedVariant.inventory_quantity ?? 0) < 10 && (selectedVariant.inventory_quantity ?? 0) > 0}
-                        <div class="low-stock" transition:slide>
-                            <span>{$t('low_stock')}</span>
-                        </div>
-                    {/if}
-                </div>
+                {/if}
                 <div class="add-to-cart">
-                    <button class="primary" disabled="{!selectionValid || loading}" class:loading={loading}>
-                    {#if loading}
-                        <span transition:fade class="loading"><LoadingSpinner size="1.3em" ringWidth="0.25em" /></span>
-                    {:else}
-                        <span transition:fade>{
-                            selectionValid
-                                ? 'Add to cart'
-                                : 'Please select size'
-                        }</span>
-                    {/if}</button>
+                    <button class="primary" disabled="{!selectionValid || loading}" class:loading="{loading}">
+                        {#if loading}
+                            <span transition:fade class="loading"
+                                ><LoadingSpinner size="1.3em" ringWidth="0.25em" /></span>
+                        {:else}
+                            <span transition:fade
+                                >{selectionValid ? 'Add to cart' : 'Please select size'}</span>
+                        {/if}</button>
                 </div>
             </form>
         </div>
@@ -251,7 +263,7 @@ $: selectionValid = Object.keys(selectedOptions).length >= Object.keys(data.prod
     gap: 1rem;
     align-items: center;
     & > .reduced {
-        color: rgb(207, 0, 0);;
+        color: rgb(207, 0, 0);
     }
 }
 .price {
@@ -319,7 +331,8 @@ fieldset {
                 &::before {
                     opacity: 0.25;
                 }
-                &:hover,&:focus-visible {
+                &:hover,
+                &:focus-visible {
                     box-shadow: none;
                     &::after {
                         background: transparent;
@@ -327,7 +340,8 @@ fieldset {
                 }
             }
 
-            &:hover,&:focus-visible {
+            &:hover,
+            &:focus-visible {
                 &::after {
                     background: hsla(0, 0%, 100%, var(--effectAlpha));
                 }
