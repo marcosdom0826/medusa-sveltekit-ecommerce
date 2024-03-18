@@ -21,6 +21,19 @@ const Invoice = ({ order }) => {
         a.click();
     };
 
+
+    if (!order?.invoice || order?.metadata?.invoice) {
+        return (
+            <div className={clx(
+                'p-4 rounded-lg gap-3',
+                'flex items-start shadow-elevation-card-rest',
+                'bg-ui-bg-subtle grid grid-cols-2 gap-8 bg-white'
+            )}>
+                <span>No invoice available</span>
+            </div>
+        );
+    }
+
     return (
         <div className={clx(
             'p-4 rounded-lg gap-3',
