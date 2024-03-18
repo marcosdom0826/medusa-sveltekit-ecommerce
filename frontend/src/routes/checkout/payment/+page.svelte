@@ -111,7 +111,7 @@ $: paypalScript = loadScript({
 
 <svelte:window bind:innerWidth="{width}" bind:innerHeight="{height}" />
 
-<div class="content" transition:fade>
+<div class="content">
     <div>
         <div>
             <div class="order-info">
@@ -226,7 +226,7 @@ $: paypalScript = loadScript({
                         await applyAction(result);
                     };
                 }}">
-                <div class="overlap" transition:slide>
+                <div class="overlap">
                     {#if selectedPaymentProvider === 'paypal'}
                         <div transition:fade id="paypal-button-container">
                             <!-- eslint-disable prettier/prettier -->

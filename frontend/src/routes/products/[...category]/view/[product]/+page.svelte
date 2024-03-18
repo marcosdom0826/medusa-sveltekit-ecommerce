@@ -104,7 +104,7 @@ $: selectionValid = (
                         selectedOptions = {};
                     };
                 }}">
-                <div class="option-select" transition:slide|fade>
+                <div class="option-select">
                     {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
                         <div>
                             <h3>{optionCategory}</h3>
