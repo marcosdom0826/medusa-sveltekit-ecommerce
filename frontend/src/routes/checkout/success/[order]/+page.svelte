@@ -1,14 +1,13 @@
 <script lang="ts">
 import Cart from '$/lib/components/Cart.svelte';
 import { t } from '$/lib/i18n';
-import { fade } from 'svelte/transition';
 import type { PageData } from './$types';
 
 export let data: PageData;
 $: shippingCost = data.order.shipping_total || 0;
 </script>
 
-<div class="content" transition:fade>
+<div class="content">
     <div>
         <h2>Thank you for your order</h2>
         <div>

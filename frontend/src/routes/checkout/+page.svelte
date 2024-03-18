@@ -30,7 +30,7 @@ let portraitCartExpanded = false;
 
 <svelte:window bind:innerWidth="{width}" bind:innerHeight="{height}" />
 
-<div class="content" class:loading="{loading}" transition:fade>
+<div class="content" class:loading="{loading}">
     <div>
         <form
             method="POST"
@@ -313,7 +313,6 @@ let portraitCartExpanded = false;
                 <span>{(($page.data.cart?.subtotal || 0) + shippingCost) / 100}€</span>
             </div>
             <button
-                transition:fade|slide
                 form="data-form"
                 class="primary"
                 type="submit"
