@@ -12,7 +12,10 @@ const categories: Record<string, ProductCategory> = $page.data.categoriesByHandl
     <ul>
         {#each Object.entries(categories) as [handle, category]}
             {#if category.metadata.nav}
-                <li><a href="/products/{handle}">{$t(`${category.name}`)}</a></li>
+                <li>
+                    <a href="/products/{handle}{handle === 'giftcards' ? '/view/gift-card' : ''}"
+                        >{$t(`${category.name}`)}</a>
+                </li>
             {/if}
         {/each}
         <li>
