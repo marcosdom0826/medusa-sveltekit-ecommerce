@@ -57,7 +57,7 @@ $: shippingCost = data.order.shipping_total || 0;
 
             <h3 class="wide">Shipping method</h3>
             <div class="columns">
-                <span>{data.order?.shipping_methods?.[0]?.shipping_option?.name}</span>
+                <span>{data.order?.shipping_methods?.[0]?.shipping_option?.name || 'E-Mail'}</span>
                 <span>{shippingCost > 0 ? `${shippingCost / 100}€` : 'Free'}</span>
             </div>
         </div>
