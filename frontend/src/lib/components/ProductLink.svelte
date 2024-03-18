@@ -82,9 +82,11 @@ $: stock = product.is_giftcard
     <div>
         <span class="title">{product.title}</span>
         <span class="subtitle">{product.subtitle || ' '}</span>
-        <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price}€</span>
-        {#if originalPrice !== price}
-            <span class="original price">{originalPrice}€</span>
+        {#if !product.is_giftcard}
+            <span class="{originalPrice !== price ? 'reduced price' : 'price'}">{price}€</span>
+            {#if originalPrice !== price}
+                <span class="original price">{originalPrice}€</span>
+            {/if}
         {/if}
     </div>
 </a>

@@ -64,13 +64,11 @@ $: selectedVariant = variantForOptions(selectedOptions) || data.product.variants
 $: price = (selectedVariant?.calculated_price ?? 0) / 100;
 $: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
 
-$: selectionValid = data.product.is_giftcard
-    ? true
-    : (
-        variantForOptions(selectedOptions) !== undefined
+$: selectionValid = (
+    variantForOptions(selectedOptions) !== undefined
         && Object.keys(selectedOptions).length >= Object.keys(data.productOptions).length
         && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder)
-    );
+);
 /* eslint-enable prettier/prettier */
 </script>
 
@@ -106,37 +104,38 @@ $: selectionValid = data.product.is_giftcard
                         selectedOptions = {};
                     };
                 }}">
+                <div class="option-select" transition:slide|fade>
+                    {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
+                        <div>
+                            <h3>{optionCategory}</h3>
+                            <fieldset>
+                                {#each Object.entries(optionGroup) as [optionName, optionValues] (optionName)}
+                                    <label>
+                                        <input
+                                            disabled="{outOfStockOptions?.[optionCategory]?.[optionName] ||
+                                                !isOrderAllowed(
+                                                    variantForOptions({
+                                                        ...selectedOptions,
+                                                        [optionCategory]: optionValues
+                                                    }),
+                                                    true
+                                                )}"
+                                            type="radio"
+                                            name="{optionName}"
+                                            value="{optionValues}"
+                                            bind:group="{selectedOptions[optionCategory]}" />
+                                        <span
+                                            >{data.product.is_giftcard
+                                                ? Number.parseInt(optionName) / 100 + ' €'
+                                                : optionName}</span>
+                                    </label>
+                                {/each}
+                            </fieldset>
+                        </div>
+                    {/each}
+                    <input type="hidden" name="variant" value="{selectedVariant.id}" />
+                </div>
                 {#if !data.product.is_giftcard}
-                    <div class="option-select" transition:slide|fade>
-                        {#each Object.entries(data.productOptions || {}) as [optionCategory, optionGroup] (optionCategory)}
-                            <div>
-                                <h3>{optionCategory}</h3>
-                                <fieldset>
-                                    {#each Object.entries(optionGroup) as [optionName, optionValues] (optionName)}
-                                        <label>
-                                            <input
-                                                disabled="{outOfStockOptions?.[optionCategory]?.[
-                                                    optionName
-                                                ] ||
-                                                    !isOrderAllowed(
-                                                        variantForOptions({
-                                                            ...selectedOptions,
-                                                            [optionCategory]: optionValues
-                                                        }),
-                                                        true
-                                                    )}"
-                                                type="radio"
-                                                name="{optionName}"
-                                                value="{optionValues}"
-                                                bind:group="{selectedOptions[optionCategory]}" />
-                                            <span>{optionName}</span>
-                                        </label>
-                                    {/each}
-                                </fieldset>
-                            </div>
-                        {/each}
-                        <input type="hidden" name="variant" value="{selectedVariant.id}" />
-                    </div>
                     <div class="stock-container" transition:slide|fade>
                         {#if (selectedVariant.inventory_quantity ?? 0) <= 0 && selectedVariant.allow_backorder}
                             <div class="low-stock" transition:slide>On Backorder</div>
