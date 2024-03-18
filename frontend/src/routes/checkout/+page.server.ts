@@ -99,9 +99,13 @@ export const actions = {
                     }
                 } : {})
             });
-            await medusa.carts.addShippingMethod(cart.cart.id, {
-                option_id: data.get('shippingOption') as string
-            });
+            if (cart.cart.items.every((i) => i.is_giftcard)) {
+                console.log('All items are giftcards, allowing checkout without shipping method!');
+            } else {
+                await medusa.carts.addShippingMethod(cart.cart.id, {
+                    option_id: data.get('shippingOption') as string
+                });
+            }
 
         } catch (e) {
             console.error(e);

@@ -317,7 +317,9 @@ let portraitCartExpanded = false;
                 form="data-form"
                 class="primary"
                 type="submit"
-                disabled="{loading || !formValid || !shippingOption}">
+                disabled="{loading ||
+                    !formValid ||
+                    (!shippingOption && !data.cart?.items.some((i) => i.is_giftcard))}">
                 {#if loading}
                     <LoadingSpinner size="1.3em" ringWidth="0.25em" />
                 {:else}
