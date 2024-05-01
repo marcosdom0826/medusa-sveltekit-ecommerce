@@ -57,6 +57,7 @@ const paypalButtonOptions: PayPalButtonsComponentOptions = {
     onClick: () => {
         // has to be there otherwise it breaks...
     },
+    // eslint-disable-next-line no-console
     onError: (err) => console.error('Paypal error:', err),
 
     createOrder: async () => {
@@ -78,6 +79,7 @@ const paypalButtonOptions: PayPalButtonsComponentOptions = {
     },
     onApprove: async (ppData, actions) => actions.order?.authorize().then(async (authorization) => {
         if (authorization.status !== 'COMPLETED') {
+            // eslint-disable-next-line no-console
             console.error('Authorization not completed', authorization.status);
             await ppInitActions?.enable();
             return;
@@ -210,10 +212,20 @@ $: paypalScript = loadScript({
             <div class="total">
                 <h4>Subtotal:</h4>
                 <span>{($page.data.cart?.subtotal || 0) / 100}€</span>
+                <div class="discounts wide columns">
+                    {#each data.cart?.discounts || [] as discount (discount.id)}
+                        <span style="text-align: start;">{discount.code}</span>
+                        <span style="text-align: end;">-{discount.rule.value}%</span>
+                    {/each}
+                    {#each data.cart?.gift_cards || [] as giftCard (giftCard.id)}
+                        <span style="text-align: start;">{giftCard.code}</span>
+                        <span style="text-align: end;">-{giftCard.balance / 100}€</span>
+                    {/each}
+                </div>
                 <span>Shipping:</span>
                 <span>{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
                 <h3>Total:</h3>
-                <span>{(($page.data.cart?.subtotal || 0) + shippingCost) / 100}€</span>
+                <span>{(($page.data.cart?.total || 0) + shippingCost) / 100}€</span>
             </div>
             <form
                 action="?/placeOrder"
@@ -355,8 +367,15 @@ form {
     & span {
         font-weight: bold;
     }
-    & > :nth-child(even) {
+    & > :nth-of-type(even):span {
         text-align: end;
+    }
+}
+
+.discounts {
+    opacity: 0.6;
+    & > * {
+        font-weight: normal !important;
     }
 }
 

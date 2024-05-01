@@ -2,7 +2,7 @@
 import Cart from '$/lib/components/Cart.svelte';
 import { applyAction, enhance } from '$app/forms';
 import { page } from '$app/stores';
-import { fade, slide } from 'svelte/transition';
+import { slide } from 'svelte/transition';
 import type { ActionData, PageData } from './$types';
 import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 
@@ -18,7 +18,7 @@ let shippingOption = data.cart?.shipping_methods?.[0]?.shipping_option_id ?? dat
 $: shippingCost = data.shippingOptions.find((s) => s.id === shippingOption)?.amount || 0;
 
 let invoiceAddress = data.cart?.billing_address ? 'separateAddress' : 'asDelivery';
-let formValid = false;
+let formValid = true;
 
 let width: number;
 let height: number;
@@ -35,6 +35,7 @@ let portraitCartExpanded = false;
         <form
             method="POST"
             id="data-form"
+            action="?/next"
             bind:this="{htmlForm}"
             on:input="{() => {
                 formValid = htmlForm.checkValidity();
@@ -216,7 +217,7 @@ let portraitCartExpanded = false;
                                 type="text"
                                 placeholder="Name"
                                 required
-                                value="{data.cart?.billing_address?.first_name}" />
+                                value="{data.cart?.billing_address?.first_name ?? ''}" />
                             <span class="hint">Name</span>
                         </label>
                         <label
@@ -307,10 +308,21 @@ let portraitCartExpanded = false;
             <div class="total">
                 <h4>Subtotal:</h4>
                 <span>{($page.data.cart?.subtotal || 0) / 100}€</span>
+
+                <div class="discounts wide columns">
+                    {#each data.cart?.discounts || [] as discount (discount.id)}
+                        <span style="text-align: start;">{discount.code}</span>
+                        <span style="text-align: end;">-{discount.rule.value}%</span>
+                    {/each}
+                    {#each data.cart?.gift_cards || [] as giftCard (giftCard.id)}
+                        <span style="text-align: start;">{giftCard.code}</span>
+                        <span style="text-align: end;">-{giftCard.balance / 100}€</span>
+                    {/each}
+                </div>
                 <span>Shipping:</span>
                 <span>{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
                 <h3>Total:</h3>
-                <span>{(($page.data.cart?.subtotal || 0) + shippingCost) / 100}€</span>
+                <span>{(($page.data.cart?.total || 0) + shippingCost) / 100}€</span>
             </div>
             <button
                 form="data-form"
@@ -325,6 +337,34 @@ let portraitCartExpanded = false;
                     Next
                 {/if}
             </button>
+            <hr style="opacity: 0.25;" />
+            <form
+                class="code-form"
+                method="POST"
+                id="code-form"
+                action="?/addCode"
+                use:enhance="{async () => {
+                    loading = true;
+                    return async ({ update, result }) => {
+                        await update({ reset: false });
+                        loading = false;
+                        await applyAction(result);
+                    };
+                }}">
+                <h3>Discount Code</h3>
+                <label for="code" class:field-error="{form?.fieldErrors?.code}">
+                    <input
+                        id="code"
+                        name="code"
+                        type="text"
+                        placeholder="Discount code / Voucher"
+                        required
+                        class="wide"
+                        value="{''}" />
+                    <span class="hint">Discount Code / Voucher</span>
+                </label>
+                <button class="discount-button"> Add discount / voucher code </button>
+            </form>
         </div>
     </div>
 </div>
@@ -369,6 +409,32 @@ let portraitCartExpanded = false;
             }
         }
     }
+}
+
+.discount-button {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    background-color: var(--backgroundColor);
+    border: 1px solid color-mix(in srgb, var(--textColor), transparent 50%);
+    color: color-mix(in srgb, var(--textColor), transparent 20%);
+    padding: 1em;
+    cursor: pointer;
+    transition: all var(--transitionDuration) ease;
+
+    &:hover {
+        box-shadow:
+            0 0.5em 0.5em var(--shadowColor),
+            0 0 0 var(--shadowColor);
+        border: 1px solid var(--textColor);
+        color: var(--textColor);
+    }
+}
+
+.code-form {
+    display: grid;
+    gap: 1em;
+    padding: 0em;
 }
 
 .rhs {
@@ -502,7 +568,7 @@ fieldset {
     & span {
         font-weight: bold;
     }
-    & > :nth-child(even) {
+    & > :nth-of-type(even):span {
         text-align: end;
     }
 }
@@ -516,5 +582,12 @@ fieldset {
 .error {
     color: rgb(207, 0, 0);
     font-weight: bold;
+}
+
+.discounts {
+    opacity: 0.6;
+    & > * {
+        font-weight: normal !important;
+    }
 }
 </style>

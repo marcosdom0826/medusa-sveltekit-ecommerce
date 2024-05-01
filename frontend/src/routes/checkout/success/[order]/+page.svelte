@@ -64,13 +64,23 @@ $: shippingCost = data.order.shipping_total || 0;
             <Cart items="{data.order.items}" disableEdit>
                 <div slot="total" class="total">
                     <h4>Subtotal:</h4>
-                    <span>{(data.order?.subtotal || 0) / 100}€</span>
+                    <span class="rhs">{(data.order?.subtotal || 0) / 100}€</span>
+                    <div class="discounts wide columns">
+                        {#each data.order?.discounts || [] as discount (discount.id)}
+                            <span style="text-align: start;">{discount.code}</span>
+                            <span style="text-align: end;">-{discount.rule.value}%</span>
+                        {/each}
+                        {#if data.order?.gift_card_total}
+                            <span style="text-align: start;">Gift Cards</span>
+                            <span style="text-align: end;">-{data.order.gift_card_total / 100}€</span>
+                        {/if}
+                    </div>
                     <span>Shipping:</span>
-                    <span>{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
+                    <span class="rhs">{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
                     <h3>Total:</h3>
-                    <span>{data.order.total / 100}€</span>
+                    <span class="rhs">{data.order.total / 100}€</span>
                     <h3>Payment:</h3>
-                    <span>{$t(`payment.${data.order.payments?.[0].provider_id}`)}</span>
+                    <span class="rhs">{$t(`payment.${data.order.payments?.[0].provider_id}`)}</span>
                     {#if data.order.payments?.[0].provider_id === 'manual'}
                         <p>
                             <!-- eslint-disable prettier/prettier -->
@@ -184,8 +194,15 @@ $: shippingCost = data.order.shipping_total || 0;
     & span {
         font-weight: bold;
     }
-    & > :nth-child(even) {
+    & > .rhs {
         text-align: end;
+    }
+}
+
+.discounts {
+    opacity: 0.6;
+    & > * {
+        font-weight: normal !important;
     }
 }
 </style>

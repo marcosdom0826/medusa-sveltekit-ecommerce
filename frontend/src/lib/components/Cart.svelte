@@ -30,6 +30,9 @@ $: sortedItems =
         <slot name="total">
             {#if (sortedItems?.length || 0) > 0}
                 <h3 transition:slide>Total: {($page.data.cart?.subtotal || 0) / 100}€</h3>
+                {#if $page.data.cart?.subtotal !== $page.data.cart?.total}
+                    <span style="opacity: 0.5;">Discounts are calculated at checkout step</span>
+                {/if}
                 <a transition:slide class="button primary" href="/checkout">Checkout</a>
             {/if}
         </slot>
