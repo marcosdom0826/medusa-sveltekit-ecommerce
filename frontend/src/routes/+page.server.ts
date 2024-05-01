@@ -10,7 +10,6 @@ export const load: PageServerLoad = async ({ parent }) => {
     const parentData = await parent();
 
     const products = await medusa.products.list({
-        // eslint-disable-next-line
         currency_code: 'eur',
         include_category_children: true,
         limit: 10,
@@ -39,6 +38,7 @@ export const actions = {
                 quantity: quantity
             });
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(e);
             return fail(400, (e as AxiosError)?.response?.data as Record<string, unknown> || {});
         }
@@ -56,6 +56,7 @@ export const actions = {
                 quantity: quantity + 1
             });
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(e);
             return fail(400, (e as AxiosError)?.response?.data as Record<string, unknown> || {});
         }

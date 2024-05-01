@@ -1,8 +1,6 @@
 <script lang="ts">
 import ProductBar from '$/lib/components/ProductBar.svelte';
 import type { PageData } from './$types';
-// import needed for css
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import background from '$assets/background.svg?url';
 
 export let data: PageData;

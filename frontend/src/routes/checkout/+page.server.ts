@@ -8,10 +8,10 @@ export const load: PageServerLoad = async ({ parent }) => {
 
     const parentData = await parent();
     if (!parentData.cart) {
-        throw redirect( 303, '/');
+        throw redirect(303, '/');
     }
     const shippingOptions =
-    await medusa.shippingOptions.listCartOptions(parentData.cart.id);
+        await medusa.shippingOptions.listCartOptions(parentData.cart.id);
 
     return {
         shippingOptions: shippingOptions.shipping_options
@@ -23,12 +23,12 @@ const validateEmail = (email: string) => {
     const at = email.indexOf('@');
     const dot = email.lastIndexOf('.');
     return email.length > 0 &&
-      at > 0 &&
-      dot > at + 1 &&
-      dot < email.length &&
-      email[at + 1] !== '.' &&
-      email.indexOf(' ') === -1 &&
-      email.indexOf('..') === -1;
+        at > 0 &&
+        dot > at + 1 &&
+        dot < email.length &&
+        email[at + 1] !== '.' &&
+        email.indexOf(' ') === -1 &&
+        email.indexOf('..') === -1;
 };
 const validatorFunctions: Record<string, (v: string, cart?: Cart) => boolean> = {
     invoiceAddress: (value: string) => value === 'asDelivery' || value === 'separateAddress',
@@ -40,7 +40,7 @@ const validatorFunctions: Record<string, (v: string, cart?: Cart) => boolean> = 
 
 
 export const actions = {
-    default: async (event) => {
+    next: async (event) => {
         const data = await event.request.formData();
         const cartId = event.cookies.get('cart_id');
 
@@ -115,5 +115,68 @@ export const actions = {
             return fail(400, { error: e as Record<string, unknown> });
         }
         throw redirect(303, '/checkout/payment');
+    },
+    addCode: async (event) => {
+        const data = await event.request.formData();
+        const cartId = event.cookies.get('cart_id');
+
+        const code = data.get('code') as string;
+        if (!code) {
+            return fail(400, {
+                error: 'Discount code is required',
+                fieldErrors: { code: 'Discount code is required' }
+            });
+        }
+
+        let cart;
+        if (cartId) {
+            try {
+                cart = await medusa.carts.retrieve(cartId);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        if (!cart) {
+            throw redirect(303, '/');
+        }
+
+        let giftCard;
+        try {
+            giftCard = await medusa.giftCards.retrieve(code);
+        } catch (e) {
+            console.error(e);
+        }
+
+
+        try {
+            await medusa.carts.update(
+                cart.cart.id, (
+                    giftCard ? {
+                        gift_cards: [
+                            {
+                                code
+                            }
+                        ]
+                    } : {
+                        discounts: [
+                            {
+                                code
+                            }
+                        ]
+                    })
+            );
+        } catch (e) {
+            console.error(e);
+            if ((e as AxiosError)?.response?.data) {
+                return fail(400, {
+                    error: (e as AxiosError).response?.data as Record<string, unknown>,
+                    fieldErrors: { code: 'Discount code is invalid' }
+                });
+            }
+            return fail(400, {
+                error: e as Record<string, unknown>,
+                fieldErrors: { code: 'Discount code is invalid' }
+            });
+        }
     }
 } satisfies Actions;

@@ -32,6 +32,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
         try {
             cart = await medusa.carts.retrieve(cartId);
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(e);
         }
     }
