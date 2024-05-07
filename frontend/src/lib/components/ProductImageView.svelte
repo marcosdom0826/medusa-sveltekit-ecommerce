@@ -5,27 +5,26 @@ import { fade } from 'svelte/transition';
 import MdiChevronLeft from '~icons/mdi/chevron-left';
 import MdiChevronRight from '~icons/mdi/chevron-right';
 
-export let product: PricedProduct;
-export let zoomFactor = 2.25;
+const { product, zoomFactor = 2.25 }: { product: PricedProduct; zoomFactor?: number } = $props();
 
-let zoomed = false;
-let imgTranslate = '0 0';
+let zoomed = $state(false);
+let imgTranslate = $state('0 0');
 
-let lastScrollLeft = 0;
-let isDragging = false;
+let lastScrollLeft = $state(0);
+let isDragging = $state(false);
 
-let hasZoomTransitions = false;
-let lastTouchX = 0;
-let lastTouchStartX = 0;
+let hasZoomTransitions = $state(false);
+let lastTouchX = $state(0);
+let lastTouchStartX = $state(0);
 
-let currentImage = 0;
+let currentImage = $state(0);
 
-let mainImageWrapper: HTMLDivElement | undefined;
-let slideWrapper: HTMLDivElement | undefined;
-let thumbnails: HTMLDivElement | undefined;
+let mainImageWrapper: HTMLDivElement | undefined = $state(undefined);
+let slideWrapper: HTMLDivElement | undefined = $state(undefined);
+let thumbnails: HTMLDivElement | undefined = $state(undefined);
 
 /* eslint-disable prettier/prettier */
-$: images =
+const images = $derived(
     (product.images?.length || 0) > 0
         ? product.images
         : [
@@ -33,7 +32,8 @@ $: images =
                 url: product.thumbnail,
                 id: Math.random().toString(36).substring(7)
             }
-        ];
+        ]
+);
 /* eslint-enable prettier/prettier */
 
 const zoomMouseHandler = (e: MouseEvent) => {
@@ -116,8 +116,8 @@ const scrollToImage = (index: number) => {
     }
 };
 
-let stretchPosition = 0;
-let stretch = 0;
+let stretchPosition = $state(0);
+let stretch = $state(0);
 onMount(() => {
     const scrollEventListener = () => {
         const clientWidth = slideWrapper?.clientWidth || 0;
@@ -139,7 +139,7 @@ onMount(() => {
         {#if (images ?? []).length > 1}
             <div class="thumbnails" bind:this="{thumbnails}" transition:fade>
                 {#each images ?? [] as image, idx (image.id)}
-                    <button on:click="{() => scrollToImage(idx)}" class:selected="{idx === currentImage}">
+                    <button onclick="{() => scrollToImage(idx)}" class:selected="{idx === currentImage}">
                         <picture>
                             <source srcset="{image.url}" />
                             <img
@@ -160,15 +160,15 @@ onMount(() => {
             role="slider"
             aria-valuenow="{currentImage}"
             tabindex="{currentImage}"
-            on:dragstart="{(e) => e.preventDefault()}"
-            on:touchstart="{(e) => {
+            ondragstart="{(e) => e.preventDefault()}"
+            ontouchstart="{(e) => {
                 if (!slideWrapper || zoomed) return;
                 lastScrollLeft = slideWrapper.scrollLeft;
                 isDragging = true;
                 lastTouchX = e.changedTouches[0].clientX;
                 lastTouchStartX = lastTouchX;
             }}"
-            on:mousemove="{(e) => {
+            onmousemove="{(e) => {
                 if (!e.buttons) return;
                 if (!slideWrapper) return;
                 if (Math.abs(e.movementX) < 2 && !isDragging) {
@@ -178,7 +178,7 @@ onMount(() => {
                 slideWrapper.scrollLeft -= e.movementX;
                 isDragging = true;
             }}"
-            on:touchmove="{(e) => {
+            ontouchmove="{(e) => {
                 if (!slideWrapper || zoomed) return;
                 const touch = e.changedTouches[0];
                 const movementX = lastTouchX - touch.clientX;
@@ -190,9 +190,9 @@ onMount(() => {
                 slideWrapper.scrollLeft += movementX;
                 isDragging = true;
             }}"
-            on:mouseup="{dragEndHandler}"
-            on:mouseleave="{dragEndHandler}"
-            on:touchend="{dragEndHandler}">
+            onmouseup="{dragEndHandler}"
+            onmouseleave="{dragEndHandler}"
+            ontouchend="{dragEndHandler}">
             {#each images ?? [] as image, idx (image.id)}
                 <div class="zoom-container-wrapper">
                     <button
@@ -201,13 +201,13 @@ onMount(() => {
                         {currentImage === idx ? 'current-image' : ''}
                         {isDragging ? 'dragging' : ''}"
                         style="{idx === 0 ? `view-transition-name: product-${product.id};` : ''}"
-                        on:click="{(e) => {
+                        onclick="{(e) => {
                             if (isDragging) {
                                 return;
                             }
                             setZoomed(e, !zoomed);
                         }}"
-                        on:mouseleave="{(e) => {
+                        onmouseleave="{(e) => {
                             if (isDragging) {
                                 return;
                             }
@@ -240,7 +240,7 @@ onMount(() => {
         {/if}
         <button
             class="scroll-button left"
-            on:click="{() => {
+            onclick="{() => {
                 if (currentImage > 0) {
                     scrollToImage(currentImage - 1);
                 }
@@ -250,7 +250,7 @@ onMount(() => {
         </button>
         <button
             class="scroll-button right"
-            on:click="{() => {
+            onclick="{() => {
                 if (currentImage < (images?.length || 0) - 1) {
                     scrollToImage(currentImage + 1);
                 }

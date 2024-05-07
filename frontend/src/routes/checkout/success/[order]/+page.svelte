@@ -3,8 +3,8 @@ import Cart from '$/lib/components/Cart.svelte';
 import { t } from '$/lib/i18n';
 import type { PageData } from './$types';
 
-export let data: PageData;
-$: shippingCost = data.order.shipping_total || 0;
+const { data }: { data: PageData } = $props();
+const shippingCost = $derived(data.order.shipping_total || 0);
 </script>
 
 <div class="content">
@@ -62,34 +62,38 @@ $: shippingCost = data.order.shipping_total || 0;
         </div>
         <div class="rhs">
             <Cart items="{data.order.items}" disableEdit>
-                <div slot="total" class="total">
-                    <h4>Subtotal:</h4>
-                    <span class="rhs">{(data.order?.subtotal || 0) / 100}€</span>
-                    <div class="discounts wide columns">
-                        {#each data.order?.discounts || [] as discount (discount.id)}
-                            <span style="text-align: start;">{discount.code}</span>
-                            <span style="text-align: end;">-{discount.rule.value}%</span>
-                        {/each}
-                        {#if data.order?.gift_card_total}
-                            <span style="text-align: start;">Gift Cards</span>
-                            <span style="text-align: end;">-{data.order.gift_card_total / 100}€</span>
+                {#snippet total()}
+                    <div class="total">
+                        <h4>Subtotal:</h4>
+                        <span class="rhs">{(data.order?.subtotal || 0) / 100}€</span>
+                        <div class="discounts wide columns">
+                            {#each data.order?.discounts || [] as discount (discount.id)}
+                                <span style="text-align: start;">{discount.code}</span>
+                                <span style="text-align: end;">-{discount.rule.value}%</span>
+                            {/each}
+                            {#if data.order?.gift_card_total}
+                                <span style="text-align: start;">Gift Cards</span>
+                                <span style="text-align: end;">-{data.order.gift_card_total / 100}€</span>
+                            {/if}
+                        </div>
+                        <span>Shipping:</span>
+                        <span class="rhs">{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
+                        <h3>Total:</h3>
+                        <span class="rhs">{data.order.total / 100}€</span>
+                        <h3>Payment:</h3>
+                        <!-- TODO: rome when eslint-plugin-svelte is updated -->
+                        <!-- eslint-disable-next-line svelte/valid-compile -->
+                        <span class="rhs">{$t(`payment.${data.order.payments?.[0].provider_id}`)}</span>
+                        {#if data.order.payments?.[0].provider_id === 'manual'}
+                            <!-- eslint-disable prettier/prettier -->
+                            <p>
+                                You will receive an invoice with payment instructions via e-email
+                                Please wire the money withing 7 business days
+                            </p>
+                            <!-- eslint-enable prettier/prettier -->
                         {/if}
                     </div>
-                    <span>Shipping:</span>
-                    <span class="rhs">{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
-                    <h3>Total:</h3>
-                    <span class="rhs">{data.order.total / 100}€</span>
-                    <h3>Payment:</h3>
-                    <span class="rhs">{$t(`payment.${data.order.payments?.[0].provider_id}`)}</span>
-                    {#if data.order.payments?.[0].provider_id === 'manual'}
-                        <p>
-                            <!-- eslint-disable prettier/prettier -->
-                            You will receive an invoice with payment instructions via e-email
-                            Please wire the money withing 7 business days
-                            <!-- eslint-enable prettier/prettier -->
-                        </p>
-                    {/if}
-                </div>
+                {/snippet}
             </Cart>
         </div>
     </div>

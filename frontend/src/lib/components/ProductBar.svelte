@@ -1,8 +1,8 @@
 <script lang="ts">
 import ProductLink from '$lib/components/ProductLink.svelte';
 import type { PricedProduct } from '../medusa';
-export let products: PricedProduct[] = [];
-export let scrollable = true;
+
+const { products = [], scrollable }: { products: PricedProduct[]; scrollable: boolean } = $props();
 </script>
 
 <div class="product-bar {scrollable ? 'scrollable' : ''}">

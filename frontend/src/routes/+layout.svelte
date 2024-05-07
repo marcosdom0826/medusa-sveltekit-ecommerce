@@ -18,7 +18,11 @@ onNavigate((navigation) => {
     });
 });
 
-$: email = $page.url.searchParams.get('email') === 'true';
+const { children } = $props();
+
+// TODO: remove after eslint-plugin-svelte is updated
+// eslint-disable-next-line svelte/valid-compile
+const email = $derived($page.url.searchParams.get('email') === 'true');
 </script>
 
 <svelte:head></svelte:head>
@@ -28,7 +32,7 @@ $: email = $page.url.searchParams.get('email') === 'true';
 {/if}
 
 <main style="view-transition-name: main;">
-    <slot />
+    {@render children()}
 </main>
 
 {#if !email}

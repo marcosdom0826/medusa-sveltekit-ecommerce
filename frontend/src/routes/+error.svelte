@@ -4,6 +4,8 @@ import { page } from '$app/stores';
 
 <div class="wrapper">
     <div>
+        <!-- TODO: remove after eslint-plugin-svelte has been updated -->
+        <!-- eslint-disable-next-line svelte/valid-compile -->
         <h1>{$page?.status}</h1>
         <h2>{$page.error?.message}</h2>
     </div>

@@ -10,9 +10,9 @@ import { fade, slide } from 'svelte/transition';
 import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
 
-export let data: PageData;
+const { data }: { data: PageData } = $props();
 
-let loading = false;
+let loading = $state(false);
 
 const findOutOfStockOptions = (): Record<string, Record<string, boolean>> => data.product.is_giftcard
     ? ({})
@@ -57,18 +57,19 @@ const isOrderAllowed = (variant: ProductVariant | undefined, nonVariant?: boolea
     data.product.is_giftcard ? true : variant ? (variant.allow_backorder || variant.inventory_quantity !== 0) : nonVariant;
 
 const outOfStockOptions = findOutOfStockOptions();
-let selectedOptions: Record<string, ProductOptionValue[]> = {};
+let selectedOptions: Record<string, ProductOptionValue[]> = $state({});
 
-$: selectedVariant = variantForOptions(selectedOptions) || data.product.variants[0];
+const selectedVariant = $derived.by(() => variantForOptions(selectedOptions) || data.product.variants[0]);
 
-$: price = (selectedVariant?.calculated_price ?? 0) / 100;
-$: originalPrice = (selectedVariant?.original_price ?? 0) / 100;
+const price = $derived((selectedVariant?.calculated_price ?? 0) / 100);
+const originalPrice = $derived((selectedVariant?.original_price ?? 0) / 100);
 
-$: selectionValid = (
+const selectionValid = $derived.by(() =>
     variantForOptions(selectedOptions) !== undefined
         && Object.keys(selectedOptions).length >= Object.keys(data.productOptions).length
-        && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder)
+        && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder || data.product.is_giftcard)
 );
+
 /* eslint-enable prettier/prettier */
 </script>
 
@@ -100,6 +101,8 @@ $: selectionValid = (
                     return async ({ update }) => {
                         await update({ reset: false });
                         loading = false;
+                        // TODO: remove when eslint-plugin-svelte is updated
+                        // eslint-disable-next-line svelte/valid-compile
                         $cartDrawerOpen = true;
                         selectedOptions = {};
                     };
@@ -152,10 +155,10 @@ $: selectionValid = (
                 <div class="add-to-cart">
                     <button class="primary" disabled="{!selectionValid || loading}" class:loading="{loading}">
                         {#if loading}
-                            <span transition:fade class="loading"
+                            <span transition:fade|local class="loading"
                                 ><LoadingSpinner size="1.3em" ringWidth="0.25em" /></span>
                         {:else}
-                            <span transition:fade
+                            <span transition:fade|local
                                 >{selectionValid ? 'Add to cart' : 'Please select size'}</span>
                         {/if}</button>
                 </div>

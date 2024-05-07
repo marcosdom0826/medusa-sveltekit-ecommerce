@@ -1,13 +1,27 @@
 <script lang="ts">
 import { onNavigate } from '$app/navigation';
-import { onMount } from 'svelte';
+import { onMount, type Snippet } from 'svelte';
 import Logo from '$assets/logo.svg?component';
 import MaterialSymbolsArrowBackRounded from '~icons/material-symbols/arrow-back-rounded';
 import { browser } from '$app/environment';
 
-export let open = false;
-export let side: 'left' | 'right' = 'left';
-export let cancellable = true;
+let {
+    open = $bindable(false),
+    // eslint-disable-next-line prefer-const
+    side = 'left',
+    // eslint-disable-next-line prefer-const
+    cancellable = true,
+    // eslint-disable-next-line prefer-const
+    header,
+    // eslint-disable-next-line prefer-const
+    children
+}: {
+    open?: boolean;
+    side?: 'left' | 'right';
+    cancellable?: boolean;
+    header?: Snippet;
+    children?: Snippet;
+} = $props();
 
 const close = () => {
     open = false;
@@ -29,9 +43,9 @@ onNavigate(() => {
     close();
 });
 
-$: scrollbarWidth = browser ? window.innerWidth - document.documentElement.clientWidth : 0;
+const scrollbarWidth = $derived(browser ? window.innerWidth - document.documentElement.clientWidth : 0);
 
-$: {
+$effect(() => {
     if (browser) {
         if (open) {
             document.body.style.overflow = 'hidden';
@@ -43,27 +57,31 @@ $: {
             setTimeout(() => (document.body.style.transition = ''), 250);
         }
     }
-}
+});
 </script>
 
 <div class="drawer {side === 'left' || side === undefined ? 'left' : 'right'} {open && 'open'}">
-    <slot name="header">
+    {#if header}
+        {@render header()}
+    {:else}
         <div class="drawer-header">
             {#if side === 'left'}
-                <button on:click="{close}"><MaterialSymbolsArrowBackRounded /></button>
+                <button onclick="{close}"><MaterialSymbolsArrowBackRounded /></button>
             {/if}
             <div>
                 <Logo />
             </div>
             {#if side === 'right'}
-                <button on:click="{close}" style="transform: rotate(180deg);"
+                <button onclick="{close}" style="transform: rotate(180deg);"
                     ><MaterialSymbolsArrowBackRounded /></button>
             {/if}
         </div>
-    </slot>
-    <slot />
+    {/if}
+    {#if children}
+        {@render children()}
+    {/if}
 </div>
-<button class="scrim {open && 'open'}" on:click="{() => cancellable && close()}"></button>
+<button class="scrim {open && 'open'}" onclick="{() => cancellable && close()}"></button>
 
 <style lang="postcss">
 .drawer {

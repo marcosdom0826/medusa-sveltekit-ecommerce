@@ -6,26 +6,52 @@ import { slide } from 'svelte/transition';
 import type { ActionData, PageData } from './$types';
 import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 
-let loading = false;
+let loading = $state(false);
 
-export let data: PageData;
-export let form: ActionData;
+const {
+    data,
+    form
+}: {
+    data: PageData;
+    form: ActionData & {
+        fieldErrors?: Record<string, unknown>;
+    };
+} = $props();
 
 let htmlForm: HTMLFormElement;
 
-let shippingOption = data.cart?.shipping_methods?.[0]?.shipping_option_id ?? data.shippingOptions?.[0]?.id;
+let shippingOption = $state(
+    data.cart?.shipping_methods?.[0]?.shipping_option_id ?? data.shippingOptions?.[0]?.id
+);
 
-$: shippingCost = data.shippingOptions.find((s) => s.id === shippingOption)?.amount || 0;
+const shippingCost = $derived(data.shippingOptions.find((s) => s.id === shippingOption)?.amount || 0);
 
-let invoiceAddress = data.cart?.billing_address ? 'separateAddress' : 'asDelivery';
-let formValid = true;
+let invoiceAddress = $state(data.cart?.billing_address ? 'separateAddress' : 'asDelivery');
+let formValid = $state(true);
 
-let width: number;
-let height: number;
+let width: number = $state(0);
+let height: number = $state(0);
 
-$: portrait = width < height;
+const portrait = $derived(width < height);
 
-let portraitCartExpanded = false;
+let portraitCartExpanded = $state(false);
+
+const formData = $state({
+    email: data.cart?.email ?? '',
+    first_name: data.cart?.shipping_address?.first_name ?? '',
+    last_name: data.cart?.shipping_address?.last_name ?? '',
+    company: data.cart?.shipping_address?.company ?? '',
+    address: data.cart?.shipping_address?.address_1 ?? '',
+    zip: data.cart?.shipping_address?.postal_code ?? '',
+    city: data.cart?.shipping_address?.city ?? '',
+    phone: data.cart?.shipping_address?.phone ?? '',
+    invoice_first_name: data.cart?.billing_address?.first_name ?? '',
+    invoice_last_name: data.cart?.billing_address?.last_name ?? '',
+    invoice_company: data.cart?.billing_address?.company ?? '',
+    invoice_address: data.cart?.billing_address?.address_1 ?? '',
+    invoice_zip: data.cart?.billing_address?.postal_code ?? '',
+    invoice_city: data.cart?.billing_address?.city ?? ''
+});
 </script>
 
 <svelte:window bind:innerWidth="{width}" bind:innerHeight="{height}" />
@@ -37,7 +63,7 @@ let portraitCartExpanded = false;
             id="data-form"
             action="?/next"
             bind:this="{htmlForm}"
-            on:input="{() => {
+            oninput="{() => {
                 formValid = htmlForm.checkValidity();
             }}"
             use:enhance="{async () => {
@@ -57,10 +83,10 @@ let portraitCartExpanded = false;
                         placeholder="Email"
                         required
                         id="email"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.email) form.fieldErrors.email = '';
                         }}"
-                        value="{data.cart?.email ?? ''}" />
+                        bind:value="{formData.email}" />
                     <span class="hint">Email</span>
                 </label>
                 <label for="first_name" class:field-error="{form?.fieldErrors?.first_name}">
@@ -70,10 +96,10 @@ let portraitCartExpanded = false;
                         placeholder="Name"
                         required
                         id="first_name"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.first_name) form.fieldErrors.first_name = '';
                         }}"
-                        value="{data.cart?.shipping_address?.first_name ?? ''}" />
+                        bind:value="{formData.first_name}" />
                     <span class="hint">Name</span>
                 </label>
                 <label for="last_name" class:field-error="{form?.fieldErrors?.last_name}">
@@ -83,10 +109,10 @@ let portraitCartExpanded = false;
                         placeholder="Last Name"
                         required
                         id="last_name"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.last_name) form.fieldErrors.last_name = '';
                         }}"
-                        value="{data.cart?.shipping_address?.last_name ?? ''}" />
+                        bind:value="{formData.last_name}" />
                     <span class="hint">Last Name</span>
                 </label>
                 <label for="company" class="wide" class:field-error="{form?.fieldErrors?.company}">
@@ -95,10 +121,10 @@ let portraitCartExpanded = false;
                         type="text"
                         placeholder="Company (Optional)"
                         id="company"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.company) form.fieldErrors.company = '';
                         }}"
-                        value="{data.cart?.shipping_address?.company ?? ''}" />
+                        bind:value="{formData.company}" />
                     <span class="hint">Company (Optional)</span>
                 </label>
                 <label for="address" class="wide" class:field-error="{form?.fieldErrors?.address}">
@@ -108,10 +134,10 @@ let portraitCartExpanded = false;
                         placeholder="Address"
                         required
                         id="address"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.address) form.fieldErrors.address = '';
                         }}"
-                        value="{data.cart?.shipping_address?.address_1 ?? ''}" />
+                        bind:value="{formData.address}" />
                     <span class="hint">Address</span>
                 </label>
                 <label for="zip" class:field-error="{form?.fieldErrors?.zip}">
@@ -121,10 +147,10 @@ let portraitCartExpanded = false;
                         placeholder="Zip"
                         required
                         id="zip"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.zip) form.fieldErrors.zip = '';
                         }}"
-                        value="{data.cart?.shipping_address?.postal_code ?? ''}" />
+                        bind:value="{formData.zip}" />
                     <span class="hint">Zip</span>
                 </label>
                 <label for="city" class:field-error="{form?.fieldErrors?.city}">
@@ -134,10 +160,10 @@ let portraitCartExpanded = false;
                         placeholder="City"
                         required
                         id="city"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.city) form.fieldErrors.city = '';
                         }}"
-                        value="{data.cart?.shipping_address?.city ?? ''}" />
+                        bind:value="{formData.city}" />
                     <span class="hint">City</span>
                 </label>
                 <label for="phone" class="wide" class:field-error="{form?.fieldErrors?.phone}">
@@ -146,10 +172,10 @@ let portraitCartExpanded = false;
                         type="tel"
                         placeholder="Phone (Optional)"
                         id="phone"
-                        on:input="{() => {
+                        oninput="{() => {
                             if (form?.fieldErrors?.phone) form.fieldErrors.phone = '';
                         }}"
-                        value="{data.cart?.shipping_address?.phone ?? ''}" />
+                        bind:value="{formData.phone}" />
                     <span class="hint">Phone (Optional)</span>
                 </label>
                 <input type="hidden" name="country" value="de" />
@@ -167,6 +193,11 @@ let portraitCartExpanded = false;
                                 id="shipping-{option.id}"
                                 value="{option.id}"
                                 required
+                                onchange="{() => {
+                                    setTimeout(() => {
+                                        formValid = htmlForm.checkValidity();
+                                    }, 500);
+                                }}"
                                 bind:group="{shippingOption}" />
                             <span>{option.name}</span>
                             <span>{(option.price_incl_tax || 0) / 100}€</span>
@@ -183,7 +214,7 @@ let portraitCartExpanded = false;
                         id="asDelivery"
                         value="asDelivery"
                         required
-                        on:change="{() => {
+                        onchange="{() => {
                             setTimeout(() => {
                                 formValid = htmlForm.checkValidity();
                             }, 500);
@@ -198,7 +229,7 @@ let portraitCartExpanded = false;
                         id="separateAddress"
                         value="separateAddress"
                         required
-                        on:change="{() => {
+                        onchange="{() => {
                             setTimeout(() => {
                                 formValid = htmlForm.checkValidity();
                             }, 500);
@@ -206,84 +237,84 @@ let portraitCartExpanded = false;
                         bind:group="{invoiceAddress}" />
                     <span>Separate address</span>
                 </label>
-                {#if invoiceAddress === 'separateAddress'}
-                    <div class="columns" transition:slide>
-                        <label
-                            for="invoice-first_name"
-                            class:field-error="{form?.fieldErrors?.['invoice-first_name']}">
-                            <input
-                                id="invoice-first_name"
-                                name="invoice-first_name"
-                                type="text"
-                                placeholder="Name"
-                                required
-                                value="{data.cart?.billing_address?.first_name ?? ''}" />
-                            <span class="hint">Name</span>
-                        </label>
-                        <label
-                            for="invoice-last_name"
-                            class:field-error="{form?.fieldErrors?.['invoice-last_name']}">
-                            <input
-                                id="invoice-last_name"
-                                name="invoice-last_name"
-                                type="text"
-                                placeholder="Last Name"
-                                required
-                                value="{data.cart?.billing_address?.last_name ?? ''}" />
-                            <span class="hint">Last Name</span>
-                        </label>
-                        <label
-                            for="invoice-company"
-                            class="wide"
-                            class:field-error="{form?.fieldErrors?.['invoice-company']}">
-                            <input
-                                id="invoice-company"
-                                name="invoice-company"
-                                type="text"
-                                placeholder="Company (Optional)"
-                                class="wide"
-                                value="{data.cart?.billing_address?.company ?? ''}" />
-                            <span class="hint">Company (Optional)</span>
-                        </label>
-                        <label
-                            for="invoice-address"
-                            class="wide"
-                            class:field-error="{form?.fieldErrors?.['invoice-address']}">
-                            <input
-                                id="invoice-address"
-                                name="invoice-address"
-                                type="text"
-                                placeholder="Address"
-                                required
-                                class="wide"
-                                value="{data.cart?.billing_address?.address_1 ?? ''}" />
-                            <span class="hint">Address</span>
-                        </label>
-                        <label for="invoice-zip" class:field-error="{form?.fieldErrors?.['invoice-zip']}">
-                            <input
-                                id="invoice-zip"
-                                name="invoice-zip"
-                                type="text"
-                                placeholder="Zip"
-                                required
-                                value="{data.cart?.billing_address?.postal_code ?? ''}" />
-                            <span class="hint">Zip</span>
-                        </label>
-                        <label for="invoice-city" class:field-error="{form?.fieldErrors?.['invoice-city']}">
-                            <input
-                                id="invoice-city"
-                                name="invoice-city"
-                                type="text"
-                                placeholder="City"
-                                required
-                                value="{data.cart?.billing_address?.city ?? ''}" />
-                            <span class="hint">City</span>
-                        </label>
-                        <input type="hidden" name="invoice-country" value="de" />
-                    </div>
-                {/if}
             </fieldset>
-            {#if form?.error?.message}
+            {#if invoiceAddress === 'separateAddress'}
+                <div class="columns" transition:slide>
+                    <label
+                        for="invoice-first_name"
+                        class:field-error="{form?.fieldErrors?.['invoice-first_name']}">
+                        <input
+                            id="invoice-first_name"
+                            name="invoice-first_name"
+                            type="text"
+                            placeholder="Name"
+                            required
+                            bind:value="{formData.invoice_first_name}" />
+                        <span class="hint">Name</span>
+                    </label>
+                    <label
+                        for="invoice-last_name"
+                        class:field-error="{form?.fieldErrors?.['invoice-last_name']}">
+                        <input
+                            id="invoice-last_name"
+                            name="invoice-last_name"
+                            type="text"
+                            placeholder="Last Name"
+                            required
+                            bind:value="{formData.invoice_last_name}" />
+                        <span class="hint">Last Name</span>
+                    </label>
+                    <label
+                        for="invoice-company"
+                        class="wide"
+                        class:field-error="{form?.fieldErrors?.['invoice-company']}">
+                        <input
+                            id="invoice-company"
+                            name="invoice-company"
+                            type="text"
+                            placeholder="Company (Optional)"
+                            class="wide"
+                            bind:value="{formData.invoice_company}" />
+                        <span class="hint">Company (Optional)</span>
+                    </label>
+                    <label
+                        for="invoice-address"
+                        class="wide"
+                        class:field-error="{form?.fieldErrors?.['invoice-address']}">
+                        <input
+                            id="invoice-address"
+                            name="invoice-address"
+                            type="text"
+                            placeholder="Address"
+                            required
+                            class="wide"
+                            bind:value="{formData.invoice_address}" />
+                        <span class="hint">Address</span>
+                    </label>
+                    <label for="invoice-zip" class:field-error="{form?.fieldErrors?.['invoice-zip']}">
+                        <input
+                            id="invoice-zip"
+                            name="invoice-zip"
+                            type="text"
+                            placeholder="Zip"
+                            required
+                            bind:value="{formData.invoice_zip}" />
+                        <span class="hint">Zip</span>
+                    </label>
+                    <label for="invoice-city" class:field-error="{form?.fieldErrors?.['invoice-city']}">
+                        <input
+                            id="invoice-city"
+                            name="invoice-city"
+                            type="text"
+                            placeholder="City"
+                            required
+                            bind:value="{formData.invoice_city}" />
+                        <span class="hint">City</span>
+                    </label>
+                    <input type="hidden" name="invoice-country" value="de" />
+                </div>
+            {/if}
+            {#if typeof form?.error !== 'string' && form?.error?.message}
                 <span transition:slide class="error">{form?.error?.message}</span>
             {/if}
         </form>
@@ -291,7 +322,7 @@ let portraitCartExpanded = false;
             {#if portrait}
                 <button
                     class="expand-cart-button"
-                    on:click="{(e) => {
+                    onclick="{(e) => {
                         e.preventDefault();
                         portraitCartExpanded = !portraitCartExpanded;
                     }}">
@@ -301,12 +332,16 @@ let portraitCartExpanded = false;
             {#if !portrait || portraitCartExpanded}
                 <div transition:slide>
                     <Cart disableMinWidth="{true}">
-                        <div slot="total"></div>
+                        {#snippet total()}
+                            <div></div>
+                        {/snippet}
                     </Cart>
                 </div>
             {/if}
             <div class="total">
                 <h4>Subtotal:</h4>
+                <!-- TODO: remove when eslint-plugin-svelte is updated -->
+                <!-- eslint-disable-next-line svelte/valid-compile -->
                 <span>{($page.data.cart?.subtotal || 0) / 100}€</span>
 
                 <div class="discounts wide columns">

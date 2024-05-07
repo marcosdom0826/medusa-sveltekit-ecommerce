@@ -1,7 +1,8 @@
 <script lang="ts">
 import ProductLink from '$lib/components/ProductLink.svelte';
 import type { PricedProduct } from '../medusa';
-export let products: PricedProduct[] = [];
+
+const { products = [] }: { products: PricedProduct[] } = $props();
 </script>
 
 <div>

@@ -3,7 +3,7 @@ import { onMount } from 'svelte';
 import PhMoon from '~icons/ph/moon';
 import PhSun from '~icons/ph/sun';
 
-let darkMode = false;
+let darkMode = $state(false);
 const toggleTheme = () => {
     const body = document.querySelector('body');
     const html = document.querySelector('html');
@@ -47,7 +47,7 @@ onMount(() => {
 </script>
 
 <div class="wrapper">
-    <input type="checkbox" class="toggle" checked="{darkMode}" on:change="{() => toggleTheme()}" />
+    <input type="checkbox" class="toggle" checked="{darkMode}" onchange="{() => toggleTheme()}" />
     <div class="icon {darkMode ? 'checked' : ''}">
         {#if darkMode}
             <PhMoon />

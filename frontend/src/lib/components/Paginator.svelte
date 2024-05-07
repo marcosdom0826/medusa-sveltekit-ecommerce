@@ -1,8 +1,8 @@
 <script lang="ts">
-export let page: number;
-export let pageCount: number;
 import MaterialSymbolsChevronRight from '~icons/material-symbols/chevron-right';
 import MaterialSymbolsChevronLeft from '~icons/material-symbols/chevron-left';
+
+const { page, pageCount }: { page: number; pageCount: number } = $props();
 </script>
 
 {#if pageCount > 1}
