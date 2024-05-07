@@ -4,8 +4,11 @@ import { t } from '$/lib/i18n';
 import type { PricedProduct, ProductCategory } from '$lib/medusa';
 import { page } from '$app/stores';
 
-export let product: PricedProduct;
 
+const { product }: { product: PricedProduct } = $props();
+
+// TODO: remove after after eslint-plugin-svelte is updated
+// eslint-disable-next-line svelte/valid-compile
 const categories: Record<string, ProductCategory> = $page.data.categoriesByHandle || {};
 const recurseParentCategories = (category: ProductCategory | undefined | null, rest = ''): string => {
     if (!category) {
@@ -18,32 +21,32 @@ const recurseParentCategories = (category: ProductCategory | undefined | null, r
     return rest || category.handle;
 };
 
-$: price = (product.variants?.[0]?.calculated_price ?? 0) / 100;
-$: originalPrice = (product.variants?.[0]?.original_price ?? 0) / 100;
+const price = $derived((product.variants?.[0]?.calculated_price ?? 0) / 100);
+const originalPrice = $derived((product.variants?.[0]?.original_price ?? 0) / 100);
 
-$: reducedPercent = (() => {
+const reducedPercent = $derived.by((() => {
     if (originalPrice !== price) {
         return Math.round(((originalPrice - price) / originalPrice) * 100);
     }
     return 0;
-})();
+}));
 
-$: categoryUrl = (() => {
+const categoryUrl = $derived.by(() => {
     if (product.is_giftcard) {
         return 'giftcards/';
     }
     if (product.categories
         ?.[0]?.handle) {
-        const res = recurseParentCategories(product.categories
+        const res = recurseParentCategories([...product.categories]
             ?.sort((a, b) => a.rank - b.rank)
             ?.[0]
         );
         return res ? `${res}/` : '';
     }
     return '';
-})();
+});
 
-$: stock = product.is_giftcard
+const stock = $derived(product.is_giftcard
     ? 9999
     : product.variants
         ?.reduce(
@@ -56,7 +59,8 @@ $: stock = product.is_giftcard
                 return acc + (v.inventory_quantity || 0);
             },
             0
-        ) ?? 0;
+        ) ?? 0
+);
 /* eslint-enable prettier/prettier */
 </script>
 

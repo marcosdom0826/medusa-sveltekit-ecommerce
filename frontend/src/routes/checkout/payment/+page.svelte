@@ -10,35 +10,39 @@ import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 import type { ActionResult } from '@sveltejs/kit';
 import { PUBLIC_PAYPAL_CLIENT_ID } from '$env/static/public';
 
-export let data: PageData;
+const { data }: { data: PageData } = $props();
 
-let loading = false;
+let loading = $state(false);
 
-let htmlForm: HTMLFormElement | undefined;
+let htmlForm: HTMLFormElement | undefined = $state();
 
-let selectedPaymentProvider = data.cart?.payment_session?.provider_id || 'paypal';
+let selectedPaymentProvider = $state(data.cart?.payment_session?.provider_id || 'paypal');
 
-$: shippingCost = data.cart?.shipping_methods?.[0]?.shipping_option?.amount || 0;
+const shippingCost = $derived(data.cart?.shipping_methods?.[0]?.shipping_option?.amount || 0);
 
 /* eslint-disable prettier/prettier */
-$: sortedPaymentOptions =
-    data.cart?.payment_sessions?.sort((a, b) =>
-        a.provider_id === 'paypal'
-            ? -1
-            : b.provider_id === 'paypal'
-                ? 1
-                : a.provider_id.localeCompare(b.provider_id)
-    ) || [];
+const sortedPaymentOptions = $derived.by(() =>
+    data.cart?.payment_sessions
+        ? [...data.cart.payment_sessions]
+            .sort((a, b) =>
+                a.provider_id === 'paypal'
+                    ? -1
+                    : b.provider_id === 'paypal'
+                        ? 1
+                        : a.provider_id.localeCompare(b.provider_id)
+            )
+        : []
+);
 /* eslint-enable prettier/prettier */
 
-let width: number;
-let height: number;
+let width: number = $state(0);
+let height: number = $state(0);
 
-$: portrait = width < height;
+const portrait = $derived(width < height);
 
-let portraitCartExpanded = false;
+let portraitCartExpanded = $state(false);
 
-let ppInitActions: OnInitActions | undefined;
+let ppInitActions: OnInitActions | undefined = $state();
 
 /* eslint-disable prettier/prettier */
 const paypalButtonOptions: PayPalButtonsComponentOptions = {
@@ -100,13 +104,15 @@ const paypalButtonOptions: PayPalButtonsComponentOptions = {
     })
 };
 
-$: paypalScript = loadScript({
-    clientId: PUBLIC_PAYPAL_CLIENT_ID,
-    currency: 'EUR',
-    debug: false,
-    intent: 'authorize',
-    disableFunding: 'card'
-});
+const paypalScript = $derived(
+    loadScript({
+        clientId: PUBLIC_PAYPAL_CLIENT_ID,
+        currency: 'EUR',
+        debug: false,
+        intent: 'authorize',
+        disableFunding: 'card'
+    })
+);
 
 /* eslint-enable prettier/prettier */
 </script>
@@ -168,7 +174,7 @@ $: paypalScript = loadScript({
                 bind:this="{htmlForm}"
                 method="post"
                 action="?/setPaymentSession"
-                on:input="{() => {
+                oninput="{() => {
                     htmlForm?.requestSubmit();
                 }}"
                 use:enhance="{async () =>
@@ -185,6 +191,8 @@ $: paypalScript = loadScript({
                                 name="paymentProvider"
                                 value="{paymentOption.provider_id}"
                                 bind:group="{selectedPaymentProvider}" />
+                            <!-- TODO: remove once eslint-plugin-svelte is updated -->
+                            <!-- eslint-disable-next-line svelte/valid-compile -->
                             <span>{$t(`payment.${paymentOption.provider_id}`)}</span>
                         </label>
                     {/each}
@@ -195,7 +203,7 @@ $: paypalScript = loadScript({
             {#if portrait}
                 <button
                     class="expand-cart-button"
-                    on:click="{(e) => {
+                    onclick="{(e) => {
                         e.preventDefault();
                         portraitCartExpanded = !portraitCartExpanded;
                     }}">
@@ -205,7 +213,9 @@ $: paypalScript = loadScript({
             {#if !portrait || portraitCartExpanded}
                 <div transition:slide>
                     <Cart disableMinWidth="{true}" disableEdit="{true}">
-                        <div slot="total"></div>
+                        {#snippet total()}
+                            <div></div>
+                        {/snippet}
                     </Cart>
                 </div>
             {/if}
@@ -225,7 +235,7 @@ $: paypalScript = loadScript({
                 <span>Shipping:</span>
                 <span>{shippingCost === 0 ? 'Free' : `${shippingCost / 100}€`}</span>
                 <h3>Total:</h3>
-                <span>{(($page.data.cart?.total || 0) + shippingCost) / 100}€</span>
+                <span>{($page.data.cart?.total || 0) / 100}€</span>
             </div>
             <form
                 action="?/placeOrder"

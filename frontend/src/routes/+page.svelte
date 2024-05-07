@@ -3,10 +3,10 @@ import ProductBar from '$/lib/components/ProductBar.svelte';
 import type { PageData } from './$types';
 import background from '$assets/background.svg?url';
 
-export let data: PageData;
-$: products = data.products;
+const { data }: { data: PageData } = $props();
+const products = $derived(data.products);
 
-let y = 0;
+let y = $state(0);
 </script>
 
 <svelte:window bind:scrollY="{y}" />

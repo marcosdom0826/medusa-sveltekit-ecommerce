@@ -2,7 +2,9 @@
 import { page } from '$app/stores';
 import { t } from '$/lib/i18n';
 
-$: crumbs = $page.data.crumbs || [];
+// TODO: fix after eslint-plugin-svelte is updated
+// eslint-disable-next-line svelte/valid-compile
+const crumbs = $derived($page.data.crumbs || []);
 </script>
 
 <nav>

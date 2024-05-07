@@ -7,17 +7,28 @@ import LoadingSpinner from './LoadingSpinner.svelte';
 import { fade, slide } from 'svelte/transition';
 import { page } from '$app/stores';
 
-export let item: CartItem;
-export let disableEmpty = false;
-export let disableEdit = false;
-$: cartItems = $page.data.cart?.items || [];
+const {
+    item,
+    disableEmpty = false,
+    disableEdit = false
+}: {
+    item: CartItem;
+    disableEmpty?: boolean;
+    disableEdit?: boolean;
+} = $props();
 
-$: isLastCartItem = cartItems.length === 1 && cartItems[0].id === item.id && cartItems[0].quantity === 1;
+// TODO: remove when eslint-plugin-svelte is updated
+// eslint-disable-next-line svelte/valid-compile
+const cartItems = $derived($page.data.cart?.items || []);
 
-let formElement: HTMLFormElement;
-let loading = false;
+const isLastCartItem = $derived(
+    cartItems.length === 1 && cartItems[0].id === item.id && cartItems[0].quantity === 1
+);
 
-let error: string | false = '';
+let formElement: HTMLFormElement | undefined = $state(undefined);
+let loading = $state(false);
+
+let error: string | false = $state('');
 </script>
 
 <form
@@ -66,7 +77,7 @@ let error: string | false = '';
             min="0"
             value="{item.quantity}"
             formaction="/?/editCart"
-            on:keydown="{(e) => {
+            onkeydown="{(e) => {
                 if (e.key === 'Enter') {
                     if (disableEmpty && isLastCartItem) {
                         if (e.target) {
@@ -77,10 +88,10 @@ let error: string | false = '';
                         return;
                     }
                     e.preventDefault();
-                    formElement.requestSubmit();
+                    formElement?.requestSubmit();
                 }
             }}"
-            on:blur="{(e) => {
+            onblur="{(e) => {
                 if (disableEmpty && isLastCartItem) {
                     if (e.target) {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -89,7 +100,7 @@ let error: string | false = '';
                     }
                     return;
                 }
-                formElement.requestSubmit();
+                formElement?.requestSubmit();
             }}" />
         {#if !disableEdit}
             <button disabled="{loading}" role="spinbutton" data-type="add" formaction="/?/incrementCartItem"
@@ -199,10 +210,10 @@ fieldset {
     place-items: center;
     overflow: hidden;
     & > * {
-        border: none;
-        box-shadow: none;
+        border: none !important;
+        box-shadow: none !important;
         &:is(:hover, :focus, :active) {
-            border: none;
+            border: none !important;
         }
     }
     &:not(:disabled):hover {

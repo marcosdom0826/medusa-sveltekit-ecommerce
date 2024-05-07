@@ -3,15 +3,23 @@ import { page } from '$app/stores';
 import { fade, slide } from 'svelte/transition';
 import CartItem from './CartItem.svelte';
 import type { CartItem as LineItem } from '../medusa';
+import type { Snippet } from 'svelte';
 
-export let disableMinWidth = false;
-export let disableEmpty = false;
-export let disableEdit = false;
-export let items = undefined as LineItem[] | undefined;
+const {
+    disableMinWidth = false,
+    disableEmpty = false,
+    disableEdit = false,
+    items = undefined as LineItem[] | undefined,
+    total = undefined as Snippet | undefined
+} = $props();
 
-$: sortedItems =
-    (items ?? $page.data.cart?.items)?.sort((a: LineItem, b: LineItem) => a.title.localeCompare(b.title)) ||
-    [];
+const sortItems = () =>
+    // TODO: fix after eslint-plugin-svelte is updated
+    // eslint-disable-next-line svelte/valid-compile
+    [...((items ?? $page.data.cart?.items) || [])]?.sort((a: LineItem, b: LineItem) =>
+        a.title.localeCompare(b.title)
+    );
+const sortedItems = $derived(sortItems());
 </script>
 
 <div class="wrapper" style="{disableMinWidth ? '' : 'min-width: min(28em, 100dvw);'}">
@@ -27,15 +35,15 @@ $: sortedItems =
         </div>
     {/if}
     <div>
-        <slot name="total">
-            {#if (sortedItems?.length || 0) > 0}
-                <h3 transition:slide>Total: {($page.data.cart?.subtotal || 0) / 100}€</h3>
-                {#if $page.data.cart?.subtotal !== $page.data.cart?.total}
-                    <span style="opacity: 0.5;">Discounts are calculated at checkout step</span>
-                {/if}
-                <a transition:slide class="button primary" href="/checkout">Checkout</a>
+        {#if total}
+            {@render total()}
+        {:else if (sortedItems?.length || 0) > 0}
+            <h3 transition:slide>Total: {($page.data.cart?.subtotal || 0) / 100}€</h3>
+            {#if $page.data.cart?.subtotal !== $page.data.cart?.total}
+                <span style="opacity: 0.5;">Discounts are calculated at checkout step</span>
             {/if}
-        </slot>
+            <a transition:slide class="button primary" href="/checkout">Checkout</a>
+        {/if}
     </div>
 </div>
 

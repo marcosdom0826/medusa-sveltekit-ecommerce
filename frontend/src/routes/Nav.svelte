@@ -3,8 +3,10 @@ import { t } from '$/lib/i18n';
 import type { ProductCategory } from '$/lib/medusa';
 import { page } from '$app/stores';
 
-export let desktop = true;
+const { desktop = true } = $props();
 
+// TODO: fix after eslint-plugin-svelte is updated
+// eslint-disable-next-line svelte/valid-compile
 const categories: Record<string, ProductCategory> = $page.data.categoriesByHandle || {};
 </script>
 

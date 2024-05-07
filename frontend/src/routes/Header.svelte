@@ -13,7 +13,7 @@ import { page } from '$app/stores';
 import CartItem from '$/lib/components/CartItem.svelte';
 import { fade } from 'svelte/transition';
 
-let navDrawerOpen = false;
+let navDrawerOpen = $state(false);
 
 onMount(() => {
     const header = document.querySelector('header');
@@ -21,12 +21,16 @@ onMount(() => {
     document.body.style.setProperty('--header-height', `${headerHeight || 0}px`);
 });
 
-$: cartCount = $page.data.cart?.items?.reduce((acc: number, item: CartItem) => acc + item.quantity, 0) || 0;
+const cartCount = $derived(
+    // TODO: remove after eslint-plugin-svelte is updated
+    // eslint-disable-next-line svelte/valid-compile
+    $page.data.cart?.items?.reduce((acc: number, item: CartItem) => acc + item.quantity, 0) || 0
+);
 </script>
 
 <header>
     <div class="lhs">
-        <button class="menu-btn landscape-none" on:click="{() => (navDrawerOpen = true)}"
+        <button class="menu-btn landscape-none" onclick="{() => (navDrawerOpen = true)}"
             ><MaterialSymbolsMenu /></button>
         <!-- TODO -->
     </div>
@@ -35,7 +39,7 @@ $: cartCount = $page.data.cart?.items?.reduce((acc: number, item: CartItem) => a
     </a>
     <div class="rhs">
         {#if !Object.values($page.route).find((val) => val?.includes('checkout'))}
-            <button class="menu-btn" on:click="{() => ($cartDrawerOpen = true)}" transition:fade>
+            <button class="menu-btn" onclick="{() => ($cartDrawerOpen = true)}" transition:fade>
                 <MdiCartOutline />
                 {#if cartCount > 0}
                     <div class="badge" transition:fade><span>{cartCount}</span></div>
@@ -56,7 +60,9 @@ $: cartCount = $page.data.cart?.items?.reduce((acc: number, item: CartItem) => a
     <Nav desktop="{false}" />
 </Drawer>
 
-<Drawer bind:open="{$cartDrawerOpen}" side="right"><Cart /></Drawer>
+<Drawer bind:open="{$cartDrawerOpen}" side="right">
+    <Cart />
+</Drawer>
 
 <style lang="postcss">
 header {

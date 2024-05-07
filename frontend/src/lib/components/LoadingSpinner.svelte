@@ -1,6 +1,5 @@
 <script lang="ts">
-export let size = '';
-export let ringWidth = '';
+const { size = '', ringWidth = '' } = $props();
 </script>
 
 <div class="loader" style="--size: {size}; --ringWidth: {ringWidth};"></div>

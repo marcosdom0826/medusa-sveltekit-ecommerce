@@ -2,7 +2,7 @@
 import ProductGallery from '$/lib/components/ProductGallery.svelte';
 import type { PageData } from './$types';
 
-export let data: PageData;
+const { data }: { data: PageData } = $props();
 </script>
 
 <div class="content">
