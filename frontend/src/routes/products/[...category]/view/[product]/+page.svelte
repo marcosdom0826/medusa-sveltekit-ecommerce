@@ -211,6 +211,8 @@ const selectionValid = $derived.by(() =>
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    overflow-x: hidden;
+    max-width: 100%;
     & form {
         display: flex;
         flex-direction: column;
@@ -238,12 +240,12 @@ const selectionValid = $derived.by(() =>
 }
 
 .option-select {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    max-width: 100%;
 
     & > div {
-        display: grid;
+        max-width: 100%;
+        overflow-x: hidden;
+        display: flex;
         flex-direction: column;
         gap: 1em;
     }
@@ -280,8 +282,10 @@ const selectionValid = $derived.by(() =>
 fieldset {
     border: 1px solid transparent;
     display: grid;
-    grid-auto-flow: column;
+    grid-template-columns: repeat(auto-fit, minmax(8ch, 1fr));
     gap: 1rem;
+    overflow-x: hidden;
+    max-width: 100%;
 
     & label {
         position: relative;

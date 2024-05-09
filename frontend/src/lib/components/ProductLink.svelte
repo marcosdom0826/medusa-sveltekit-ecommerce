@@ -102,7 +102,7 @@ a {
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto min-content;
+    grid-template-rows: min-content auto;
     & > :first-child {
         position: relative;
         aspect-ratio: 1 / 1.33;
@@ -113,6 +113,7 @@ a {
         flex-wrap: wrap;
         column-gap: 1em;
         padding: 0.25em;
+        align-items: end;
     }
 }
 
@@ -134,7 +135,7 @@ img {
 }
 .subtitle {
     width: 100%;
-    height: 1.5em;
+    min-height: 1.5em;
 }
 
 .original {

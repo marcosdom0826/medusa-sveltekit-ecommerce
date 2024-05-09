@@ -364,6 +364,7 @@ button {
 .zoom-container-wrapper {
     display: grid;
     justify-content: center;
+    align-items: center;
     height: 100%;
     width: 100%;
 }
