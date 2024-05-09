@@ -5,6 +5,7 @@ import { page } from '$app/stores';
 import { slide } from 'svelte/transition';
 import type { ActionData, PageData } from './$types';
 import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
+import InputField from '$/lib/components/InputField.svelte';
 
 let loading = $state(false);
 
@@ -76,108 +77,68 @@ const formData = $state({
             }}">
             <div class="columns">
                 <h3 class="wide">Delivery</h3>
-                <label for="email" class="wide" class:field-error="{form?.fieldErrors?.email}">
-                    <input
-                        name="email"
+                <div class="wide">
+                    <InputField
+                        field="email"
+                        label="Email"
                         type="email"
-                        placeholder="Email"
+                        bind:value="{formData.email}"
                         required
-                        id="email"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.email) form.fieldErrors.email = '';
-                        }}"
-                        bind:value="{formData.email}" />
-                    <span class="hint">Email</span>
-                </label>
-                <label for="first_name" class:field-error="{form?.fieldErrors?.first_name}">
-                    <input
-                        name="first_name"
+                        fieldErrors="{form?.fieldErrors}" />
+                </div>
+                <InputField
+                    field="first_name"
+                    label="Name"
+                    type="text"
+                    bind:value="{formData.first_name}"
+                    required
+                    fieldErrors="{form?.fieldErrors}" />
+                <InputField
+                    field="last_name"
+                    label="Last Name"
+                    type="text"
+                    bind:value="{formData.last_name}"
+                    required
+                    fieldErrors="{form?.fieldErrors}" />
+                <div class="wide">
+                    <InputField
+                        field="company"
+                        label="Company (Optional)"
                         type="text"
-                        placeholder="Name"
+                        bind:value="{formData.company}"
+                        fieldErrors="{form?.fieldErrors}" />
+                </div>
+                <div class="wide">
+                    <InputField
+                        field="address"
+                        label="Address"
                         required
-                        id="first_name"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.first_name) form.fieldErrors.first_name = '';
-                        }}"
-                        bind:value="{formData.first_name}" />
-                    <span class="hint">Name</span>
-                </label>
-                <label for="last_name" class:field-error="{form?.fieldErrors?.last_name}">
-                    <input
-                        name="last_name"
                         type="text"
-                        placeholder="Last Name"
-                        required
-                        id="last_name"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.last_name) form.fieldErrors.last_name = '';
-                        }}"
-                        bind:value="{formData.last_name}" />
-                    <span class="hint">Last Name</span>
-                </label>
-                <label for="company" class="wide" class:field-error="{form?.fieldErrors?.company}">
-                    <input
-                        name="company"
-                        type="text"
-                        placeholder="Company (Optional)"
-                        id="company"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.company) form.fieldErrors.company = '';
-                        }}"
-                        bind:value="{formData.company}" />
-                    <span class="hint">Company (Optional)</span>
-                </label>
-                <label for="address" class="wide" class:field-error="{form?.fieldErrors?.address}">
-                    <input
-                        name="address"
-                        type="text"
-                        placeholder="Address"
-                        required
-                        id="address"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.address) form.fieldErrors.address = '';
-                        }}"
-                        bind:value="{formData.address}" />
-                    <span class="hint">Address</span>
-                </label>
-                <label for="zip" class:field-error="{form?.fieldErrors?.zip}">
-                    <input
-                        name="zip"
-                        type="text"
-                        placeholder="Zip"
-                        required
-                        id="zip"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.zip) form.fieldErrors.zip = '';
-                        }}"
-                        bind:value="{formData.zip}" />
-                    <span class="hint">Zip</span>
-                </label>
-                <label for="city" class:field-error="{form?.fieldErrors?.city}">
-                    <input
-                        name="city"
-                        type="text"
-                        placeholder="City"
-                        required
-                        id="city"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.city) form.fieldErrors.city = '';
-                        }}"
-                        bind:value="{formData.city}" />
-                    <span class="hint">City</span>
-                </label>
-                <label for="phone" class="wide" class:field-error="{form?.fieldErrors?.phone}">
-                    <input
-                        name="phone"
+                        bind:value="{formData.address}"
+                        fieldErrors="{form?.fieldErrors}" />
+                </div>
+                <InputField
+                    field="zip"
+                    label="Zip"
+                    required
+                    type="text"
+                    bind:value="{formData.zip}"
+                    fieldErrors="{form?.fieldErrors}" />
+                <InputField
+                    field="city"
+                    label="City"
+                    required
+                    type="text"
+                    bind:value="{formData.city}"
+                    fieldErrors="{form?.fieldErrors}" />
+                <div class="wide">
+                    <InputField
+                        field="phone"
+                        label="Phone (Optional)"
                         type="tel"
-                        placeholder="Phone (Optional)"
-                        id="phone"
-                        oninput="{() => {
-                            if (form?.fieldErrors?.phone) form.fieldErrors.phone = '';
-                        }}"
-                        bind:value="{formData.phone}" />
-                    <span class="hint">Phone (Optional)</span>
-                </label>
+                        bind:value="{formData.phone}"
+                        fieldErrors="{form?.fieldErrors}" />
+                </div>
                 <input type="hidden" name="country" value="de" />
             </div>
             <fieldset>
@@ -240,77 +201,51 @@ const formData = $state({
             </fieldset>
             {#if invoiceAddress === 'separateAddress'}
                 <div class="columns" transition:slide>
-                    <label
-                        for="invoice-first_name"
-                        class:field-error="{form?.fieldErrors?.['invoice-first_name']}">
-                        <input
-                            id="invoice-first_name"
-                            name="invoice-first_name"
+                    <InputField
+                        field="invoice-first_name"
+                        required
+                        type="text"
+                        label="Name"
+                        fieldErrors="{form?.fieldErrors}"
+                        bind:value="{formData.invoice_first_name}" />
+                    <InputField
+                        field="invoice-last_name"
+                        required
+                        type="text"
+                        label="Last Name"
+                        fieldErrors="{form?.fieldErrors}"
+                        bind:value="{formData.invoice_last_name}" />
+                    <div class="wide">
+                        <InputField
+                            field="invoice-company"
                             type="text"
-                            placeholder="Name"
-                            required
-                            bind:value="{formData.invoice_first_name}" />
-                        <span class="hint">Name</span>
-                    </label>
-                    <label
-                        for="invoice-last_name"
-                        class:field-error="{form?.fieldErrors?.['invoice-last_name']}">
-                        <input
-                            id="invoice-last_name"
-                            name="invoice-last_name"
-                            type="text"
-                            placeholder="Last Name"
-                            required
-                            bind:value="{formData.invoice_last_name}" />
-                        <span class="hint">Last Name</span>
-                    </label>
-                    <label
-                        for="invoice-company"
-                        class="wide"
-                        class:field-error="{form?.fieldErrors?.['invoice-company']}">
-                        <input
-                            id="invoice-company"
-                            name="invoice-company"
-                            type="text"
-                            placeholder="Company (Optional)"
-                            class="wide"
+                            label="Company (Optional)"
+                            fieldErrors="{form?.fieldErrors}"
                             bind:value="{formData.invoice_company}" />
-                        <span class="hint">Company (Optional)</span>
-                    </label>
-                    <label
-                        for="invoice-address"
-                        class="wide"
-                        class:field-error="{form?.fieldErrors?.['invoice-address']}">
-                        <input
-                            id="invoice-address"
-                            name="invoice-address"
+                    </div>
+                    <div class="wide">
+                        <InputField
+                            field="invoice-address"
                             type="text"
-                            placeholder="Address"
+                            label="Address"
                             required
-                            class="wide"
+                            fieldErrors="{form?.fieldErrors}"
                             bind:value="{formData.invoice_address}" />
-                        <span class="hint">Address</span>
-                    </label>
-                    <label for="invoice-zip" class:field-error="{form?.fieldErrors?.['invoice-zip']}">
-                        <input
-                            id="invoice-zip"
-                            name="invoice-zip"
-                            type="text"
-                            placeholder="Zip"
-                            required
-                            bind:value="{formData.invoice_zip}" />
-                        <span class="hint">Zip</span>
-                    </label>
-                    <label for="invoice-city" class:field-error="{form?.fieldErrors?.['invoice-city']}">
-                        <input
-                            id="invoice-city"
-                            name="invoice-city"
-                            type="text"
-                            placeholder="City"
-                            required
-                            bind:value="{formData.invoice_city}" />
-                        <span class="hint">City</span>
-                    </label>
+                    </div>
+                    <InputField
+                        field="invoice-zip"
+                        type="text"
+                        label="Zip"
+                        required
+                        fieldErrors="{form?.fieldErrors}"
+                        bind:value="{formData.invoice_zip}" />
+                    <InputField
+                        field="invoice-city"
+                        type="text"
+                        label="City"
+                        required
+                        fieldErrors="{form?.fieldErrors}"
+                        bind:value="{formData.invoice_city}" />
                     <input type="hidden" name="invoice-country" value="de" />
                 </div>
             {/if}
@@ -386,19 +321,15 @@ const formData = $state({
                         await applyAction(result);
                     };
                 }}">
-                <h3>Discount Code</h3>
-                <label for="code" class:field-error="{form?.fieldErrors?.code}">
-                    <input
-                        id="code"
-                        name="code"
-                        type="text"
-                        placeholder="Discount code / Voucher"
-                        required
-                        class="wide"
-                        value="{''}" />
-                    <span class="hint">Discount Code / Voucher</span>
-                </label>
-                <button class="discount-button"> Add discount / voucher code </button>
+                <h3 class="wide">Discount Code</h3>
+                <InputField
+                    field="code"
+                    label="Discount code / Voucher"
+                    type="text"
+                    required
+                    value="{''}"
+                    fieldErrors="{form?.fieldErrors}" />
+                <button class="discount-button"> Add code</button>
             </form>
         </div>
     </div>
@@ -449,11 +380,12 @@ const formData = $state({
 .discount-button {
     display: grid;
     place-items: center;
+    white-space: nowrap;
     width: 100%;
     background-color: var(--backgroundColor);
     border: 1px solid color-mix(in srgb, var(--textColor), transparent 50%);
     color: color-mix(in srgb, var(--textColor), transparent 20%);
-    padding: 1em;
+    padding: 0 1em;
     cursor: pointer;
     transition: all var(--transitionDuration) ease;
 
@@ -468,6 +400,7 @@ const formData = $state({
 
 .code-form {
     display: grid;
+    grid-template-columns: auto min-content;
     gap: 1em;
     padding: 0em;
 }
@@ -505,25 +438,6 @@ form {
         & input:not([type='radio']) {
             width: 100%;
         }
-
-        & input:focus-visible + .hint,
-        & input:not(:placeholder-shown) + .hint {
-            opacity: 1;
-            font-size: 0.75em;
-            translate: 0 -1.75em;
-            background-color: var(--backgroundColor);
-        }
-
-        & .hint {
-            pointer-events: none;
-            width: fit-content;
-            user-select: none;
-            margin: 0 0.5em;
-            padding: 0 0.5em;
-            opacity: 0.5;
-            transition: all var(--transitionDuration) ease;
-            border-radius: 0.5em;
-        }
     }
 }
 
@@ -546,17 +460,6 @@ form {
 input::placeholder {
     visibility: hidden;
     opacity: 0;
-}
-
-label.field-error {
-    & input {
-        border-color: red;
-    }
-    & span + span {
-        color: red;
-        grid-row: 2;
-        padding: 0.5em 0;
-    }
 }
 
 fieldset {
