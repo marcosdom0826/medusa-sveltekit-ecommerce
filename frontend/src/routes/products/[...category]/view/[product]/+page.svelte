@@ -131,6 +131,11 @@ const selectionValid = $derived.by(() =>
                                             >{data.product.is_giftcard
                                                 ? Number.parseInt(optionName) / 100 + ' €'
                                                 : optionName}</span>
+                                        {#each [variantForOptions( { ...selectedOptions, [optionCategory]: optionValues } )] as variant}
+                                            {#if variant?.calculated_price !== variant?.original_price}
+                                                <div class="reduced-marker"></div>
+                                            {/if}
+                                        {/each}
                                     </label>
                                 {/each}
                             </fieldset>
@@ -300,6 +305,18 @@ fieldset {
             pointer-events: none;
             font-weight: bold;
             transition: color var(--transitionDuration) ease;
+        }
+
+        .reduced-marker {
+            height: 50%;
+            aspect-ratio: 1;
+            z-index: 0;
+            position: absolute;
+            inset: 0;
+            background: red;
+            border: 2px solid var(--textColor);
+            clip-path: polygon(0 100%, 100% 0, 0 0);
+            transition: border var(--transitionDuration) ease;
         }
 
         & input[type='radio'] {
