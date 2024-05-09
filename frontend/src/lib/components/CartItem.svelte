@@ -6,6 +6,7 @@ import { cartDrawerOpen } from '../stores/cartDrawer';
 import LoadingSpinner from './LoadingSpinner.svelte';
 import { fade, slide } from 'svelte/transition';
 import { page } from '$app/stores';
+import { t } from '$/lib/i18n';
 
 const {
     item,
@@ -122,7 +123,7 @@ let error: string | false = $state('');
         </div>
     {/if}
     {#if error}
-        <p class="error" transition:slide>{error}</p>
+        <p class="error" transition:slide>{$t(error)}</p>
     {/if}
 </form>
 

@@ -73,12 +73,10 @@ const sortedItems = $derived(sortItems());
 .cart {
     display: grid;
     padding: 1em;
-    height: fit-content;
-    grid-row: 1;
-    grid-column: 1;
 
     & > :global(*) {
         margin: 1em 0;
+        position: relative;
         &::after {
             content: '';
             width: 100%;
