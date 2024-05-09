@@ -246,13 +246,16 @@ const selectionValid = $derived.by(() =>
 
 .option-select {
     max-width: 100%;
+    display: grid;
+    height: fit-content;
+    gap: 1em;
 
     & > div {
         max-width: 100%;
         overflow-x: hidden;
         display: flex;
         flex-direction: column;
-        gap: 1em;
+        gap: 0.5em;
     }
 }
 
@@ -313,7 +316,7 @@ fieldset {
             z-index: 0;
             position: absolute;
             inset: 0;
-            background: red;
+            background: rgb(207, 0, 0);
             border: 2px solid var(--textColor);
             clip-path: polygon(0 100%, 100% 0, 0 0);
             transition: border var(--transitionDuration) ease;
