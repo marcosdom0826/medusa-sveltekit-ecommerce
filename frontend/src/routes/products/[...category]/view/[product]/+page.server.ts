@@ -1,8 +1,9 @@
 // server-file
 /* eslint-disable no-console */
 import { medusa, type ProductOptionValue } from '$/lib/medusa';
-import { error } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import type { AxiosError } from 'axios';
 
 const HOME_CATEGORY = 'fresh';
 const CART_EXPIRY_DAYS = 5;
@@ -83,16 +84,24 @@ export const actions = {
             cookies.set('cart_id', cart.cart.id, { path: '/', expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * CART_EXPIRY_DAYS) });
         }
         const maybeInCartItem = cart.cart.items?.find((i) => i.variant_id === selectedVariant);
-        if (maybeInCartItem) {
-            await medusa.carts.lineItems.update(cart.cart.id, maybeInCartItem.id, {
-                quantity: maybeInCartItem.quantity + 1
-            });
-        } else {
-            await medusa.carts.lineItems.create(cart.cart.id, {
-                variant_id: selectedVariant,
-                quantity: 1
-            });
+        try {
+            if (maybeInCartItem) {
+                await medusa.carts.lineItems.update(cart.cart.id, maybeInCartItem.id, {
+                    quantity: maybeInCartItem.quantity + 1
+                });
+            } else {
+                await medusa.carts.lineItems.create(cart.cart.id, {
+                    variant_id: selectedVariant,
+                    quantity: 1
+                });
 
+            }
+        } catch (e) {
+            console.error(e);
+            if ((e as AxiosError)?.response?.data) {
+                return fail(400, { error: (e as AxiosError).response?.data as Record<string, unknown> });
+            }
+            return fail(400, { error: e as Record<string, unknown> });
         }
 
     }

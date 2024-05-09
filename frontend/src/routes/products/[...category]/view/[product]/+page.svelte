@@ -1,16 +1,16 @@
 <script lang="ts">
 /* eslint-disable prettier/prettier */
 import { t } from '$/lib/i18n';
-import type { PageData } from './$types';
+import type { ActionData, PageData } from './$types';
 import ProductImageView from '$/lib/components/ProductImageView.svelte';
 import type { ProductOptionValue, ProductVariant } from '$/lib/medusa';
 import ProductBar from '$/lib/components/ProductBar.svelte';
-import { enhance } from '$app/forms';
+import { applyAction, enhance } from '$app/forms';
 import { fade, slide } from 'svelte/transition';
 import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
 
-const { data }: { data: PageData } = $props();
+const { data, form }: { data: PageData; form: ActionData } = $props();
 
 let loading = $state(false);
 
@@ -56,7 +56,7 @@ const variantForOptions = (options: Record<string, ProductOptionValue[]>) => {
 const isOrderAllowed = (variant: ProductVariant | undefined, nonVariant?: boolean) =>
     data.product.is_giftcard ? true : variant ? (variant.allow_backorder || variant.inventory_quantity !== 0) : nonVariant;
 
-const outOfStockOptions = findOutOfStockOptions();
+const outOfStockOptions = $derived.by(findOutOfStockOptions);
 let selectedOptions: Record<string, ProductOptionValue[]> = $state({});
 
 const selectedVariant = $derived.by(() => variantForOptions(selectedOptions) || data.product.variants[0]);
@@ -64,7 +64,7 @@ const selectedVariant = $derived.by(() => variantForOptions(selectedOptions) || 
 const price = $derived((selectedVariant?.calculated_price ?? 0) / 100);
 const originalPrice = $derived((selectedVariant?.original_price ?? 0) / 100);
 
-const selectionValid = $derived.by(() =>
+const selectionValid = $derived(
     variantForOptions(selectedOptions) !== undefined
         && Object.keys(selectedOptions).length >= Object.keys(data.productOptions).length
         && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder || data.product.is_giftcard)
@@ -98,13 +98,16 @@ const selectionValid = $derived.by(() =>
                 method="POST"
                 use:enhance="{() => {
                     loading = true;
-                    return async ({ update }) => {
+                    return async ({ update, result }) => {
                         await update({ reset: false });
                         loading = false;
-                        // TODO: remove when eslint-plugin-svelte is updated
-                        // eslint-disable-next-line svelte/valid-compile
-                        $cartDrawerOpen = true;
+                        if (result.type !== 'failure') {
+                            // TODO: remove when eslint-plugin-svelte is updated
+                            // eslint-disable-next-line svelte/valid-compile
+                            $cartDrawerOpen = true;
+                        }
                         selectedOptions = {};
+                        await applyAction(result);
                     };
                 }}">
                 <div class="option-select">
@@ -158,13 +161,18 @@ const selectionValid = $derived.by(() =>
                     <input type="hidden" name="variant" value="{selectedVariant.id}" />
                 {/if}
                 <div class="add-to-cart">
-                    <button class="primary" disabled="{!selectionValid || loading}" class:loading="{loading}">
+                    {#if form?.error}
+                        <div class="error" transition:slide>{$t(form.error?.code)}</div>
+                    {/if}
+                    <button class="primary" disabled="{!selectionValid || loading}">
                         {#if loading}
-                            <span transition:fade|local class="loading"
-                                ><LoadingSpinner size="1.3em" ringWidth="0.25em" /></span>
+                            <div transition:fade|local="{{ duration: 230 }}" class="loading">
+                                <LoadingSpinner size="1.3em" ringWidth="0.25em" />
+                            </div>
+                        {:else if selectionValid}
+                            <span transition:fade|local="{{ duration: 200 }}">Add to cart</span>
                         {:else}
-                            <span transition:fade|local
-                                >{selectionValid ? 'Add to cart' : 'Please select size'}</span>
+                            <span transition:fade|local="{{ duration: 200 }}">Please select size</span>
                         {/if}</button>
                 </div>
             </form>
@@ -404,5 +412,11 @@ fieldset {
             grid-row: 1 / -1;
         }
     }
+}
+
+.error {
+    color: rgb(207, 0, 0);
+    font-weight: bold;
+    padding: 1em 0;
 }
 </style>
