@@ -17,24 +17,9 @@ export default tseslint.config(
             "build/**/*",
             "dist/**/*",
             ".babelrc.js",
-            "./index.js",
+            "index.js",
             "medusa-config.js"
         ],
-    },
-    {
-        files: ["*.test.ts", "*.spec.ts", "*.test.tsx", "*.spec.tsx"],
-        languageOptions: {
-            parser: tseslint.parser,
-            globals: {
-                ...globals.node,
-                ...globals.es2021,
-            },
-            parserOptions: {
-                sourceType: 'module',
-                ecmaVersion: 2020,
-                project: './tsconfig.spec.json',
-            },
-        },
     },
     {
         languageOptions: {
@@ -179,4 +164,19 @@ export default tseslint.config(
             // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
         },
     },
+    {
+        files: ["*.test.ts", "*.spec.ts", "*.test.tsx", "*.spec.tsx"],
+        languageOptions: {
+            parser: tseslint.parser,
+            globals: {
+                ...globals.node,
+                ...globals.es2021,
+            },
+            parserOptions: {
+                sourceType: 'module',
+                ecmaVersion: 2020,
+                project: './tsconfig.spec.json',
+            },
+        },
+    }
 );
