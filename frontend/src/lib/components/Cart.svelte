@@ -30,7 +30,9 @@ const sortedItems = $derived(sortItems());
     {:else}
         <div class="cart">
             {#each sortedItems as item (item.id)}
-                <CartItem item="{item}" disableEmpty="{disableEmpty}" disableEdit="{disableEdit}" />
+                <div transition:slide|local>
+                    <CartItem item="{item}" disableEmpty="{disableEmpty}" disableEdit="{disableEdit}" />
+                </div>
             {/each}
         </div>
     {/if}
