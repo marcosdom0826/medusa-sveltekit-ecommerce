@@ -1,4 +1,5 @@
 <script lang="ts">
+import { t } from '$/lib/i18n';
 import Cart from '$/lib/components/Cart.svelte';
 import { applyAction, enhance } from '$app/forms';
 import { page } from '$app/stores';
@@ -250,7 +251,8 @@ const formData = $state({
                 </div>
             {/if}
             {#if typeof form?.error !== 'string' && form?.error?.message}
-                <span transition:slide class="error">{form?.error?.message}</span>
+                <!-- eslint-disable-next-line svelte/valid-compile -->
+                <span transition:slide class="error">{$t(form?.error?.message)}</span>
             {/if}
         </form>
         <div class="rhs">
