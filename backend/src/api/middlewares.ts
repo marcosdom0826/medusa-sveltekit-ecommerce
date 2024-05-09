@@ -20,7 +20,6 @@ const defaultExpandWithCategories = [
     'profiles'
 ];
 
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 async function categoryInclude(
     req: MedusaRequest,
     res: MedusaResponse,
