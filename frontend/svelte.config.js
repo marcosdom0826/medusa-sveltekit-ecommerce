@@ -8,6 +8,7 @@ const config = {
     preprocess: vitePreprocess(),
     compilerOptions: {
         runes: true,
+        cssHash: ({ hash, css }) => `svelte-${hash(css)}`,
     },
 
 	kit: {

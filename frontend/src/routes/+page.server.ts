@@ -15,7 +15,9 @@ export const load: PageServerLoad = async ({ parent }) => {
         limit: 10,
         offset: 0,
         category_id: [parentData.categoriesByHandle[HOME_CATEGORY].id]
-    });
+    }, parentData.authToken ? {
+        Authorization: `Bearer ${parentData.authToken}`
+    } : undefined);
 
     return {
         products: products.products

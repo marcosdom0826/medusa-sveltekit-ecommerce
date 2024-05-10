@@ -29,7 +29,11 @@ let shippingOption = $state(
 const shippingCost = $derived(data.shippingOptions.find((s) => s.id === shippingOption)?.amount || 0);
 
 let invoiceAddress = $state(data.cart?.billing_address ? 'separateAddress' : 'asDelivery');
-let formValid = $state(true);
+let formValid = $state(false);
+
+$effect(() => {
+    formValid = htmlForm.checkValidity();
+});
 
 let width: number = $state(0);
 let height: number = $state(0);
@@ -54,6 +58,8 @@ const formData = $state({
     invoice_zip: data.cart?.billing_address?.postal_code ?? '',
     invoice_city: data.cart?.billing_address?.city ?? ''
 });
+
+$inspect(form?.error);
 </script>
 
 <svelte:window bind:innerWidth="{width}" bind:innerHeight="{height}" />
@@ -250,9 +256,15 @@ const formData = $state({
                     <input type="hidden" name="invoice-country" value="de" />
                 </div>
             {/if}
-            {#if typeof form?.error !== 'string' && form?.error?.message}
-                <!-- eslint-disable-next-line svelte/valid-compile -->
-                <span transition:slide class="error">{$t(form?.error?.message)}</span>
+            {#if form?.error?.message}
+                <span
+                    transition:slide="{{
+                        duration: 200
+                    }}"
+                    class="error">
+                    <!-- eslint-disable-next-line svelte/valid-compile -->
+                    {$t(form?.error?.message)}
+                </span>
             {/if}
         </form>
         <div class="rhs">

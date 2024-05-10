@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-import { medusa, type ProductCategory } from '$/lib/medusa';
+import { medusa, type Customer, type ProductCategory } from '$/lib/medusa';
 import { ENABLE_GIFT_CARDS, VIRTUAL_ALL_CATEGORY } from '$env/static/private';
 
 const createVirtualCategory = (name: string, handle: string, nav: boolean, rank: number) => ({
@@ -14,6 +14,19 @@ const createVirtualCategory = (name: string, handle: string, nav: boolean, rank:
 });
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
+    const authToken = cookies.get('auth_token');
+    let customer: Customer|undefined;
+    if (authToken) {
+        try {
+            customer = (await medusa.customers.retrieve({
+                Authorization: `Bearer ${authToken}`
+            })).customer;
+        } catch ( e) {
+            cookies.delete('auth_token', { path: '/' });
+            customer = undefined;
+        }
+    }
+
     const productCategories: (Partial<ProductCategory> & Pick<ProductCategory, 'id' | 'handle' | 'name' | 'rank'>)[] = (
         await medusa.productCategories.list()
     ).product_categories;
@@ -30,7 +43,9 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
     let cart;
     if (cartId) {
         try {
-            cart = await medusa.carts.retrieve(cartId);
+            cart = await medusa.carts.retrieve(cartId, authToken ? {
+                Authorization: `Bearer ${authToken}`
+            } : undefined);
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error(e);
@@ -48,6 +63,8 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
     return {
         productCategories: productCategories,
         categoriesByHandle: categoriesByHandle,
-        cart: cart?.cart
+        cart: cart?.cart,
+        authToken,
+        customer
     };
 };

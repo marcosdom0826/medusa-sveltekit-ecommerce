@@ -43,11 +43,15 @@ export const actions = {
     next: async (event) => {
         const data = await event.request.formData();
         const cartId = event.cookies.get('cart_id');
+        const authToken = event.cookies.get('auth_token');
+
 
         let cart;
         if (cartId) {
             try {
-                cart = await medusa.carts.retrieve(cartId);
+                cart = await medusa.carts.retrieve(cartId, authToken ? {
+                    Authorization: `Bearer ${authToken}`
+                } : undefined);
             } catch (e) {
                 console.error(e);
             }
@@ -98,13 +102,17 @@ export const actions = {
                         country_code: data.get('invoice-country') as string
                     }
                 } : {})
-            });
+            }, authToken ? {
+                Authorization: `Bearer ${authToken}`
+            } : undefined);
             if (cart.cart.items.every((i) => i.is_giftcard)) {
                 console.log('All items are giftcards, allowing checkout without shipping method!');
             } else {
                 await medusa.carts.addShippingMethod(cart.cart.id, {
                     option_id: data.get('shippingOption') as string
-                });
+                }, authToken ? {
+                    Authorization: `Bearer ${authToken}`
+                } : undefined);
             }
 
         } catch (e) {
@@ -119,6 +127,8 @@ export const actions = {
     addCode: async (event) => {
         const data = await event.request.formData();
         const cartId = event.cookies.get('cart_id');
+        const authToken = event.cookies.get('auth_token');
+
 
         const code = data.get('code') as string;
         if (!code) {
@@ -131,7 +141,9 @@ export const actions = {
         let cart;
         if (cartId) {
             try {
-                cart = await medusa.carts.retrieve(cartId);
+                cart = await medusa.carts.retrieve(cartId, authToken ? {
+                    Authorization: `Bearer ${authToken}`
+                } : undefined);
             } catch (e) {
                 console.error(e);
             }
@@ -142,7 +154,9 @@ export const actions = {
 
         let giftCard;
         try {
-            giftCard = await medusa.giftCards.retrieve(code);
+            giftCard = await medusa.giftCards.retrieve(code, authToken ? {
+                Authorization: `Bearer ${authToken}`
+            } : undefined);
         } catch (e) {
             console.error(e);
         }
@@ -164,7 +178,9 @@ export const actions = {
                             }
                         ]
                     })
-            );
+                , authToken ? {
+                    Authorization: `Bearer ${authToken}`
+                } : undefined);
         } catch (e) {
             console.error(e);
             if ((e as AxiosError)?.response?.data) {

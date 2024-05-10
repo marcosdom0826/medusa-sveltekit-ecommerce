@@ -69,7 +69,7 @@ $effect(() => {
                 <button onclick="{close}"><MaterialSymbolsArrowBackRounded /></button>
             {/if}
             <div>
-                <Logo />
+                <Logo style="width: 10rem;" />
             </div>
             {#if side === 'right'}
                 <button onclick="{close}" style="transform: rotate(180deg);"

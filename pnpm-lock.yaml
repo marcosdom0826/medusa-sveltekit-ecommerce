@@ -40,7 +40,7 @@ importers:
         version: 1.0.3(medusa-interfaces@1.3.9)
       '@medusajs/medusa':
         specifier: 1.20.4
-        version: 1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+        version: 1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
       '@tanstack/react-query':
         specifier: 5.32.1
         version: 5.32.1(react@18.3.1)
@@ -158,13 +158,13 @@ importers:
     dependencies:
       '@medusajs/medusa-js':
         specifier: ^6.1.8
-        version: 6.1.8(@medusajs/medusa@1.20.4)
+        version: 6.1.8(@medusajs/medusa@1.20.6)
       '@paypal/paypal-js':
         specifier: ^8.0.5
         version: 8.0.5
       sveltekit-i18n:
         specifier: ^2.4.2
-        version: 2.4.2(svelte@5.0.0-next.123)
+        version: 2.4.2(svelte@5.0.0-next.126)
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.0.2
@@ -180,16 +180,16 @@ importers:
         version: 1.1.13
       '@poppanator/sveltekit-svg':
         specifier: 5.0.0-svelte5.3
-        version: 5.0.0-svelte5.3(svelte@5.0.0-next.123)(svgo@3.2.0)(vite@5.2.11)
+        version: 5.0.0-svelte5.3(svelte@5.0.0-next.126)(svgo@3.3.2)(vite@5.2.11)
       '@sveltejs/adapter-auto':
         specifier: ^3.2.0
         version: 3.2.0(@sveltejs/kit@2.5.7)
       '@sveltejs/kit':
         specifier: ^2.5.7
-        version: 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.123)(vite@5.2.11)
+        version: 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.126)(vite@5.2.11)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.0
-        version: 3.1.0(svelte@5.0.0-next.123)(vite@5.2.11)
+        version: 3.1.0(svelte@5.0.0-next.126)(vite@5.2.11)
       '@types/eslint':
         specifier: 8.56.10
         version: 8.56.10
@@ -206,11 +206,11 @@ importers:
         specifier: ^5.1.3
         version: 5.1.3(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0)(eslint@9.2.0)(prettier@3.2.5)
       eslint-plugin-svelte:
-        specifier: ^2.38.0
-        version: 2.38.0(eslint@9.2.0)(svelte@5.0.0-next.123)
+        specifier: ^2.39.0
+        version: 2.39.0(eslint@9.2.0)(svelte@5.0.0-next.126)
       globals:
-        specifier: ^15.1.0
-        version: 15.1.0
+        specifier: ^15.2.0
+        version: 15.2.0
       postcss-preset-env:
         specifier: ^9.5.11
         version: 9.5.11(postcss@8.4.38)
@@ -219,13 +219,13 @@ importers:
         version: 3.2.5
       prettier-plugin-svelte:
         specifier: ^3.2.3
-        version: 3.2.3(prettier@3.2.5)(svelte@5.0.0-next.123)
+        version: 3.2.3(prettier@3.2.5)(svelte@5.0.0-next.126)
       svelte:
-        specifier: 5.0.0-next.123
-        version: 5.0.0-next.123
+        specifier: 5.0.0-next.126
+        version: 5.0.0-next.126
       svelte-check:
         specifier: ^3.7.1
-        version: 3.7.1(postcss@8.4.38)(svelte@5.0.0-next.123)
+        version: 3.7.1(postcss@8.4.38)(svelte@5.0.0-next.126)
       tslib:
         specifier: ^2.4.1
         version: 2.6.2
@@ -4408,7 +4408,7 @@ packages:
       '@medusajs/medusa': ^1.14.0
     dependencies:
       '@medusajs/admin-ui': 2.1.13(@medusajs/medusa@1.20.4)(@types/node@20.12.7)(@types/react@18.3.1)(csstype@3.1.3)(esbuild@0.17.18)(eslint@9.1.1)(typescript@5.4.5)
-      '@medusajs/medusa': 1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+      '@medusajs/medusa': 1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
       '@rollup/plugin-alias': 5.0.0(rollup@3.20.7)
       '@rollup/plugin-commonjs': 24.1.0(rollup@3.20.7)
       '@rollup/plugin-json': 6.0.0(rollup@3.20.7)
@@ -4507,6 +4507,36 @@ packages:
       '@medusajs/orchestration': 0.5.6(pg@8.11.5)
       '@medusajs/utils': 1.11.8(pg@8.11.5)
       '@medusajs/workflows-sdk': 0.1.5(pg@8.11.5)
+      awilix: 8.0.1
+      ulid: 2.3.0
+    transitivePeerDependencies:
+      - '@mikro-orm/better-sqlite'
+      - '@mikro-orm/entity-generator'
+      - '@mikro-orm/mariadb'
+      - '@mikro-orm/migrations-mongodb'
+      - '@mikro-orm/mongodb'
+      - '@mikro-orm/mysql'
+      - '@mikro-orm/seeder'
+      - '@mikro-orm/sqlite'
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
+
+  /@medusajs/core-flows@0.0.9(pg@8.11.5):
+    resolution: {integrity: sha512-RJ2J6LQN58xnNfCyK8gZMGXCdi/CE6e9vvKI6jx1GJYivM/vEN/veySl4BtoAEpYbi7LnJjZWb2OAp4+x0PRFg==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@medusajs/modules-sdk': 1.12.11
+      '@medusajs/orchestration': 0.5.7(pg@8.11.5)
+      '@medusajs/utils': 1.11.9(pg@8.11.5)
+      '@medusajs/workflows-sdk': 0.1.6(pg@8.11.5)
       awilix: 8.0.1
       ulid: 2.3.0
     transitivePeerDependencies:
@@ -4633,6 +4663,37 @@ packages:
       - tedious
     dev: false
 
+  /@medusajs/link-modules@0.2.11(pg@8.11.5):
+    resolution: {integrity: sha512-NTTiBOgr7w0SYMnyHPeE1btWmbxe39H+uB8fp1cCeRqELf8tIZ+E5GqJhHGLSCqAhOmKq1kXxNdO9Z81VyOHAQ==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@medusajs/modules-sdk': 1.12.11
+      '@medusajs/types': 1.11.16
+      '@medusajs/utils': 1.11.9(pg@8.11.5)
+      '@mikro-orm/core': 5.9.7(@mikro-orm/postgresql@5.9.7)
+      '@mikro-orm/postgresql': 5.9.7(@mikro-orm/core@5.9.7)
+      awilix: 8.0.1
+    transitivePeerDependencies:
+      - '@mikro-orm/better-sqlite'
+      - '@mikro-orm/entity-generator'
+      - '@mikro-orm/mariadb'
+      - '@mikro-orm/migrations'
+      - '@mikro-orm/migrations-mongodb'
+      - '@mikro-orm/mongodb'
+      - '@mikro-orm/mysql'
+      - '@mikro-orm/seeder'
+      - '@mikro-orm/sqlite'
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
+
   /@medusajs/medusa-cli@1.3.22:
     resolution: {integrity: sha512-iUkQVSKlvjzrisgIyKPfiPTbWFYZt/y7tWlKMrP78ekZm5P/ls5chIdlM/5TKOTxjvcgGEop76323lQ//W5dCg==}
     engines: {node: '>=16'}
@@ -4691,7 +4752,7 @@ packages:
     peerDependencies:
       '@medusajs/medusa': ^1.17.2
     dependencies:
-      '@medusajs/medusa': 1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+      '@medusajs/medusa': 1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
       axios: 1.6.8
       cross-env: 5.2.1
       qs: 6.12.1
@@ -4701,7 +4762,23 @@ packages:
       - debug
     dev: false
 
-  /@medusajs/medusa@1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20):
+  /@medusajs/medusa-js@6.1.8(@medusajs/medusa@1.20.6):
+    resolution: {integrity: sha512-2i480Uslh7Y2qJW5OSrzXKR2NKjmYRAcWbcuKGBawmpMkveTVesuP/VmYCYNuBB/V3HKq/KEa9Q868lc1F+FKQ==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@medusajs/medusa': ^1.17.2
+    dependencies:
+      '@medusajs/medusa': 1.20.6(@types/ioredis-mock@8.2.5)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+      axios: 1.6.8
+      cross-env: 5.2.1
+      qs: 6.12.1
+      retry-axios: 2.6.0(axios@1.6.8)
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /@medusajs/medusa@1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20):
     resolution: {integrity: sha512-c54jufkdJnySsrw4jsqDMAKgLf3wvhG9T3FxpiAEPtnr293EVmlVjX+5gB3cEshrXCKE2cFQN9yyEAkVGQxBNw==}
     engines: {node: '>=16'}
     hasBin: true
@@ -4742,7 +4819,7 @@ packages:
       medusa-core-utils: 1.2.1
       medusa-interfaces: 1.3.9
       medusa-telemetry: 0.0.17
-      medusa-test-utils: 1.1.43(@medusajs/medusa@1.20.4)(@mikro-orm/core@5.9.7)(axios@1.6.8)(express@4.19.2)(pg@8.11.5)(typeorm@0.3.20)
+      medusa-test-utils: 1.1.43(@medusajs/medusa@1.20.4)(@mikro-orm/core@6.2.5)(axios@1.6.8)(express@4.19.2)(pg@8.11.5)(typeorm@0.3.20)
       morgan: 1.10.0
       multer: 1.4.5-lts.1
       node-schedule: 2.1.1
@@ -4788,6 +4865,89 @@ packages:
       - tedious
     dev: false
 
+  /@medusajs/medusa@1.20.6(@types/ioredis-mock@8.2.5)(medusa-interfaces@1.3.9)(typeorm@0.3.20):
+    resolution: {integrity: sha512-HdJyoQkq82nWIlbIwvd/qCik6iO5Rv8ERMl4aivEtKr8G+zohL7ovJb9DLcwHvSaXONaA/+FTxO7PB5P5lXNPA==}
+    engines: {node: '>=16'}
+    hasBin: true
+    peerDependencies:
+      medusa-interfaces: ^1.3.7
+      typeorm: ^0.3.16
+    dependencies:
+      '@medusajs/core-flows': 0.0.9(pg@8.11.5)
+      '@medusajs/link-modules': 0.2.11(pg@8.11.5)
+      '@medusajs/medusa-cli': 1.3.22
+      '@medusajs/modules-sdk': 1.12.11
+      '@medusajs/orchestration': 0.5.7(pg@8.11.5)
+      '@medusajs/utils': 1.11.9(pg@8.11.5)
+      '@medusajs/workflows-sdk': 0.1.6(pg@8.11.5)
+      awilix: 8.0.1
+      body-parser: 1.20.2
+      boxen: 5.1.2
+      bullmq: 5.7.8
+      chokidar: 3.6.0
+      class-transformer: 0.5.1
+      class-validator: 0.14.1
+      compression: 1.7.4
+      connect-redis: 5.2.0
+      cookie-parser: 1.4.6
+      core-js: 3.37.0
+      cors: 2.8.5
+      cross-spawn: 7.0.3
+      dotenv: 16.4.5
+      express: 4.19.2
+      express-session: 1.18.0
+      fs-exists-cached: 1.0.0
+      glob: 7.2.3
+      ioredis: 5.4.1
+      ioredis-mock: 8.4.0(@types/ioredis-mock@8.2.5)(ioredis@5.4.1)
+      iso8601-duration: 1.3.0
+      jsonwebtoken: 9.0.2
+      lodash: 4.17.21
+      medusa-core-utils: 1.2.2
+      medusa-interfaces: 1.3.9
+      medusa-telemetry: 0.0.17
+      morgan: 1.10.0
+      multer: 1.4.5-lts.1
+      node-schedule: 2.1.1
+      papaparse: 5.3.2
+      passport: 0.6.0
+      passport-custom: 1.1.1
+      passport-jwt: 4.0.1
+      passport-local: 1.0.0
+      pg: 8.11.5
+      qs: 6.12.1
+      randomatic: 3.1.1
+      reflect-metadata: 0.1.14
+      regenerator-runtime: 0.13.11
+      request-ip: 3.3.0
+      scrypt-kdf: 2.0.1
+      typeorm: 0.3.20(ioredis@5.4.1)(pg@8.11.5)
+      ulid: 2.3.0
+      uuid: 9.0.1
+      winston: 3.13.0
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - '@mikro-orm/better-sqlite'
+      - '@mikro-orm/entity-generator'
+      - '@mikro-orm/mariadb'
+      - '@mikro-orm/migrations'
+      - '@mikro-orm/migrations-mongodb'
+      - '@mikro-orm/mongodb'
+      - '@mikro-orm/mysql'
+      - '@mikro-orm/seeder'
+      - '@mikro-orm/sqlite'
+      - '@types/ioredis-mock'
+      - better-sqlite3
+      - debug
+      - mssql
+      - mysql
+      - mysql2
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
+
   /@medusajs/modules-sdk@1.12.10:
     resolution: {integrity: sha512-qYybipV1RM7MmBCXCkNWOs8pIYDq33boQjKr0VzUT4BXH/LMvIRRJDvTCAjvoCnkpjI6EK45sKjg1jjiv+h6tA==}
     engines: {node: '>=16'}
@@ -4797,6 +4957,39 @@ packages:
       '@medusajs/orchestration': 0.5.6(pg@8.11.5)
       '@medusajs/types': 1.11.15
       '@medusajs/utils': 1.11.8(pg@8.11.5)
+      awilix: 8.0.1
+      graphql: 16.8.1
+      knex: 2.4.2(pg@8.11.5)
+      pg: 8.11.5
+      resolve-cwd: 3.0.0
+    transitivePeerDependencies:
+      - '@mikro-orm/better-sqlite'
+      - '@mikro-orm/entity-generator'
+      - '@mikro-orm/mariadb'
+      - '@mikro-orm/migrations-mongodb'
+      - '@mikro-orm/mongodb'
+      - '@mikro-orm/mysql'
+      - '@mikro-orm/seeder'
+      - '@mikro-orm/sqlite'
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
+
+  /@medusajs/modules-sdk@1.12.11:
+    resolution: {integrity: sha512-JDZ0BP1CD69cAqYQb/PHC2pZKhhzeM6krttt6/8pi9/h7HvpUvkMQ2gaL1ze8NTu5K66BjRu9MpRrzBFQzOrdg==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@graphql-tools/merge': 9.0.4(graphql@16.8.1)
+      '@graphql-tools/schema': 10.0.3(graphql@16.8.1)
+      '@medusajs/orchestration': 0.5.7(pg@8.11.5)
+      '@medusajs/types': 1.11.16
+      '@medusajs/utils': 1.11.9(pg@8.11.5)
       awilix: 8.0.1
       graphql: 16.8.1
       knex: 2.4.2(pg@8.11.5)
@@ -4910,6 +5103,34 @@ packages:
       - tedious
     dev: false
 
+  /@medusajs/orchestration@0.5.7(pg@8.11.5):
+    resolution: {integrity: sha512-PlP93BKinb4WAUaMLqaxceNQ1QE3K7fXLRpKx2AvBb4b6m/g5Iz3A+K50NtC5CrSqr4PVH0UIV6AGCrdFUS8WQ==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@medusajs/types': 1.11.16
+      '@medusajs/utils': 1.11.9(pg@8.11.5)
+      awilix: 8.0.1
+      graphql: 16.8.1
+    transitivePeerDependencies:
+      - '@mikro-orm/better-sqlite'
+      - '@mikro-orm/entity-generator'
+      - '@mikro-orm/mariadb'
+      - '@mikro-orm/migrations-mongodb'
+      - '@mikro-orm/mongodb'
+      - '@mikro-orm/mysql'
+      - '@mikro-orm/seeder'
+      - '@mikro-orm/sqlite'
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
+
   /@medusajs/types@1.11.13:
     resolution: {integrity: sha512-y8NM4G/rIrZxtt5rJmRCaFQ33BOIuPPh4MXdo6e3fHyEa8mN9NSo1IWydkV470WyqfJ2Z43QbW8v05jfyKvJIw==}
     engines: {node: '>=16'}
@@ -4918,6 +5139,11 @@ packages:
   /@medusajs/types@1.11.15:
     resolution: {integrity: sha512-1zoM+MSbSxuDoyJ3xUVlwh5DgB9DgZH4yu/WUrymbZwVNka7/uPIraRG65sVO6fJu+/y8NpEe231Y7ZEyFz19A==}
     engines: {node: '>=16'}
+
+  /@medusajs/types@1.11.16:
+    resolution: {integrity: sha512-utgD9FdDH8u/m7d9Zj2IUBIhLHXBhkBZ9IvILvdaus6BfEk+grkk1qBsAmAdgQTfOM1DGmf8vWChCNTR++uF9Q==}
+    engines: {node: '>=16'}
+    dev: false
 
   /@medusajs/ui-preset@1.1.3(tailwindcss@3.2.2):
     resolution: {integrity: sha512-pFfZUE7EP5rH4tkzxHIH0sW5iOwUzZGP3u7519D4LIusI1MrgH5E89USjSaQXNJlh0jil4pfbh3zNWnGFn5ldg==}
@@ -5066,6 +5292,38 @@ packages:
       - supports-color
       - tedious
 
+  /@medusajs/utils@1.11.9(pg@8.11.5):
+    resolution: {integrity: sha512-L9tKoan2aiCO+o3gJMvZyCMLX9Xj778V1O8dOpiEUTGMvOLC8pCGW+CgKpBf7Zq6qa2GKz1Xj3DA9pCluJIETA==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@medusajs/types': 1.11.16
+      '@mikro-orm/core': 5.9.7(@mikro-orm/migrations@5.9.7)(@mikro-orm/postgresql@5.9.7)
+      '@mikro-orm/migrations': 5.9.7(@mikro-orm/core@5.9.7)(pg@8.11.5)
+      '@mikro-orm/postgresql': 5.9.7(@mikro-orm/core@5.9.7)(@mikro-orm/migrations@5.9.7)
+      awilix: 8.0.1
+      bignumber.js: 9.1.2
+      knex: 2.4.2(pg@8.11.5)
+      ulid: 2.3.0
+    transitivePeerDependencies:
+      - '@mikro-orm/better-sqlite'
+      - '@mikro-orm/entity-generator'
+      - '@mikro-orm/mariadb'
+      - '@mikro-orm/migrations-mongodb'
+      - '@mikro-orm/mongodb'
+      - '@mikro-orm/mysql'
+      - '@mikro-orm/seeder'
+      - '@mikro-orm/sqlite'
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
+
   /@medusajs/workflows-sdk@0.1.5(pg@8.11.5):
     resolution: {integrity: sha512-mO9A92uCLt1TzgqqpTx0TlTChEWU2PrM8uvLLm/QU0O//MiL3sqeGroW0ESOEVKKtrvR6T/6EkKaIQzQP0f/LQ==}
     engines: {node: '>=16'}
@@ -5073,6 +5331,35 @@ packages:
       '@medusajs/modules-sdk': 1.12.10
       '@medusajs/orchestration': 0.5.6(pg@8.11.5)
       '@medusajs/utils': 1.11.8(pg@8.11.5)
+      awilix: 8.0.1
+      ulid: 2.3.0
+    transitivePeerDependencies:
+      - '@mikro-orm/better-sqlite'
+      - '@mikro-orm/entity-generator'
+      - '@mikro-orm/mariadb'
+      - '@mikro-orm/migrations-mongodb'
+      - '@mikro-orm/mongodb'
+      - '@mikro-orm/mysql'
+      - '@mikro-orm/seeder'
+      - '@mikro-orm/sqlite'
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
+
+  /@medusajs/workflows-sdk@0.1.6(pg@8.11.5):
+    resolution: {integrity: sha512-4P0xlxSEO0RHedf34kksIO+NmJ1A93obYjtmHjXdrp0vQnRdBfTi8t7y74lbFVFexnXndRsRc7V4VrvVdlqIHA==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@medusajs/modules-sdk': 1.12.11
+      '@medusajs/orchestration': 0.5.7(pg@8.11.5)
+      '@medusajs/utils': 1.11.9(pg@8.11.5)
       awilix: 8.0.1
       ulid: 2.3.0
     transitivePeerDependencies:
@@ -5185,6 +5472,19 @@ packages:
       globby: 11.1.0
       mikro-orm: 5.9.7
       reflect-metadata: 0.1.13
+    dev: false
+
+  /@mikro-orm/core@6.2.5:
+    resolution: {integrity: sha512-KZvirbAoFNjR/Sx30Jr7j6y5oEofNr13llPvCPUQlWQzHrFXedU1Td5AtVeBkOzp7f5FDBSv/a/wMRXqyqkrcA==}
+    engines: {node: '>= 18.12.0'}
+    dependencies:
+      dataloader: 2.2.2
+      dotenv: 16.4.5
+      esprima: 4.0.1
+      fs-extra: 11.2.0
+      globby: 11.1.0
+      mikro-orm: 6.2.5
+      reflect-metadata: 0.2.2
     dev: false
 
   /@mikro-orm/knex@5.9.7(@mikro-orm/core@5.9.7)(@mikro-orm/migrations@5.9.7)(pg@8.11.3):
@@ -5313,6 +5613,92 @@ packages:
       - tedious
     dev: false
 
+  /@mikro-orm/knex@5.9.7(@mikro-orm/core@6.2.5)(@mikro-orm/migrations@5.9.7)(pg@8.11.3):
+    resolution: {integrity: sha512-LmyoXPXrEtTJ4/D/2/ppWMjRxIHwyk/E/2SNz28/fmN+nK9of6Sqa0ql6M0WJRNxYOxLiVOGZWy1fGJAGW3lCg==}
+    engines: {node: '>= 14.0.0'}
+    peerDependencies:
+      '@mikro-orm/core': ^5.0.0
+      '@mikro-orm/entity-generator': ^5.0.0
+      '@mikro-orm/migrations': ^5.0.0
+      better-sqlite3: '*'
+      mssql: '*'
+      mysql: '*'
+      mysql2: '*'
+      pg: '*'
+      sqlite3: '*'
+    peerDependenciesMeta:
+      '@mikro-orm/entity-generator':
+        optional: true
+      '@mikro-orm/migrations':
+        optional: true
+      better-sqlite3:
+        optional: true
+      mssql:
+        optional: true
+      mysql:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      sqlite3:
+        optional: true
+    dependencies:
+      '@mikro-orm/core': 6.2.5
+      '@mikro-orm/migrations': 5.9.7(@mikro-orm/core@6.2.5)(pg@8.11.5)
+      fs-extra: 11.1.1
+      knex: 2.5.1(pg@8.11.3)
+      pg: 8.11.3
+      sqlstring: 2.3.3
+    transitivePeerDependencies:
+      - pg-native
+      - supports-color
+      - tedious
+    dev: false
+
+  /@mikro-orm/knex@5.9.7(@mikro-orm/core@6.2.5)(@mikro-orm/migrations@5.9.7)(pg@8.11.5):
+    resolution: {integrity: sha512-LmyoXPXrEtTJ4/D/2/ppWMjRxIHwyk/E/2SNz28/fmN+nK9of6Sqa0ql6M0WJRNxYOxLiVOGZWy1fGJAGW3lCg==}
+    engines: {node: '>= 14.0.0'}
+    peerDependencies:
+      '@mikro-orm/core': ^5.0.0
+      '@mikro-orm/entity-generator': ^5.0.0
+      '@mikro-orm/migrations': ^5.0.0
+      better-sqlite3: '*'
+      mssql: '*'
+      mysql: '*'
+      mysql2: '*'
+      pg: '*'
+      sqlite3: '*'
+    peerDependenciesMeta:
+      '@mikro-orm/entity-generator':
+        optional: true
+      '@mikro-orm/migrations':
+        optional: true
+      better-sqlite3:
+        optional: true
+      mssql:
+        optional: true
+      mysql:
+        optional: true
+      mysql2:
+        optional: true
+      pg:
+        optional: true
+      sqlite3:
+        optional: true
+    dependencies:
+      '@mikro-orm/core': 6.2.5
+      '@mikro-orm/migrations': 5.9.7(@mikro-orm/core@6.2.5)(pg@8.11.5)
+      fs-extra: 11.1.1
+      knex: 2.5.1(pg@8.11.5)
+      pg: 8.11.5
+      sqlstring: 2.3.3
+    transitivePeerDependencies:
+      - pg-native
+      - supports-color
+      - tedious
+    dev: false
+
   /@mikro-orm/migrations@5.9.7(@mikro-orm/core@5.9.7)(pg@8.11.3):
     resolution: {integrity: sha512-5CFVIwmGMxN7p7Rs3KRQmYlDVy47DN2MJQqtDOSVG9ww0xzOP0suCLDA/yRG1uFcPnTn/Ru6lwAH6nllqV75FQ==}
     engines: {node: '>= 14.0.0'}
@@ -5359,6 +5745,30 @@ packages:
       - sqlite3
       - supports-color
       - tedious
+
+  /@mikro-orm/migrations@5.9.7(@mikro-orm/core@6.2.5)(pg@8.11.5):
+    resolution: {integrity: sha512-5CFVIwmGMxN7p7Rs3KRQmYlDVy47DN2MJQqtDOSVG9ww0xzOP0suCLDA/yRG1uFcPnTn/Ru6lwAH6nllqV75FQ==}
+    engines: {node: '>= 14.0.0'}
+    peerDependencies:
+      '@mikro-orm/core': ^5.0.0
+    dependencies:
+      '@mikro-orm/core': 6.2.5
+      '@mikro-orm/knex': 5.9.7(@mikro-orm/core@6.2.5)(@mikro-orm/migrations@5.9.7)(pg@8.11.5)
+      fs-extra: 11.1.1
+      knex: 2.5.1(pg@8.11.5)
+      umzug: 3.3.1
+    transitivePeerDependencies:
+      - '@mikro-orm/entity-generator'
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
 
   /@mikro-orm/postgresql@5.9.7(@mikro-orm/core@5.9.7):
     resolution: {integrity: sha512-GbWWR/1QWjqTx10I4bjvMQjSN1SDVgNcQYm0kiY54sGvRxOqam55aiwA3Hb9Jp4myyKufKfDjAU0lCFmlpTWyQ==}
@@ -5419,6 +5829,37 @@ packages:
       - sqlite3
       - supports-color
       - tedious
+
+  /@mikro-orm/postgresql@5.9.7(@mikro-orm/core@6.2.5)(@mikro-orm/migrations@5.9.7):
+    resolution: {integrity: sha512-GbWWR/1QWjqTx10I4bjvMQjSN1SDVgNcQYm0kiY54sGvRxOqam55aiwA3Hb9Jp4myyKufKfDjAU0lCFmlpTWyQ==}
+    engines: {node: '>= 14.0.0'}
+    peerDependencies:
+      '@mikro-orm/core': ^5.0.0
+      '@mikro-orm/entity-generator': ^5.0.0
+      '@mikro-orm/migrations': ^5.0.0
+      '@mikro-orm/seeder': ^5.0.0
+    peerDependenciesMeta:
+      '@mikro-orm/entity-generator':
+        optional: true
+      '@mikro-orm/migrations':
+        optional: true
+      '@mikro-orm/seeder':
+        optional: true
+    dependencies:
+      '@mikro-orm/core': 6.2.5
+      '@mikro-orm/knex': 5.9.7(@mikro-orm/core@6.2.5)(@mikro-orm/migrations@5.9.7)(pg@8.11.3)
+      '@mikro-orm/migrations': 5.9.7(@mikro-orm/core@6.2.5)(pg@8.11.5)
+      pg: 8.11.3
+    transitivePeerDependencies:
+      - better-sqlite3
+      - mssql
+      - mysql
+      - mysql2
+      - pg-native
+      - sqlite3
+      - supports-color
+      - tedious
+    dev: false
 
   /@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.2:
     resolution: {integrity: sha512-9bfjwDxIDWmmOKusUcqdS4Rw+SETlp9Dy39Xui9BEGEk19dDwH0jhipwFzEff/pFg95NKymc6TOTbRKcWeRqyQ==}
@@ -5729,7 +6170,7 @@ packages:
     resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
     dev: true
 
-  /@poppanator/sveltekit-svg@5.0.0-svelte5.3(svelte@5.0.0-next.123)(svgo@3.2.0)(vite@5.2.11):
+  /@poppanator/sveltekit-svg@5.0.0-svelte5.3(svelte@5.0.0-next.126)(svgo@3.3.2)(vite@5.2.11):
     resolution: {integrity: sha512-lRP65Fed3ZVrPQwNVuXD1qPDGVkS17pk9TANKjGjJU4et4g8XjU2EgX3JfC3FwIHiC4IrdLtWiR57hUUEHFSuA==}
     peerDependencies:
       svelte: '>=5.x || ^5.0.0-next.0'
@@ -5737,8 +6178,8 @@ packages:
       vite: '>=5.x'
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@3.20.7)
-      svelte: 5.0.0-next.123
-      svgo: 3.2.0
+      svelte: 5.0.0-next.126
+      svgo: 3.3.2
       vite: 5.2.11
     transitivePeerDependencies:
       - rollup
@@ -8297,11 +8738,11 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
-      '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.123)(vite@5.2.11)
+      '@sveltejs/kit': 2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.126)(vite@5.2.11)
       import-meta-resolve: 4.1.0
     dev: true
 
-  /@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.123)(vite@5.2.11):
+  /@sveltejs/kit@2.5.7(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.126)(vite@5.2.11):
     resolution: {integrity: sha512-6uedTzrb7nQrw6HALxnPrPaXdIN2jJJTzTIl96Z3P5NiG+OAfpdPbrWrvkJ3GN4CfWqrmU4dJqwMMRMTD/C7ow==}
     engines: {node: '>=18.13'}
     hasBin: true
@@ -8311,7 +8752,7 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.3
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@5.0.0-next.123)(vite@5.2.11)
+      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@5.0.0-next.126)(vite@5.2.11)
       '@types/cookie': 0.6.0
       cookie: 0.6.0
       devalue: 5.0.0
@@ -8323,12 +8764,12 @@ packages:
       sade: 1.8.1
       set-cookie-parser: 2.6.0
       sirv: 2.0.4
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
       tiny-glob: 0.2.9
       vite: 5.2.11
     dev: true
 
-  /@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.123)(vite@5.2.11):
+  /@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.126)(vite@5.2.11):
     resolution: {integrity: sha512-9QX28IymvBlSCqsCll5t0kQVxipsfhFFL+L2t3nTWfXnddYwxBuAEtTtlaVQpRz9c37BhJjltSeY4AJSC03SSg==}
     engines: {node: ^18.0.0 || >=20}
     peerDependencies:
@@ -8336,40 +8777,40 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@5.0.0-next.123)(vite@5.2.11)
+      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@5.0.0-next.126)(vite@5.2.11)
       debug: 4.3.4(supports-color@8.1.1)
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
       vite: 5.2.11
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte@3.1.0(svelte@5.0.0-next.123)(vite@5.2.11):
+  /@sveltejs/vite-plugin-svelte@3.1.0(svelte@5.0.0-next.126)(vite@5.2.11):
     resolution: {integrity: sha512-sY6ncCvg+O3njnzbZexcVtUqOBE3iYmQPJ9y+yXSkOwG576QI/xJrBnQSRXFLGwJNBa0T78JEKg5cIR0WOAuUw==}
     engines: {node: ^18.0.0 || >=20}
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.123)(vite@5.2.11)
+      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@5.0.0-next.126)(vite@5.2.11)
       debug: 4.3.4(supports-color@8.1.1)
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
-      svelte: 5.0.0-next.123
-      svelte-hmr: 0.16.0(svelte@5.0.0-next.123)
+      svelte: 5.0.0-next.126
+      svelte-hmr: 0.16.0(svelte@5.0.0-next.126)
       vite: 5.2.11
       vitefu: 0.2.5(vite@5.2.11)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@sveltekit-i18n/base@1.3.7(svelte@5.0.0-next.123):
+  /@sveltekit-i18n/base@1.3.7(svelte@5.0.0-next.126):
     resolution: {integrity: sha512-kg1kql1/ro/lIudwFiWrv949Q07gmweln87tflUZR51MNdXXzK4fiJQv5Mw50K/CdQ5BOk/dJ0WOH2vOtBI6yw==}
     peerDependencies:
       svelte: '>=3.49.0'
     dependencies:
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
     dev: false
 
   /@sveltekit-i18n/parser-default@1.1.1:
@@ -8842,7 +9283,7 @@ packages:
   /@types/ioredis-mock@8.2.5:
     resolution: {integrity: sha512-cZyuwC9LGtg7s5G9/w6rpy3IOZ6F/hFR0pQlWYZESMo1xQUYbDpa6haqB4grTePjsGzcB/YLBFCjqRunK5wieg==}
     dependencies:
-      '@types/node': 20.12.10
+      '@types/node': 20.12.11
       ioredis: 5.4.1
     transitivePeerDependencies:
       - supports-color
@@ -8894,8 +9335,8 @@ packages:
       '@types/node': 20.12.7
     dev: false
 
-  /@types/node@20.12.10:
-    resolution: {integrity: sha512-Eem5pH9pmWBHoGAT8Dr5fdc5rYA+4NAovdM4EktRPVAAiJhmWWfQrA0cFhAbOsQdSfIHjAud6YdkbL69+zSKjw==}
+  /@types/node@20.12.11:
+    resolution: {integrity: sha512-vDg9PZ/zi+Nqp6boSOT7plNuthRugEKixDv5sFTIpkE89MmNtEArAShI4mxuX2+UrLEe9pxC1vm2cjm9YlWbJw==}
     dependencies:
       undici-types: 5.26.5
     dev: false
@@ -10070,6 +10511,20 @@ packages:
       - supports-color
     dev: false
 
+  /bullmq@5.7.8:
+    resolution: {integrity: sha512-F/Haeu6AVHkFrfeaU/kLOjhfrH6x3CaKAZlQQ+76fa8l3kfI9oaUHeFMW+1mYVz0NtYPF7PNTWFq4ylAHYcCgA==}
+    dependencies:
+      cron-parser: 4.9.0
+      ioredis: 5.4.1
+      msgpackr: 1.10.1
+      node-abort-controller: 3.1.1
+      semver: 7.6.2
+      tslib: 2.6.2
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /busboy@1.6.0:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
     engines: {node: '>=10.16.0'}
@@ -10960,6 +11415,10 @@ packages:
     engines: {node: '>= 12'}
     dev: false
 
+  /dataloader@2.2.2:
+    resolution: {integrity: sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==}
+    dev: false
+
   /date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
@@ -11477,7 +11936,7 @@ packages:
       eslint: '>=6.0.0'
     dependencies:
       eslint: 9.2.0
-      semver: 7.6.1
+      semver: 7.6.2
     dev: true
 
   /eslint-config-prettier@9.1.0(eslint@9.2.0):
@@ -11528,8 +11987,8 @@ packages:
       synckit: 0.8.8
     dev: true
 
-  /eslint-plugin-svelte@2.38.0(eslint@9.2.0)(svelte@5.0.0-next.123):
-    resolution: {integrity: sha512-IwwxhHzitx3dr0/xo0z4jjDlb2AAHBPKt+juMyKKGTLlKi1rZfA4qixMwnveU20/JTHyipM6keX4Vr7LZFYc9g==}
+  /eslint-plugin-svelte@2.39.0(eslint@9.2.0)(svelte@5.0.0-next.126):
+    resolution: {integrity: sha512-FXktBLXsrxbA+6ZvJK2z/sQOrUKyzSg3fNWK5h0reSCjr2fjAsc9ai/s/JvSl4Hgvz3nYVtTIMwarZH5RcB7BA==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0-0 || ^9.0.0-0
@@ -11544,14 +12003,14 @@ packages:
       eslint: 9.2.0
       eslint-compat-utils: 0.5.0(eslint@9.2.0)
       esutils: 2.0.3
-      known-css-properties: 0.30.0
+      known-css-properties: 0.31.0
       postcss: 8.4.38
       postcss-load-config: 3.1.4(postcss@8.4.38)
       postcss-safe-parser: 6.0.0(postcss@8.4.38)
       postcss-selector-parser: 6.0.16
-      semver: 7.6.1
-      svelte: 5.0.0-next.123
-      svelte-eslint-parser: 0.35.0(svelte@5.0.0-next.123)
+      semver: 7.6.2
+      svelte: 5.0.0-next.126
+      svelte-eslint-parser: 0.36.0(svelte@5.0.0-next.126)
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -12187,6 +12646,15 @@ packages:
       jsonfile: 6.1.0
       universalify: 2.0.1
 
+  /fs-extra@11.2.0:
+    resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.1.0
+      universalify: 2.0.1
+    dev: false
+
   /fs-extra@8.1.0:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
     engines: {node: '>=6 <7 || >=8'}
@@ -12352,6 +12820,11 @@ packages:
 
   /globals@15.1.0:
     resolution: {integrity: sha512-926gJqg+4mkxwYKiFvoomM4J0kWESfk3qfTvRL2/oc/tK/eTDBbrfcKnSa2KtfdxB5onoL7D3A3qIHQFpd4+UA==}
+    engines: {node: '>=18'}
+    dev: true
+
+  /globals@15.2.0:
+    resolution: {integrity: sha512-FQ5YwCHZM3nCmtb5FzEWwdUc9K5d3V/w9mzcz8iGD1gC/aOTHc6PouYu0kkKipNJqHAT7m51sqzQjEjIP+cK0A==}
     engines: {node: '>=18'}
     dev: true
 
@@ -13814,8 +14287,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /known-css-properties@0.30.0:
-    resolution: {integrity: sha512-VSWXYUnsPu9+WYKkfmJyLKtIvaRJi1kXUqVmBACORXZQxT5oZDsoZ2vQP+bQFDnWtpI/4eq3MLoRMjI2fnLzTQ==}
+  /known-css-properties@0.31.0:
+    resolution: {integrity: sha512-sBPIUGTNF0czz0mwGGUoKKJC8Q7On1GPbCSFPfyEsfHb2DyBG0Y4QtV+EVWpINSaiGKZblDNuF5AezxSgOhesQ==}
     dev: true
 
   /kolorist@1.8.0:
@@ -14090,6 +14563,13 @@ packages:
     resolution: {integrity: sha512-PBAm+5ODVcS9HREz7SH9LtiDY6/Fkwax+tqB5cTjujOiWSPuuj13ImH8eb9p6aVoOEvFtpDP4HL8TIijpJ6juw==}
     engines: {node: '>=16'}
 
+  /medusa-core-utils@1.2.2:
+    resolution: {integrity: sha512-2M7bzZeEPovDZigofn5ihGhxUP4XKiovGxvEEYpfmoQAeg+kL2Vd42lIJyKRsLOKjKXqz99mmRpyUT+6gSKCCA==}
+    engines: {node: '>=16'}
+    dependencies:
+      awilix: 8.0.1
+    dev: false
+
   /medusa-fulfillment-manual@1.1.40(@babel/core@7.24.5)(medusa-interfaces@1.3.9):
     resolution: {integrity: sha512-HRz2+ZAE8lYMgFs17EVkQrXYuOWTSmR1qZa++XqDx2DJrv6NWtBKYf49AmdB3VkFdeuHRz7Xl+7114bStNlM4Q==}
     engines: {node: '>=16'}
@@ -14126,7 +14606,7 @@ packages:
     peerDependencies:
       '@medusajs/medusa': ^1.12.0
     dependencies:
-      '@medusajs/medusa': 1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+      '@medusajs/medusa': 1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
       '@paypal/checkout-server-sdk': 1.0.3
       axios: 1.6.8
       body-parser: 1.20.2
@@ -14150,7 +14630,7 @@ packages:
       medusa-react:
         optional: true
     dependencies:
-      '@medusajs/medusa': 1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+      '@medusajs/medusa': 1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
       '@medusajs/utils': 1.11.8(pg@8.11.3)
       body-parser: 1.20.2
       express: 4.19.2
@@ -14184,7 +14664,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@medusajs/medusa': 1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+      '@medusajs/medusa': 1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
       '@medusajs/medusa-js': 6.1.8(@medusajs/medusa@1.20.4)
       '@tanstack/react-query': 4.22.0(react-dom@18.3.1)(react@18.3.1)
       react: 18.3.1
@@ -14210,7 +14690,7 @@ packages:
     transitivePeerDependencies:
       - debug
 
-  /medusa-test-utils@1.1.43(@medusajs/medusa@1.20.4)(@mikro-orm/core@5.9.7)(axios@1.6.8)(express@4.19.2)(pg@8.11.5)(typeorm@0.3.20):
+  /medusa-test-utils@1.1.43(@medusajs/medusa@1.20.4)(@mikro-orm/core@6.2.5)(axios@1.6.8)(express@4.19.2)(pg@8.11.5)(typeorm@0.3.20):
     resolution: {integrity: sha512-59kZgat/MBNZRH3xT4BtfUhFSrHxPqam2eTgRm8LUXvx9p7TY/j+/iskoCDpwb+iiPEMOBG3vbaCubq8827+lw==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -14234,11 +14714,11 @@ packages:
       typeorm:
         optional: true
     dependencies:
-      '@medusajs/medusa': 1.20.4(@mikro-orm/core@5.9.7)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
+      '@medusajs/medusa': 1.20.4(@mikro-orm/core@6.2.5)(@types/ioredis-mock@8.2.5)(axios@1.6.8)(medusa-interfaces@1.3.9)(typeorm@0.3.20)
       '@medusajs/modules-sdk': 1.12.10
       '@medusajs/utils': 1.11.8(pg@8.11.5)
-      '@mikro-orm/migrations': 5.9.7(@mikro-orm/core@5.9.7)(pg@8.11.5)
-      '@mikro-orm/postgresql': 5.9.7(@mikro-orm/core@5.9.7)(@mikro-orm/migrations@5.9.7)
+      '@mikro-orm/migrations': 5.9.7(@mikro-orm/core@6.2.5)(pg@8.11.5)
+      '@mikro-orm/postgresql': 5.9.7(@mikro-orm/core@6.2.5)(@mikro-orm/migrations@5.9.7)
       axios: 1.6.8
       express: 4.19.2
       medusa-core-utils: 1.2.1
@@ -14306,6 +14786,11 @@ packages:
   /mikro-orm@5.9.7:
     resolution: {integrity: sha512-0AxNDxQWk45n5N5g5q/K2tVj1/Narf4h5+1fhFc0uYAp/tOGAGvjmVK43Xy4TisEm/1VpBNOtS7FYKvh14WVOQ==}
     engines: {node: '>= 14.0.0'}
+
+  /mikro-orm@6.2.5:
+    resolution: {integrity: sha512-8GJulcYlawnMbXHch4/HTKDg8u0Q6p4l1Jfyn0WmaN4lMz/XXTuLQTZMSdHhISXUjf9/aQdVkmRPxvKog47pVA==}
+    engines: {node: '>= 18.12.0'}
+    dev: false
 
   /mime-db@1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
@@ -15874,14 +16359,14 @@ packages:
       fast-diff: 1.3.0
     dev: true
 
-  /prettier-plugin-svelte@3.2.3(prettier@3.2.5)(svelte@5.0.0-next.123):
+  /prettier-plugin-svelte@3.2.3(prettier@3.2.5)(svelte@5.0.0-next.126):
     resolution: {integrity: sha512-wJq8RunyFlWco6U0WJV5wNCM7zpBFakS76UBSbmzMGpncpK98NZABaE+s7n8/APDCEVNHXC5Mpq+MLebQtsRlg==}
     peerDependencies:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
     dependencies:
       prettier: 3.2.5
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
     dev: true
 
   /prettier@3.2.5:
@@ -16610,6 +17095,10 @@ packages:
     deprecated: This version has a critical bug in fallback handling. Please upgrade to reflect-metadata@0.2.2 or newer.
     dev: false
 
+  /reflect-metadata@0.2.2:
+    resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
+    dev: false
+
   /regenerate-unicode-properties@10.1.1:
     resolution: {integrity: sha512-X007RyZLsCJVVrjgEFVpLUTZwyOZk3oiL75ZcuYjlIWd6rNJtOjkBwQc5AsRrpbKVkxN6sklw/k/9m2jJYOf8Q==}
     engines: {node: '>=4'}
@@ -16934,6 +17423,12 @@ packages:
 
   /semver@7.6.1:
     resolution: {integrity: sha512-f/vbBsu+fOiYt+lmwZV0rVwJScl46HppnOA1ZvIuBWKOTlllpyJ3bfVax76/OrhCH38dyxoDIA8K7uB963IYgA==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: false
+
+  /semver@7.6.2:
+    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -17402,7 +17897,7 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check@3.7.1(postcss@8.4.38)(svelte@5.0.0-next.123):
+  /svelte-check@3.7.1(postcss@8.4.38)(svelte@5.0.0-next.126):
     resolution: {integrity: sha512-U4uJoLCzmz2o2U33c7mPDJNhRYX/DNFV11XTUDlFxaKLsO7P+40gvJHMPpoRfa24jqZfST4/G9fGNcUGMO8NAQ==}
     hasBin: true
     peerDependencies:
@@ -17414,8 +17909,8 @@ packages:
       import-fresh: 3.3.0
       picocolors: 1.0.0
       sade: 1.8.1
-      svelte: 5.0.0-next.123
-      svelte-preprocess: 5.1.4(postcss@8.4.38)(svelte@5.0.0-next.123)(typescript@5.4.5)
+      svelte: 5.0.0-next.126
+      svelte-preprocess: 5.1.4(postcss@8.4.38)(svelte@5.0.0-next.126)(typescript@5.4.5)
       typescript: 5.4.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -17429,11 +17924,11 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-eslint-parser@0.35.0(svelte@5.0.0-next.123):
-    resolution: {integrity: sha512-CtbPseajW0gjwEvHiuzYJkPDjAcHz2FaHt540j6RVYrZgnE6xWkzUBodQ4I3nV+G5AS0Svt8K6aIA/CIU9xT2Q==}
+  /svelte-eslint-parser@0.36.0(svelte@5.0.0-next.126):
+    resolution: {integrity: sha512-/6YmUSr0FAVxW8dXNdIMydBnddPMHzaHirAZ7RrT21XYdgGGZMh0LQG6CZsvAFS4r2Y4ItUuCQc8TQ3urB30mQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
-      svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.112
+      svelte: ^3.37.0 || ^4.0.0 || ^5.0.0-next.115
     peerDependenciesMeta:
       svelte:
         optional: true
@@ -17443,19 +17938,19 @@ packages:
       espree: 9.6.1
       postcss: 8.4.38
       postcss-scss: 4.0.9(postcss@8.4.38)
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
     dev: true
 
-  /svelte-hmr@0.16.0(svelte@5.0.0-next.123):
+  /svelte-hmr@0.16.0(svelte@5.0.0-next.126):
     resolution: {integrity: sha512-Gyc7cOS3VJzLlfj7wKS0ZnzDVdv3Pn2IuVeJPk9m2skfhcu5bq3wtIZyQGggr7/Iim5rH5cncyQft/kRLupcnA==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
     peerDependencies:
       svelte: ^3.19.0 || ^4.0.0
     dependencies:
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
     dev: true
 
-  /svelte-preprocess@5.1.4(postcss@8.4.38)(svelte@5.0.0-next.123)(typescript@5.4.5):
+  /svelte-preprocess@5.1.4(postcss@8.4.38)(svelte@5.0.0-next.126)(typescript@5.4.5):
     resolution: {integrity: sha512-IvnbQ6D6Ao3Gg6ftiM5tdbR6aAETwjhHV+UKGf5bHGYR69RQvF1ho0JKPcbUON4vy4R7zom13jPjgdOWCQ5hDA==}
     engines: {node: '>= 16.0.0'}
     requiresBuild: true
@@ -17499,12 +17994,12 @@ packages:
       postcss: 8.4.38
       sorcery: 0.11.0
       strip-indent: 3.0.0
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
       typescript: 5.4.5
     dev: true
 
-  /svelte@5.0.0-next.123:
-    resolution: {integrity: sha512-EKdXcqT795J34V8TyyUO5ExI0amjeKBECA2t7Py8QeDTMgS9//pQElD0jKsCT/sfmKV4HEoOwf7sqPYINKEfUQ==}
+  /svelte@5.0.0-next.126:
+    resolution: {integrity: sha512-Qnxhf+LG/qxhXpYm6I5+o8msSFBba2QOfnybrOqWbbtQbgbfy4gDVr3p2IExCT4yPOSUcqZWJiiSPsMbCuVwtA==}
     engines: {node: '>=18'}
     dependencies:
       '@ampproject/remapping': 2.3.0
@@ -17521,14 +18016,14 @@ packages:
       magic-string: 0.30.10
       zimmerframe: 1.1.2
 
-  /sveltekit-i18n@2.4.2(svelte@5.0.0-next.123):
+  /sveltekit-i18n@2.4.2(svelte@5.0.0-next.126):
     resolution: {integrity: sha512-hjRWn4V4DBL8JQKJoJa3MRvn6d32Zo+rWkoSP5bsQ/XIAguPdQUZJ8LMe6Nc1rST8WEVdu9+vZI3aFdKYGR3+Q==}
     peerDependencies:
       svelte: '>=3.49.0'
     dependencies:
-      '@sveltekit-i18n/base': 1.3.7(svelte@5.0.0-next.123)
+      '@sveltekit-i18n/base': 1.3.7(svelte@5.0.0-next.126)
       '@sveltekit-i18n/parser-default': 1.1.1
-      svelte: 5.0.0-next.123
+      svelte: 5.0.0-next.126
     dev: false
 
   /svg-parser@2.0.4:
@@ -17547,6 +18042,21 @@ packages:
       css-what: 6.1.0
       csso: 5.0.5
       picocolors: 1.0.0
+    dev: false
+
+  /svgo@3.3.2:
+    resolution: {integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      '@trysound/sax': 0.2.0
+      commander: 7.2.0
+      css-select: 5.1.0
+      css-tree: 2.3.1
+      css-what: 6.1.0
+      csso: 5.0.5
+      picocolors: 1.0.0
+    dev: true
 
   /swc-loader@0.2.6(@swc/core@1.4.17)(webpack@5.91.0):
     resolution: {integrity: sha512-9Zi9UP2YmDpgmQVbyOPJClY0dwf58JDyDMQ7uRc4krmc72twNI2fvlBWHLqVekBpPc7h5NJkGVT1zNDxFrqhvg==}
@@ -17974,6 +18484,85 @@ packages:
       ioredis: 5.4.1
       mkdirp: 2.1.6
       pg: 8.11.3
+      reflect-metadata: 0.2.1
+      sha.js: 2.4.11
+      tslib: 2.6.2
+      uuid: 9.0.1
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /typeorm@0.3.20(ioredis@5.4.1)(pg@8.11.5):
+    resolution: {integrity: sha512-sJ0T08dV5eoZroaq9uPKBoNcGslHBR4E4y+EBHs//SiGbblGe7IeduP/IH4ddCcj0qp3PHwDwGnuvqEAnKlq/Q==}
+    engines: {node: '>=16.13.0'}
+    hasBin: true
+    peerDependencies:
+      '@google-cloud/spanner': ^5.18.0
+      '@sap/hana-client': ^2.12.25
+      better-sqlite3: ^7.1.2 || ^8.0.0 || ^9.0.0
+      hdb-pool: ^0.1.6
+      ioredis: ^5.0.4
+      mongodb: ^5.8.0
+      mssql: ^9.1.1 || ^10.0.1
+      mysql2: ^2.2.5 || ^3.0.1
+      oracledb: ^6.3.0
+      pg: ^8.5.1
+      pg-native: ^3.0.0
+      pg-query-stream: ^4.0.0
+      redis: ^3.1.1 || ^4.0.0
+      sql.js: ^1.4.0
+      sqlite3: ^5.0.3
+      ts-node: ^10.7.0
+      typeorm-aurora-data-api-driver: ^2.0.0
+    peerDependenciesMeta:
+      '@google-cloud/spanner':
+        optional: true
+      '@sap/hana-client':
+        optional: true
+      better-sqlite3:
+        optional: true
+      hdb-pool:
+        optional: true
+      ioredis:
+        optional: true
+      mongodb:
+        optional: true
+      mssql:
+        optional: true
+      mysql2:
+        optional: true
+      oracledb:
+        optional: true
+      pg:
+        optional: true
+      pg-native:
+        optional: true
+      pg-query-stream:
+        optional: true
+      redis:
+        optional: true
+      sql.js:
+        optional: true
+      sqlite3:
+        optional: true
+      ts-node:
+        optional: true
+      typeorm-aurora-data-api-driver:
+        optional: true
+    dependencies:
+      '@sqltools/formatter': 1.2.5
+      app-root-path: 3.1.0
+      buffer: 6.0.3
+      chalk: 4.1.2
+      cli-highlight: 2.1.11
+      dayjs: 1.11.10
+      debug: 4.3.4(supports-color@8.1.1)
+      dotenv: 16.4.5
+      glob: 10.3.10
+      ioredis: 5.4.1
+      mkdirp: 2.1.6
+      pg: 8.11.5
       reflect-metadata: 0.2.1
       sha.js: 2.4.11
       tslib: 2.6.2
@@ -18839,4 +19428,8 @@ packages:
 
   /zod@3.23.5:
     resolution: {integrity: sha512-fkwiq0VIQTksNNA131rDOsVJcns0pfVUjHzLrNBiF/O/Xxb5lQyEXkhZWcJ7npWsYlvs+h0jFWXXy4X46Em1JA==}
+    dev: false
+
+  /zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false

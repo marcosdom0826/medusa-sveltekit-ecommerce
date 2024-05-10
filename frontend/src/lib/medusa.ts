@@ -12,3 +12,5 @@ export type ProductOptionValue = Required<ProductOption>['values'][number];
 export type ProductVariant = Required<PricedProduct>['variants'][number];
 export type Cart = Required<Awaited<ReturnType<typeof medusa.carts.retrieve>>>['cart'];
 export type CartItem = Required<Awaited<ReturnType<typeof medusa.carts.retrieve>>>['cart']['items'][0];
+
+export type Customer = Awaited<ReturnType<typeof medusa.customers.retrieve>>['customer'];
