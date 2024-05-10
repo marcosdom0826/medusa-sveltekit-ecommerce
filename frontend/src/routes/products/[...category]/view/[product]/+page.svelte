@@ -70,6 +70,10 @@ const selectionValid = $derived(
         && (selectedVariant.inventory_quantity !== 0 || selectedVariant.allow_backorder || data.product.is_giftcard)
 );
 
+const hasReducedVariant = (options: ProductOptionValue[]) => data.product.variants.some(
+    (v) => options.some((o) => o.variant_id === v.id) && v?.calculated_price !== v?.original_price
+);
+
 /* eslint-enable prettier/prettier */
 </script>
 
@@ -134,11 +138,10 @@ const selectionValid = $derived(
                                             >{data.product.is_giftcard
                                                 ? Number.parseInt(optionName) / 100 + ' €'
                                                 : optionName}</span>
-                                        {#each [variantForOptions( { ...selectedOptions, [optionCategory]: optionValues } )] as variant}
-                                            {#if variant?.calculated_price !== variant?.original_price}
-                                                <div class="reduced-marker"></div>
-                                            {/if}
-                                        {/each}
+
+                                        {#if hasReducedVariant(optionValues)}
+                                            <div class="reduced-marker"></div>
+                                        {/if}
                                     </label>
                                 {/each}
                             </fieldset>
@@ -162,7 +165,9 @@ const selectionValid = $derived(
                 {/if}
                 <div class="add-to-cart">
                     {#if form?.error}
-                        <div class="error" transition:slide>{$t(form.error?.code)}</div>
+                        <div class="error" transition:slide>
+                            {$t(form.error?.code as string || 'Unknown error')}
+                        </div>
                     {/if}
                     <button class="primary" disabled="{!selectionValid || loading}">
                         {#if loading}
