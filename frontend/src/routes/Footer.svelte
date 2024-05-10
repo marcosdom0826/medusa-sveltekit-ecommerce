@@ -11,7 +11,7 @@ onMount(() => {
 
 <footer>
     <div class="logo">
-        <Logo />
+        <Logo style="width: 100%;" />
     </div>
 
     <div class="footer-nav-content">
@@ -59,6 +59,7 @@ footer {
 .logo {
     display: grid;
     place-items: center;
+    padding: 1em;
 }
 
 a {

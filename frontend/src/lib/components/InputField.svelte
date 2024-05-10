@@ -12,7 +12,8 @@ let {
     hint,
     requiredStar,
     style,
-    children
+    children,
+    autocomplete
 }: {
     fieldErrors?: Record<string, unknown>;
     value?: unknown;
@@ -24,6 +25,7 @@ let {
     requiredStar?: boolean;
     style?: string;
     children?: Snippet;
+    autocomplete?: string;
 } = $props();
 /* eslint-enable prefer-const */
 </script>
@@ -31,6 +33,7 @@ let {
 <label for="{field}" style="{style}" class:field-error="{fieldErrors?.[field]}">
     <input
         name="{field}"
+        autocomplete="{autocomplete}"
         type="{type}"
         placeholder="{hint || label}{required && requiredStar ? ' *' : ''}"
         required="{required}"

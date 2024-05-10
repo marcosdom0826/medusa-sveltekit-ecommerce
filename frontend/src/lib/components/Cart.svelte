@@ -71,7 +71,8 @@ const sortedItems = $derived(sortItems());
     }
 }
 .cart {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     padding: 1em;
 
     & > :global(*) {
