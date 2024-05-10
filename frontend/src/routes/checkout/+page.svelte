@@ -256,16 +256,6 @@ $inspect(form?.error);
                     <input type="hidden" name="invoice-country" value="de" />
                 </div>
             {/if}
-            {#if form?.error?.message}
-                <span
-                    transition:slide="{{
-                        duration: 200
-                    }}"
-                    class="error">
-                    <!-- eslint-disable-next-line svelte/valid-compile -->
-                    {$t(form?.error?.message)}
-                </span>
-            {/if}
         </form>
         <div class="rhs">
             {#if portrait}
@@ -321,6 +311,16 @@ $inspect(form?.error);
                     Next
                 {/if}
             </button>
+            {#if (form?.error as Record<string, unknown>)?.message}
+                <span
+                    transition:slide="{{
+                        duration: 200
+                    }}"
+                    class="error">
+                    <!-- eslint-disable-next-line svelte/valid-compile -->
+                    {$t((form?.error as Record<string, string>)?.message || form?.error as string || '')}
+                </span>
+            {/if}
             <hr style="opacity: 0.25;" />
             <form
                 class="code-form"
