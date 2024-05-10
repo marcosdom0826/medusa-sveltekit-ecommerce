@@ -9,7 +9,7 @@ onMount(() => {
 });
 </script>
 
-<footer>
+<footer style="view-transition-name: footer;">
     <div class="logo">
         <Logo style="width: 100%;" />
     </div>

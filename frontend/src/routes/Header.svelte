@@ -12,7 +12,7 @@ import Cart from '$/lib/components/Cart.svelte';
 import { cartDrawerOpen } from '$/lib/stores/cartDrawer';
 import { page } from '$app/stores';
 import CartItem from '$/lib/components/CartItem.svelte';
-import { fade } from 'svelte/transition';
+import { fade, slide } from 'svelte/transition';
 import Hoverable from '$/lib/components/Hoverable.svelte';
 
 let navDrawerOpen = $state(false);
@@ -29,10 +29,10 @@ const cartCount = $derived(
     $page.data.cart?.items?.reduce((acc: number, item: CartItem) => acc + item.quantity, 0) || 0
 );
 
-$inspect($page.data);
+let cartButton: HTMLButtonElement | undefined = $state();
 </script>
 
-<header>
+<header style="view-transition-name: header;">
     <div class="lhs">
         <button class="menu-btn landscape-none" onclick="{() => (navDrawerOpen = true)}"
             ><MaterialSymbolsMenu /></button>
@@ -44,36 +44,44 @@ $inspect($page.data);
         <Logo style="width: 100%; max-height: 40px;" />
     </a>
     <div class="rhs">
-        <Hoverable>
-            <a class="menu-btn portrait-none" href="/account">
-                <span>
-                    {#if $page.data?.customer}
-                        {$page.data.customer.first_name}
-                    {:else}
-                        My Account
-                    {/if}
-                </span><MdiAccountOutline />
-            </a>
-            {#snippet content()}
-                <div class="account-hover">
-                    {#if $page.data?.customer}
-                        <span style="font-size: 1.3em;">My Account</span>
-                        <div class="acc-links">
-                            <a href="/account/">My Summary</a>
-                            <a href="/account/orders">My Orders</a>
-                        </div>
-                        <span>Not {$page.data.customer.first_name}?</span>
-                        <a href="/account/logout" data-sveltekit-reload>Logout</a>
-                    {:else}
-                        <a href="/account/login" class="button primary">Login</a>
-                        <span>No account yet?</span>
-                        <a href="/account/register">Register now</a>
-                    {/if}
-                </div>
-            {/snippet}
-        </Hoverable>
+        <div>
+            <Hoverable>
+                <a class="menu-btn portrait-none" href="/account">
+                    <span>
+                        {#if $page.data?.customer}
+                            {$page.data.customer.first_name}
+                        {:else}
+                            My Account
+                        {/if}
+                    </span><MdiAccountOutline />
+                </a>
+                {#snippet content()}
+                    <div class="account-hover">
+                        {#if $page.data?.customer}
+                            <span style="font-size: 1.3em;">My Account</span>
+                            <div class="acc-links">
+                                <a href="/account/">My Summary</a>
+                                <a href="/account/orders">My Orders</a>
+                            </div>
+                            <span>Not {$page.data.customer.first_name}?</span>
+                            <a href="/account/logout" data-sveltekit-reload>Logout</a>
+                        {:else}
+                            <a href="/account/login" class="button primary">Login</a>
+                            <span>No account yet?</span>
+                            <a href="/account/register">Register now</a>
+                        {/if}
+                    </div>
+                {/snippet}
+            </Hoverable>
+        </div>
         {#if !Object.values($page.route).find((val) => val?.includes('checkout'))}
-            <button class="menu-btn" onclick="{() => ($cartDrawerOpen = true)}" transition:fade>
+            <button
+                class="menu-btn cart-btn"
+                onclick="{() => ($cartDrawerOpen = true)}"
+                bind:this="{cartButton}"
+                transition:slide="{{
+                    axis: 'x'
+                }}">
                 <span class="portrait-none">Basket</span>
                 <MdiCartOutline />
                 {#if cartCount > 0}
@@ -81,7 +89,9 @@ $inspect($page.data);
                 {/if}
             </button>
         {/if}
-        <ThemeToggle />
+        <div>
+            <ThemeToggle />
+        </div>
     </div>
     <div class="nav-container">
         <Nav desktop />
@@ -108,6 +118,8 @@ $inspect($page.data);
 
 <style lang="postcss">
 header {
+    position: relative;
+    z-index: 1;
     background-color: var(--cardColor);
     padding: 1rem;
     display: grid;
@@ -161,6 +173,11 @@ header {
     }
 }
 
+.cart-btn {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+}
+
 a {
     text-decoration: none;
     color: var(--textColor);
@@ -179,9 +196,13 @@ a {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 2rem;
-    @media (orientation: portrait) {
-        gap: 1em;
+    & > * {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        @media (orientation: portrait) {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
     }
 }
 .lhs {
@@ -204,10 +225,11 @@ a {
     font-weight: bold;
     top: 0;
     right: 0;
-    translate: 25% -25%;
+    translate: 0 0;
     aspect-ratio: 1;
     display: grid;
     place-items: center;
+    isolation: isolate;
 }
 
 .account-hover {
@@ -215,7 +237,7 @@ a {
     background-color: var(--cardColor);
     padding: 2em;
     filter: drop-shadow(2px 2px 4px var(--shadowColor));
-    z-index: 10;
+    z-index: 99999;
     display: grid;
     gap: 0.5em;
     white-space: nowrap;
