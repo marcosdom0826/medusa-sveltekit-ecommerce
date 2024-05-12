@@ -50,6 +50,18 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
             // eslint-disable-next-line no-console
             console.error(e);
         }
+        if (authToken && !cart?.cart?.customer_id) {
+            try {
+                await medusa.carts.update(cartId, {
+                    customer_id: customer?.id
+                }, {
+                    Authorization: `Bearer ${authToken}`
+                });
+            } catch (e) {
+                // eslint-disable-next-line no-console
+                console.error(e);
+            }
+        }
     }
 
     const categoriesByHandle: Record<string, ProductCategory> = productCategories
