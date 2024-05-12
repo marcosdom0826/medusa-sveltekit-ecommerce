@@ -60,7 +60,7 @@ let cartButton: HTMLButtonElement | undefined = $state();
                         {#if $page.data?.customer}
                             <span style="font-size: 1.3em;">My Account</span>
                             <div class="acc-links">
-                                <a href="/account/">My Summary</a>
+                                <a href="/account/">My Details</a>
                                 <a href="/account/orders">My Orders</a>
                             </div>
                             <span>Not {$page.data.customer.first_name}?</span>
