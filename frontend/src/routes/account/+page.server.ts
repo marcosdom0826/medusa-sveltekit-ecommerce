@@ -21,7 +21,7 @@ export const actions = {
                 first_name: data.get('first_name') as string || undefined,
                 last_name: data.get('last_name') as string || undefined,
                 email: data.get('email') as string || undefined,
-                phone: data.get('phone') as string || undefined
+                phone: data.get('phone') as string || ''
             }, {
                 Authorization: `Bearer ${authToken}`
             });
