@@ -280,6 +280,51 @@ input[type="checkbox"]:is(.toggle) {
   }
 }
 
+input[type='checkbox']:not(.toggle) {
+    position: relative;
+    appearance: none;
+    border-radius: 0.25em;
+    display: grid;
+    place-items: center;
+    width: 1.4em;
+    height: 1.4em;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--textColor), transparent 75%);
+    &::before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        border-radius: 0.25em;
+        transition: background-color var(--transitionDuration) ease;
+        position: absolute;
+    }
+    &:checked::before {
+        background-color: var(--textColor);
+    }
+
+    &::after {
+        position: absolute;
+        content: '';
+        opacity: 0;
+        width: 60%;
+        height: 60%;
+        background-color: var(--inverseTextColor);
+        transform-origin: bottom left;
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%)
+    }
+    &:checked::after {
+        content: '';
+        opacity: 1;
+    }
+
+    &:hover,
+    &:focus-visible {
+        & input[type='checkbox']::before {
+            background-color: color-mix(in srgb, var(--textColor), transparent 75%);
+        }
+    }
+}
+
 & input[type='radio'] {
     position: relative;
     appearance: none;
