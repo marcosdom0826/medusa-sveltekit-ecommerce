@@ -210,7 +210,7 @@ text-decoration: none;
   box-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.25);
   transition: all 0.2s ease-in-out;
   display: flex;
-  &:is(:hover, :focus) {
+  &:is(:hover, :focus-visible) {
     box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.5);
     border: 1px solid color-mix(in srgb, var(--textColor), transparent 20%);
   }
@@ -243,13 +243,13 @@ input:not([type="checkbox"]) {
 
 input[type="checkbox"]:is(.toggle) {
   appearance: none;
-  min-width: 3.5em;
-  position: relative;
-  display: grid;
-  place-items: center;
   --toggle-height: 2em;
   --toggle-width: 3.5em;
   --indicator-padding: 0.7em;
+  min-width: var(--toggle-width);
+  position: relative;
+  display: grid;
+  place-items: center;
 
   &::before {
     content: "";
