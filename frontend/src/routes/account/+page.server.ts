@@ -95,7 +95,17 @@ export const actions = {
                 if (customer.billing_address?.address_1) {
                     await medusa.customers.update({
                         billing_address: {
-                            address_1: ''
+                            first_name: '',
+                            last_name:'',
+                            company: '',
+                            address_1: '',
+                            address_2: '',
+                            city: '',
+                            postal_code: '',
+                            phone: '',
+                            province: '',
+                            metadata: {},
+                            country_code: data.get('invoice_country') as string || undefined
                         }
                     }, {
                         Authorization: `Bearer ${authToken}`

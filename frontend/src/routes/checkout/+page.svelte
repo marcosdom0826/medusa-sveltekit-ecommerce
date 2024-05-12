@@ -28,7 +28,9 @@ let shippingOption = $state(
 
 const shippingCost = $derived(data.shippingOptions.find((s) => s.id === shippingOption)?.amount || 0);
 
-let invoiceAddress = $state(data.cart?.billing_address ? 'separateAddress' : 'asDelivery');
+let invoiceAddress = $state(
+    data.cart?.billing_address || data.customer?.billing_address?.address_1 ? 'separateAddress' : 'asDelivery'
+);
 let formValid = $state(false);
 
 $effect(() => {
@@ -44,19 +46,26 @@ let portraitCartExpanded = $state(false);
 
 const formData = $state({
     email: data.cart?.email ?? '',
-    first_name: data.cart?.shipping_address?.first_name ?? '',
-    last_name: data.cart?.shipping_address?.last_name ?? '',
-    company: data.cart?.shipping_address?.company ?? '',
-    address: data.cart?.shipping_address?.address_1 ?? '',
-    zip: data.cart?.shipping_address?.postal_code ?? '',
-    city: data.cart?.shipping_address?.city ?? '',
-    phone: data.cart?.shipping_address?.phone ?? '',
-    invoice_first_name: data.cart?.billing_address?.first_name ?? '',
-    invoice_last_name: data.cart?.billing_address?.last_name ?? '',
-    invoice_company: data.cart?.billing_address?.company ?? '',
-    invoice_address: data.cart?.billing_address?.address_1 ?? '',
-    invoice_zip: data.cart?.billing_address?.postal_code ?? '',
-    invoice_city: data.cart?.billing_address?.city ?? ''
+    first_name:
+        data.cart?.shipping_address?.first_name ?? data.customer?.shipping_addresses?.[0]?.first_name ?? '',
+    last_name:
+        data.cart?.shipping_address?.last_name ?? data.customer?.shipping_addresses?.[0].last_name ?? '',
+    company: data.cart?.shipping_address?.company ?? data.customer?.shipping_addresses?.[0]?.company ?? '',
+    address:
+        data.cart?.shipping_address?.address_1 ?? data.customer?.shipping_addresses?.[0]?.address_1 ?? '',
+    zip:
+        data.cart?.shipping_address?.postal_code ?? data.customer?.shipping_addresses?.[0]?.postal_code ?? '',
+    city: data.cart?.shipping_address?.city ?? data.customer?.shipping_addresses?.[0]?.city ?? '',
+    phone: data.cart?.shipping_address?.phone ?? data.customer?.phone ?? '',
+
+    invoice_first_name:
+        data.cart?.billing_address?.first_name ?? data.customer?.billing_address?.first_name ?? '',
+    invoice_last_name:
+        data.cart?.billing_address?.last_name ?? data.customer?.billing_address?.last_name ?? '',
+    invoice_company: data.cart?.billing_address?.company ?? data.customer?.billing_address?.company ?? '',
+    invoice_address: data.cart?.billing_address?.address_1 ?? data.customer?.billing_address?.address_1 ?? '',
+    invoice_zip: data.cart?.billing_address?.postal_code ?? data.customer?.billing_address?.postal_code ?? '',
+    invoice_city: data.cart?.billing_address?.city ?? data.customer?.billing_address?.city ?? ''
 });
 
 $inspect(form?.error);
