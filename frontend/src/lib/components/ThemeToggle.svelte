@@ -63,9 +63,9 @@ onMount(() => {
 }
 
 .icon {
-    --toggle-height: 2em;
-    --toggle-width: 3.5em;
-    --indicator-padding: 0.7em;
+    --toggle-height: 1.75em;
+    --toggle-width: 3em;
+    --indicator-padding: 0.5em;
     width: auto;
     height: var(--toggle-height);
     position: absolute;
@@ -74,11 +74,11 @@ onMount(() => {
     display: grid;
     align-items: center;
     pointer-events: none;
-    left: calc(var(--indicator-padding) / 2 + 0.75px);
+    left: calc(var(--indicator-padding) / 2);
     transition-property: left;
     transition-duration: var(--transitionDuration);
     &.checked {
-        left: calc(var(--toggle-width) - var(--toggle-height) + (var(--indicator-padding) / 2 + 0.75px));
+        left: calc(var(--toggle-width) - var(--toggle-height) + (var(--indicator-padding) / 2));
     }
     & :global(svg) {
         padding: 0.1em;
@@ -86,6 +86,10 @@ onMount(() => {
 }
 
 input[type='checkbox']:is(.toggle) {
+    --toggle-height: 1.75em;
+    --toggle-width: 3em;
+    --indicator-padding: 0.5em;
+
     transition-property: all;
     position: relative;
 
