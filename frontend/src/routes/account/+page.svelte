@@ -271,6 +271,8 @@ let useSeparateInvoiceAddress = $state(!!data.customer?.billing_address?.address
                 <button class="wide" onclick="{() => (editAdresses = true)}">Edit</button>
             </div>
         {/if}
+        <hr />
+        <a href="/account/change-password" class="button">Change Password</a>
     </div>
 </div>
 
@@ -367,5 +369,10 @@ button {
             background-color: color-mix(in srgb, var(--textColor), transparent 75%);
         }
     }
+}
+
+a {
+    display: grid;
+    place-items: center;
 }
 </style>
