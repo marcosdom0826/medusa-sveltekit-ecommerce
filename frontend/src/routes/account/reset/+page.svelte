@@ -13,6 +13,7 @@ let loading = $state(false);
     <form
         id="reset-form"
         method="post"
+        action="?/requestReset"
         bind:this="{htmlForm}"
         oninput="{() => {
             formValid = htmlForm.checkValidity();

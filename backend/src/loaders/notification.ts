@@ -16,4 +16,6 @@ export default async (
         'order.shipment_created',
         'email-sender'
     );
+    notificationService.subscribe(
+        'customer.password_reset', 'email-sender');
 };

@@ -2,11 +2,18 @@ import { AbstractNotificationService, FulfillmentService, Logger, OrderService, 
 import { EntityManager } from 'typeorm';
 import nodemailer from 'nodemailer';
 import { Order } from 'src/models/order';
-// eslint-disable-next-line @typescript-eslint/naming-convention
 
+
+interface PasswordResetPayload {
+    id: string; // string ID of customer
+    email: string; // string email of the customer
+    first_name: string; // string first name of the customer
+    last_name: string; // string last name of the customer
+    token: string; // string reset password token
+}
 
 export default class EmailSenderService extends AbstractNotificationService {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     public static identifier = 'email-sender';
     protected manager: EntityManager;
     protected transactionManager: EntityManager;
@@ -51,6 +58,9 @@ export default class EmailSenderService extends AbstractNotificationService {
                 order = await this.orderService.retrieve(data.id as string) as Order;
                 return this.sendShippingEmail(order);
                 break;
+            case 'customer.password_reset':
+                return this.sendPasswordResetEmail(data as unknown as PasswordResetPayload);
+                break;
             default:
                 break;
 
@@ -92,7 +102,26 @@ export default class EmailSenderService extends AbstractNotificationService {
         throw new Error('Received event not subscribed to');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    protected async sendPasswordResetEmail(payload: PasswordResetPayload): Promise<ReturnedData> {
+        this.logger.info(`Sending password reset email ${JSON.stringify(payload)}`);
+        const result = await this.mailer.sendMail({
+            from: '"Fred Foo 👻" <daren.koch@ethereal.email>',
+            to: payload.email,
+            subject: 'Password reset',
+            html: `Hi ${payload.first_name} ${payload.last_name},\n<br />\n`
+            + `You can reset your password by following this <a href="${
+                process.env.STORE_URL}/account/reset/${payload.token}?email=${payload.email}">link</a>`
+        });
+        return {
+            to: payload.email,
+            status: 'done',
+            data: {
+                email: payload.email,
+                mailerResult: result
+            }
+        };
+    }
+
     protected async sendOrderEmail(order: Order, to?: string): Promise<ReturnedData> {
         this.logger.info(`Sending order email ${JSON.stringify(order)}`);
 
@@ -101,7 +130,7 @@ export default class EmailSenderService extends AbstractNotificationService {
         const html = await page.text();
 
         const result = await this.mailer.sendMail({
-            from: '"Fred Foo 👻" <bret3@ethereal.email>',
+            from: '"Fred Foo 👻" <daren.koch@ethereal.email>',
             to: to || order.email,
             subject: 'Order confirmation 📦',
             html: html,
@@ -128,7 +157,7 @@ export default class EmailSenderService extends AbstractNotificationService {
 
 
         const result = await this.mailer.sendMail({
-            from: '"Fred Foo 👻" <bret3@ethereal.email>',
+            from: '"Fred Foo 👻" <daren.koch@ethereal.email>',
             to: to || order.email,
             subject: 'Your order has been shipped! 📦🚀🎉',
             text: 'Your order has been shipped!\n\n'
