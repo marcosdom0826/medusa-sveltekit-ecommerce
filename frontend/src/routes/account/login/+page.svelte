@@ -6,6 +6,7 @@ import { fade } from 'svelte/transition';
 import { enhance, applyAction } from '$app/forms';
 import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 import type { ActionData } from './$types';
+import { page } from '$app/stores';
 
 const { form }: { form: ActionData & { error?: string } } = $props();
 
@@ -14,6 +15,9 @@ let htmlForm: HTMLFormElement;
 let formValid = $state(false);
 let loading = $state(false);
 let pw = $state('');
+
+page;
+const redirect = $page.url.searchParams.get('redirect');
 </script>
 
 <div class="wrapper">
@@ -57,6 +61,7 @@ let pw = $state('');
                 {/if}
             </button>
         </InputField>
+        <input type="hidden" name="redirect" value="{redirect}" />
         {#if form?.error}
             {#if form?.error === 'Unauthorized'}
                 <span class="error">Email or password incorrect</span>

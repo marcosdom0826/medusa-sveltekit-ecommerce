@@ -3,6 +3,7 @@ import { medusa, type Cart } from '$/lib/medusa';
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { AxiosError } from 'axios';
+import { LOGIN_EXPIRY_DAYS } from '$/lib/const';
 
 export const load: PageServerLoad = async ({ parent }) => {
 
@@ -43,7 +44,7 @@ export const actions = {
     next: async (event) => {
         const data = await event.request.formData();
         const cartId = event.cookies.get('cart_id');
-        const authToken = event.cookies.get('auth_token');
+        let authToken = event.cookies.get('auth_token');
 
 
         let cart;
@@ -79,6 +80,48 @@ export const actions = {
         }
 
         try {
+            const createAccount = data.get('createAccount');
+            console.log('createAccount', createAccount);
+            if (createAccount === 'on' || createAccount === 'true' || createAccount ==='checked') {
+                await medusa.customers.create({
+                    email: data.get('email') as string,
+                    password: data.get('password') as string,
+                    first_name: data.get('first_name') as string,
+                    last_name: data.get('last_name') as string,
+                    phone: data.get('phone') as string || undefined
+                });
+                const loginRes = await medusa.auth.getToken({
+                    email: data.get('email') as string,
+                    password: data.get('password') as string
+                });
+                event.cookies.set(
+                    'auth_token',
+                    loginRes.access_token,
+                    {
+                        path: '/',
+                        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * LOGIN_EXPIRY_DAYS)
+                    }
+                );
+                authToken = loginRes.access_token;
+                await medusa.customers.addresses.addAddress({
+                    address: {
+                        first_name: data.get('first_name') as string,
+                        last_name: data.get('last_name') as string,
+                        company: data.get('company') as string || '',
+                        address_1: data.get('address') as string,
+                        address_2: '',
+                        city: data.get('city') as string,
+                        postal_code: data.get('zip') as string,
+                        phone: data.get('phone') as string || '',
+                        province: '',
+                        metadata: {},
+                        country_code: data.get('country') as string
+                    }
+                }, {
+                    Authorization: `Bearer ${authToken}`
+                });
+            }
+
             await medusa.carts.update(cart.cart.id, {
                 email: data.get('email') as string,
                 shipping_address: {

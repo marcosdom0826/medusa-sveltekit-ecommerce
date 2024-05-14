@@ -35,6 +35,11 @@ export const actions = {
             }
             return fail(400, { error: e as Record<string, unknown> });
         }
+
+        if (data.get('redirect') === 'checkout') {
+            throw redirect(302, '/checkout');
+        }
+
         throw redirect(302, '/account');
     }
 } satisfies Actions;
