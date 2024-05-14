@@ -25,7 +25,7 @@ let thumbnails: HTMLDivElement | undefined = $state(undefined);
 
 /* eslint-disable prettier/prettier */
 const images = $derived(
-    (product.images?.length || 0) > 0
+    (product?.images?.length || 0) > 0
         ? product.images
         : [
             {
