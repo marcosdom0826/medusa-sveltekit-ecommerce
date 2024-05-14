@@ -3,10 +3,12 @@ import { t } from '$/lib/i18n';
 import Cart from '$/lib/components/Cart.svelte';
 import { applyAction, enhance } from '$app/forms';
 import { page } from '$app/stores';
-import { slide } from 'svelte/transition';
+import { fade, slide } from 'svelte/transition';
 import type { ActionData, PageData } from './$types';
 import LoadingSpinner from '$/lib/components/LoadingSpinner.svelte';
 import InputField from '$/lib/components/InputField.svelte';
+import MdiEyeOutline from '~icons/mdi/eye-outline';
+import MdiEyeOffOutline from '~icons/mdi/eye-off-outline';
 
 let loading = $state(false);
 
@@ -43,6 +45,11 @@ let height: number = $state(0);
 const portrait = $derived(width < height);
 
 let portraitCartExpanded = $state(false);
+
+let createAccount = $state(true);
+let pw = $state('');
+let repeatPw = $state('');
+let passwordShown = $state(false);
 
 const formData = $state({
     email: data.cart?.email ?? '',
@@ -92,6 +99,10 @@ $inspect(form?.error);
                 };
             }}">
             <div class="columns">
+                {#if !data.customer}
+                    <span style="text-align: end;">Already registered?</span>
+                    <a href="/account/login?redirect=checkout" class="button login-link">Login</a>
+                {/if}
                 <h3 class="wide">Delivery</h3>
                 <div class="wide">
                     <InputField
@@ -156,6 +167,60 @@ $inspect(form?.error);
                         fieldErrors="{form?.fieldErrors}" />
                 </div>
                 <input type="hidden" name="country" value="de" />
+                {#if !data.customer}
+                    <div class="wide">
+                        <label for="createAccount" class="checkbox-label">
+                            <input
+                                type="checkbox"
+                                name="createAccount"
+                                id="createAccount"
+                                bind:checked="{createAccount}"
+                                onchange="{() => {
+                                    setTimeout(() => {
+                                        formValid = htmlForm.checkValidity();
+                                    }, 500);
+                                }}" />
+                            <span>Create account</span>
+                        </label>
+                    </div>
+                    {#if createAccount}
+                        <div class="wide" transition:slide style="display: grid; gap: 1em;">
+                            <InputField
+                                autocomplete="new-password"
+                                field="password"
+                                label="Password"
+                                type="{passwordShown ? 'text' : 'password'}"
+                                required
+                                bind:value="{pw}">
+                            </InputField>
+                            <InputField
+                                autocomplete="new-password"
+                                field="repeat-password"
+                                label="Repeat Password"
+                                type="{passwordShown ? 'text' : 'password'}"
+                                required
+                                fieldErrors="{pw !== repeatPw
+                                    ? { 'repeat-password': 'Passwords do not match' }
+                                    : undefined}"
+                                bind:value="{repeatPw}">
+                                <button
+                                    type="button"
+                                    class="show-pw-button"
+                                    onclick="{() => (passwordShown = !passwordShown)}">
+                                    {#if passwordShown}
+                                        <div transition:fade|local="{{ duration: 200 }}">
+                                            <MdiEyeOffOutline />
+                                        </div>
+                                    {:else}
+                                        <div transition:fade|local="{{ duration: 200 }}">
+                                            <MdiEyeOutline />
+                                        </div>
+                                    {/if}
+                                </button>
+                            </InputField>
+                        </div>
+                    {/if}
+                {/if}
             </div>
             <fieldset>
                 {#if data.shippingOptions.length > 0}
@@ -313,11 +378,16 @@ $inspect(form?.error);
                 type="submit"
                 disabled="{loading ||
                     !formValid ||
+                    (!data.customer && createAccount && (pw !== repeatPw || pw === '')) ||
                     (!shippingOption && !data.cart?.items.some((i) => i.is_giftcard))}">
                 {#if loading}
                     <LoadingSpinner size="1.3em" ringWidth="0.25em" />
+                {:else if data.customer}
+                    Continue
+                {:else if createAccount}
+                    Continue and create account
                 {:else}
-                    Next
+                    Continue as Guest
                 {/if}
             </button>
             {#if (form?.error as Record<string, unknown>)?.message}
@@ -457,10 +527,6 @@ form {
             grid-column: 1;
             grid-row: 1;
         }
-
-        & input:not([type='radio']) {
-            width: 100%;
-        }
     }
 }
 
@@ -474,6 +540,8 @@ form {
     width: 100%;
     gap: 1em;
     padding: 0;
+
+    align-items: center;
 
     @media (orientation: portrait) {
         overflow-x: hidden;
@@ -550,5 +618,57 @@ fieldset {
     & > * {
         font-weight: normal !important;
     }
+}
+
+.checkbox-label {
+    position: relative;
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    isolation: isolate;
+
+    & span {
+        position: relative;
+        padding: 0;
+    }
+
+    &:hover,
+    &:focus-visible {
+        & input[type='checkbox']:not(:checked)::before {
+            background-color: color-mix(in srgb, var(--textColor), transparent 75%);
+        }
+    }
+}
+
+.show-pw-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0.25em;
+    border: none;
+    background-color: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: none;
+    opacity: 0.5;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    place-items: center;
+    & > * {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    &:hover,
+    &:focus-visible {
+        opacity: 1;
+    }
+}
+
+.login-link {
+    display: grid;
+    place-items: center;
+    height: fit-content;
+    padding: 0.5em;
 }
 </style>
