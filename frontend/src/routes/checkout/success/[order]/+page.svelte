@@ -61,7 +61,7 @@ const shippingCost = $derived(data.order.shipping_total || 0);
             </div>
         </div>
         <div class="rhs">
-            <Cart items="{data.order.items}" disableEdit>
+            <Cart items="{data.order.items}" disableEdit disableMinWidth>
                 {#snippet total()}
                     <div class="total">
                         <h4>Subtotal:</h4>
