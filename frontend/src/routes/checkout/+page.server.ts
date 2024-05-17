@@ -81,7 +81,6 @@ export const actions = {
 
         try {
             const createAccount = data.get('createAccount');
-            console.log('createAccount', createAccount);
             if (createAccount === 'on' || createAccount === 'true' || createAccount ==='checked') {
                 await medusa.customers.create({
                     email: data.get('email') as string,

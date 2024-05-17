@@ -56,7 +56,7 @@ const formData = $state({
     first_name:
         data.cart?.shipping_address?.first_name ?? data.customer?.shipping_addresses?.[0]?.first_name ?? '',
     last_name:
-        data.cart?.shipping_address?.last_name ?? data.customer?.shipping_addresses?.[0].last_name ?? '',
+        data.cart?.shipping_address?.last_name ?? data.customer?.shipping_addresses?.[0]?.last_name ?? '',
     company: data.cart?.shipping_address?.company ?? data.customer?.shipping_addresses?.[0]?.company ?? '',
     address:
         data.cart?.shipping_address?.address_1 ?? data.customer?.shipping_addresses?.[0]?.address_1 ?? '',
@@ -75,6 +75,7 @@ const formData = $state({
     invoice_city: data.cart?.billing_address?.city ?? data.customer?.billing_address?.city ?? ''
 });
 
+$inspect(data.customer);
 $inspect(form?.error);
 </script>
 
