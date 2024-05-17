@@ -118,7 +118,6 @@ const paypalScript = $derived(
 </script>
 
 <svelte:window bind:innerWidth="{width}" bind:innerHeight="{height}" />
-
 <div class="content">
     <div>
         <div>
