@@ -1,6 +1,8 @@
 import { FlatCompat } from "@eslint/eslintrc";
 import path from "path";
 import { fileURLToPath } from "url";
+import stylistic from '@stylistic/eslint-plugin'
+
 
 // mimic CommonJS variables -- not needed if using CommonJS
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +29,10 @@ export default tseslint.config(
         ignores: ['*.cjs', '*.html', 'postcss.config.js', 'svelte.config.js', 'eslint.config.js', ".svelte-kit/**/*"],
     },
     {
+        plugins: {
+            '@typescript-eslint': tseslint.plugin,
+            '@stylistic': stylistic
+        },
         languageOptions: {
             parser: tseslint.parser,
             globals: {
@@ -56,7 +62,7 @@ export default tseslint.config(
             '@typescript-eslint/prefer-namespace-keyword': 'error',
             'no-inner-declarations': 'off', // we have es6blocked scoped functions.
             '@typescript-eslint/triple-slash-reference': 'error',
-            '@typescript-eslint/type-annotation-spacing': 'error',
+            '@stylistic/type-annotation-spacing': 'error',
             '@typescript-eslint/unified-signatures': 'error',
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-unused-vars': 'error',
@@ -64,15 +70,15 @@ export default tseslint.config(
             '@typescript-eslint/no-floating-promises': 'error',
             '@typescript-eslint/no-unnecessary-type-assertion': 'error',
             'object-curly-spacing': ['error', 'always'],
-            '@typescript-eslint/semi': [
+            '@stylistic/semi': [
                 'error',
                 'always'
             ],
-            '@typescript-eslint/quotes': [
+            '@stylistic/quotes': [
                 'warn',
                 'single'
             ],
-            '@typescript-eslint/member-delimiter-style': [
+            '@stylistic/member-delimiter-style': [
                 'error',
                 {
                     multiline: {
@@ -85,7 +91,7 @@ export default tseslint.config(
                     }
                 }
             ],
-            '@typescript-eslint/indent': [
+            '@stylistic/indent': [
                 'warn',
                 4,
                 {

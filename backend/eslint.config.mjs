@@ -22,6 +22,9 @@ export default tseslint.config(
         ],
     },
     {
+        plugins: {
+            '@typescript-eslint': tseslint.plugin,
+        },
         languageOptions: {
             parser: tseslint.parser,
             globals: {
