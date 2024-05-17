@@ -271,7 +271,9 @@ let useSeparateInvoiceAddress = $state(!!data.customer?.billing_address?.address
                 <button class="wide" onclick="{() => (editAdresses = true)}">Edit</button>
             </div>
         {/if}
-        <hr />
+        <hr style="opacity: 0.5" />
+        <a href="/account/orders" class="button">My Orders</a>
+        <hr style="opacity: 0.5" />
         <a href="/account/change-password" class="button">Change Password</a>
     </div>
 </div>
