@@ -34,9 +34,15 @@ const email = $derived($page.url.searchParams.get('email') === 'true');
 <main style="view-transition-name: main;">
     {@render children()}
 </main>
-
 {#if !email}
     <Footer />
+{:else}
+    <a
+        class="centered"
+        href="{$page.url.toString().replace(/(&|\?)email=true/g, '')}"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-sveltekit-reload>View Web version</a>
 {/if}
 
 <style lang="postcss">
@@ -58,5 +64,12 @@ main {
 }
 
 :global(footer) {
+}
+
+.centered {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 1em;
 }
 </style>
