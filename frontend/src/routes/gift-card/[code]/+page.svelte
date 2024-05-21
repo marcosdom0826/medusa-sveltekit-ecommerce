@@ -4,7 +4,7 @@ import type { PageData } from './$types';
 const { data }: { data: PageData } = $props();
 </script>
 
-<div class="wrapper">
+<div class="content">
     <div>
         <h3>Thank you for your order!</h3>
         <h3>Your {data.balance / 100} € gift card code is</h3>
@@ -13,7 +13,7 @@ const { data }: { data: PageData } = $props();
 </div>
 
 <style lang="postcss">
-.wrapper {
+.content {
     display: grid;
     place-items: center;
     height: 100%;

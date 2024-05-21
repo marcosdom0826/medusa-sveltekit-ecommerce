@@ -1,4 +1,4 @@
-import { AbstractNotificationService, FulfillmentService, Logger, OrderService, ReturnedData } from '@medusajs/medusa';
+import { AbstractNotificationService, FulfillmentService, GiftCardService, Logger, OrderService, ReturnedData } from '@medusajs/medusa';
 import { EntityManager } from 'typeorm';
 import nodemailer from 'nodemailer';
 import { Order } from 'src/models/order';
@@ -12,6 +12,8 @@ interface PasswordResetPayload {
     token: string; // string reset password token
 }
 
+const MAIL_FROM = '"Fred FooBar 👻" <daren.koch@ethereal.email>';
+
 export default class EmailSenderService extends AbstractNotificationService {
 
     public static identifier = 'email-sender';
@@ -21,6 +23,7 @@ export default class EmailSenderService extends AbstractNotificationService {
     protected fulfillmentService: FulfillmentService;
     protected logger: Logger;
     protected mailer: nodemailer.Transporter;
+    protected giftCardService: GiftCardService;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public constructor(container: Record<string, unknown>, options: Record<string, unknown>) {
@@ -28,6 +31,7 @@ export default class EmailSenderService extends AbstractNotificationService {
         this.logger = container.logger as Logger;
         this.orderService = container.orderService as OrderService;
         this.fulfillmentService = container.fulfillmentService as FulfillmentService;
+        this.giftCardService = container.giftCardService as GiftCardService;
 
         this.mailer = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
@@ -48,19 +52,29 @@ export default class EmailSenderService extends AbstractNotificationService {
                 if (!data.id) {
                     throw new Error('No order id');
                 }
-                order = await this.orderService.retrieve(data.id as string) as Order;
+                order = await this.orderService.retrieve(data.id as string, {
+                    relations: ['fulfillments', 'fulfillments.tracking_links', 'invoice']
+                }) as Order;
                 return this.sendOrderEmail(order);
             }
             case 'order.shipment_created':
                 if (!data.id) {
                     throw new Error('No order id');
                 }
-                order = await this.orderService.retrieve(data.id as string) as Order;
+                order = await this.orderService.retrieve(data.id as string, {
+                    relations: ['fulfillments', 'fulfillments.tracking_links', 'invoice']
+                }) as Order;
                 return this.sendShippingEmail(order);
-                break;
             case 'customer.password_reset':
                 return this.sendPasswordResetEmail(data as unknown as PasswordResetPayload);
-                break;
+            case GiftCardService.Events.CREATED:
+                this.logger.info(`GIFTCREATED, ${JSON.stringify(data)}`);
+                return;
+            case 'order.payment_captured':
+                order = await this.orderService.retrieve(data.id as string, {
+                    relations: ['fulfillments', 'fulfillments.tracking_links', 'items', 'gift_cards']
+                }) as Order;
+                return this.handlePaymentCaptureForGiftCards(order);
             default:
                 break;
 
@@ -72,7 +86,6 @@ export default class EmailSenderService extends AbstractNotificationService {
         config: { to: string } | null | undefined,
         attachmentGenerator: unknown
     ): Promise<ReturnedData> {
-        console.log('Resend notification', notification, config, attachmentGenerator);
         let order: Order;
         const data = notification.data as Record<string, unknown> & {
             orderId: string;
@@ -95,6 +108,15 @@ export default class EmailSenderService extends AbstractNotificationService {
                     relations: ['fulfillments', 'fulfillments.tracking_links', 'invoice']
                 }) as Order;
                 return this.sendShippingEmail(order, config?.to);
+            case GiftCardService.Events.CREATED:
+                this.logger.info(`GIFTCREATED, ${JSON.stringify(data)}`);
+                return;
+            case 'order.payment_captured':
+                order = await this.orderService.retrieve(data.id as string, {
+                    relations: ['fulfillments', 'fulfillments.tracking_links', 'items', 'gift_cards']
+                }) as Order;
+                return this.handlePaymentCaptureForGiftCards(order);
+            return;
             default:
                 break;
 
@@ -102,10 +124,41 @@ export default class EmailSenderService extends AbstractNotificationService {
         throw new Error('Received event not subscribed to');
     }
 
+    protected async handlePaymentCaptureForGiftCards(order: Order, to?: string): Promise<ReturnedData> {
+        this.logger.info(`Handling payment capture for gift cards ${JSON.stringify(order)}`);
+
+        const giftCards = await this.giftCardService.list({order_id: order.id});
+
+        await Promise.all(giftCards.map(async (card) => {
+                // ?email strips the layout and only returns the email body
+                const page = await fetch(`${process.env.STORE_URL}/gift-card/${card.code}?email=true`);
+                const html = await page.text();
+                return this.mailer.sendMail({
+                    from: MAIL_FROM,
+                    to: to || order.email,
+                    subject: 'Your gift card 🎁',
+                    html
+                });
+        }));
+
+        if (order.items?.every((oi) => oi.is_giftcard)) {
+            this.orderService.completeOrder(order.id);
+        }
+
+        return {
+            to: to || order.email,
+            status: 'done',
+            data: {
+                orderId: order.id,
+                order
+            }
+        };
+    }
+
     protected async sendPasswordResetEmail(payload: PasswordResetPayload): Promise<ReturnedData> {
         this.logger.info(`Sending password reset email ${JSON.stringify(payload)}`);
         const result = await this.mailer.sendMail({
-            from: '"Fred Foo 👻" <daren.koch@ethereal.email>',
+            from: MAIL_FROM,
             to: payload.email,
             subject: 'Password reset',
             html: `Hi ${payload.first_name} ${payload.last_name},\n<br />\n`
@@ -131,7 +184,7 @@ export default class EmailSenderService extends AbstractNotificationService {
         const html = await page.text();
 
         const result = await this.mailer.sendMail({
-            from: '"Fred Foo 👻" <daren.koch@ethereal.email>',
+            from: MAIL_FROM,
             to: to || order.email,
             subject: 'Order confirmation 📦',
             html: html,
@@ -177,7 +230,7 @@ export default class EmailSenderService extends AbstractNotificationService {
         }
 
         const result = await this.mailer.sendMail({
-            from: '"Fred Foo 👻" <daren.koch@ethereal.email>',
+            from: MAIL_FROM,
             to: to || order.email,
             subject: 'Your order has been shipped! 📦🚀🎉',
             text: mailText

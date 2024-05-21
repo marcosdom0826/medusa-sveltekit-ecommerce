@@ -1,4 +1,5 @@
 import {
+    GiftCardService,
     MedusaContainer,
     NotificationService
 } from '@medusajs/medusa';
@@ -18,4 +19,7 @@ export default async (
     );
     notificationService.subscribe(
         'customer.password_reset', 'email-sender');
+
+    notificationService.subscribe(GiftCardService.Events.CREATED, 'email-sender');
+    notificationService.subscribe('order.payment_captured', 'email-sender');
 };
