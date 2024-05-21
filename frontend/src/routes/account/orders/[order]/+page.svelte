@@ -85,7 +85,14 @@ const shippingCost = $derived(data.order.shipping_total || 0);
                         {#if fulfilment.tracking_links?.[0]}
                             {#each fulfilment.tracking_links as trackingLink}
                                 {#if trackingLink.url}
-                                    <a href="{trackingLink.url}">Track Shipping</a>
+                                    <a target="_blank" rel="noopener noreferrer" href="{trackingLink.url}"
+                                        >Track Shipping</a>
+                                    <div></div>
+                                {:else if trackingLink.tracking_number.startsWith('http')}
+                                    <a
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href="{trackingLink.tracking_number}">Track Shipping</a>
                                     <div></div>
                                 {:else}
                                     <span>Tracking Number:</span><span
