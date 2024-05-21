@@ -109,6 +109,11 @@ let cartButton: HTMLButtonElement | undefined = $state();
             <a href="/account/orders">My Orders</a>
             <a href="/account/logout" data-sveltekit-reload>Logout</a>
         </div>
+    {:else}
+        <div class="mobile-sub-links">
+            <a href="/account/login">Login</a>
+            <a href="/account/register">Register</a>
+        </div>
     {/if}
 </Drawer>
 
