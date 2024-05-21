@@ -123,7 +123,8 @@ export default class EmailSenderService extends AbstractNotificationService {
     }
 
     protected async sendOrderEmail(order: Order, to?: string): Promise<ReturnedData> {
-        this.logger.info(`Sending order email ${JSON.stringify(order)}`);
+        const { invoice, ...normalizedOrder } = order;
+        this.logger.info(`Sending order email ${JSON.stringify(normalizedOrder)}`);
 
         // ?email strips the layout and only returns the email body
         const page = await fetch(`${process.env.STORE_URL}/checkout/success/${order.id}?email=true`);
@@ -153,15 +154,33 @@ export default class EmailSenderService extends AbstractNotificationService {
     }
 
     protected async sendShippingEmail(order: Order, to?: string): Promise<ReturnedData> {
-        this.logger.info(`Sending shipment email ${JSON.stringify(order)}`);
+        const { invoice, ...normalizedOrder } = order;
 
+        this.logger.info(`Sending shipment email ${JSON.stringify(normalizedOrder)}`);
+
+        let mailText = "Your order has been shipped!\n\n"
+
+        order.fulfillments.forEach((fulfillment) => {
+            fulfillment.tracking_links.forEach((tl) => {
+                const trackingUrl = tl.url || tl.tracking_number.startsWith("http") ? tl.tracking_number : null;
+                if (trackingUrl) {
+                    mailText += `${trackingUrl}\n`
+                }
+            })
+        });
+
+        if (mailText.includes("http")) {
+            mailText = mailText.replace(
+                "Your order has been shipped!\n\n",
+                 "Your order has been shipped!\n\nYou can track your order here:\n"
+                )
+        }
 
         const result = await this.mailer.sendMail({
             from: '"Fred Foo 👻" <daren.koch@ethereal.email>',
             to: to || order.email,
             subject: 'Your order has been shipped! 📦🚀🎉',
-            text: 'Your order has been shipped!\n\n'
-            + 'You can track your order here: ' + order.fulfillments[0].tracking_links[0].tracking_number + '\n\n'
+            text: mailText
         });
 
         return {
