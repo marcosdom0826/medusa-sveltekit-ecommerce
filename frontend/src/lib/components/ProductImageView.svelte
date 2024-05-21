@@ -29,7 +29,7 @@ const images = $derived(
         ? product.images
         : [
             {
-                url: product.thumbnail,
+                url: product?.thumbnail,
                 id: Math.random().toString(36).substring(7)
             }
         ]
