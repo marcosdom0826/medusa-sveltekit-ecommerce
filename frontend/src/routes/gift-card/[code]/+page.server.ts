@@ -15,6 +15,7 @@ export const load: PageServerLoad = async ({ params }) => {
             throw error(404, 'Not found');
         }
     } catch (e) {
+        console.error(e);
         throw error(404, 'Not found');
     }
 

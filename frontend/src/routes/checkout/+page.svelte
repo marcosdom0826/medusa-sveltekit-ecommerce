@@ -226,6 +226,9 @@ $inspect(form?.error);
             <fieldset>
                 {#if data.shippingOptions.length > 0}
                     <h3>Shipping method</h3>
+                {:else}
+                    <h3>Shipping method</h3>
+                    <span>EMail (until end of next working day)</span>
                 {/if}
                 {#each data.shippingOptions as option (option.id)}
                     {#if !option.admin_only}
