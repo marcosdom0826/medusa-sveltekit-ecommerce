@@ -132,7 +132,7 @@ export default class EmailSenderService extends AbstractNotificationService {
         await Promise.all(giftCards.map(async (card) => {
                 // ?email strips the layout and only returns the email body
                 const page = await fetch(`${process.env.STORE_URL}/gift-card/${card.code}?email=true`);
-                const html = await page.text();
+                const html = (await page.text()).replace(/<script(.|\n)*?<\/script>/g, '');
                 return this.mailer.sendMail({
                     from: MAIL_FROM,
                     to: to || order.email,
@@ -181,7 +181,7 @@ export default class EmailSenderService extends AbstractNotificationService {
 
         // ?email strips the layout and only returns the email body
         const page = await fetch(`${process.env.STORE_URL}/checkout/success/${order.id}?email=true`);
-        const html = await page.text();
+        const html = (await page.text()).replace(/<script(.|\n)*?<\/script>/g, '');
 
         const result = await this.mailer.sendMail({
             from: MAIL_FROM,
